@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fields name="filter">
+        <field
+                name="search"
+                type="text"
+                label="COM_CONTRACTS_FORM_CONTRACTS_TITLE_DESC"
+                description="COM_CONTRACTS_FORM_CONTRACTS_TITLE_DESC"
+                hint="COM_CONTRACTS_FORM_CONTRACTS_TITLE_DESC"
+                autocomplete="off"
+                class="js-stools-search-string"
+        />
+    </fields>
+    <fields name="list">
+        <field
+                name="fullordering"
+                type="list"
+                onchange="this.form.submit();"
+                default="c.id desc"
+        >
+            <option value="number asc">COM_CONTRACTS_SORTING_CONTRACT_NUMBER_ASC</option>
+            <option value="number desc">COM_CONTRACTS_SORTING_CONTRACT_NUMBER_DESC</option>
+            <option value="c.dat asc">COM_CONTRACTS_SORTING_DATE_ASC</option>
+            <option value="c.dat desc">COM_CONTRACTS_SORTING_DATE_DESC</option>
+            <option value="p.title asc">COM_CONTRACTS_SORTING_PROJECT_ASC</option>
+            <option value="p.title desc">COM_CONTRACTS_SORTING_PROJECT_DESC</option>
+            <option value="company asc">COM_CONTRACTS_SORTING_COMPANY_ASC</option>
+            <option value="company desc">COM_CONTRACTS_SORTING_COMPANY_DESC</option>
+            <option value="manager asc">COM_CONTRACTS_SORTING_MANAGER_ASC</option>
+            <option value="manager desc">COM_CONTRACTS_SORTING_MANAGER_DESC</option>
+            <option value="s.ordering asc">COM_CONTRACTS_SORTING_STATUS_ASC</option>
+            <option value="s.ordering desc">COM_CONTRACTS_SORTING_STATUS_DESC</option>
+            <option value="i.doc_status asc">COM_CONTRACTS_SORTING_DOC_STATUS_ASC</option>
+            <option value="i.doc_status desc">COM_CONTRACTS_SORTING_DOC_STATUS_DESC</option>
+            <option value="c.amount asc">COM_CONTRACTS_SORTING_CONTRACT_AMOUNT_ASC</option>
+            <option value="c.amount desc">COM_CONTRACTS_SORTING_CONTRACT_AMOUNT_DESC</option>
+            <option value="c.id asc">COM_CONTRACTS_SORTING_ID_ASC</option>
+            <option value="c.id desc">COM_CONTRACTS_SORTING_ID_DESC</option>
+        </field>
+        <field
+                name="limit"
+                type="limitbox"
+                class="input-mini"
+                default="0"
+                onchange="this.form.submit();"
+        />
+    </fields>
+</form>

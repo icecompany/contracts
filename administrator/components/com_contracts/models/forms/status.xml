@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form addrulepath="/administrator/components/com_contracts/models/rules">
+    <fieldset name="general">
+        <field
+                name="title"
+                type="text"
+                label="COM_CONTRACTS_FORM_TITLE"
+                description="COM_CONTRACTS_FORM_STATUS_TITLE_DESC"
+                hint="COM_CONTRACTS_FORM_STATUS_TITLE_HINT"
+                autocomplete="off"
+                required="true"
+                maxlength="255"
+                class="span12"
+        />
+        <field
+                name="code"
+                type="integer"
+                label="COM_CONTRACTS_FORM_STATUS_CODE_LABEL"
+                description="COM_CONTRACTS_FORM_STATUS_CODE_DESC"
+                hint="COM_CONTRACTS_FORM_STATUS_CODE_HINT"
+                autocomplete="off"
+                required="true"
+                maxlength="255"
+                first="0"
+                step="1"
+                last="254"
+                class="span12"
+        />
+        <field
+                name="id"
+                type="hidden"
+        />
+    </fieldset>
+</form>
