@@ -29,7 +29,7 @@ class ContractsViewContracts extends HtmlView
 
     private function toolbar()
     {
-        JToolBarHelper::title(JText::sprintf('COM_CONTRACTS_MENU_CONTRACTS'), 'contracts');
+        JToolBarHelper::title(JText::sprintf('COM_CONTRACTS_MENU_CONTRACTS'), 'briefcase');
 
         if (ContractsHelper::canDo('core.create'))
         {

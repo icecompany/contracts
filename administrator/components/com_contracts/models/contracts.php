@@ -105,7 +105,7 @@ class ContractsModelContracts extends ListModel
             $manager = explode(' ', $item->manager);
             $arr['manager'] = $manager[0];
             $currency = mb_strtoupper($item->currency);
-            $amount = number_format((float) $item->amount ?? 0, 2, '.', '');
+            $amount = number_format((float) $item->amount ?? 0, 2, '.', ' ');
             $arr['dat'] = (!empty($item->dat)) ? JDate::getInstance($item->dat)->format("d.m.Y") : '';
             $arr['currency'] = JText::sprintf("COM_CONTRACTS_CURRENCY_{$currency}_SHORT");
             $arr['amount_full'] = JText::sprintf("COM_CONTRACTS_CURRENCY_{$currency}_AMOUNT_SHORT", $amount);
