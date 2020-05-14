@@ -74,7 +74,18 @@ class ContractsModelContracts extends ListModel
                 }
             }
         }
-
+        $project = $this->getState('filter.project');
+        if (is_numeric($project)) {
+            $query->where("c.projectID = {$this->_db->q($project)}");
+        }
+        $status = $this->getState('filter.status');
+        if (is_array($status) && !empty($status)) {
+            $statuses = implode(", ", $status);
+            $query->where("c.status in ($statuses)");
+        }
+        else {
+            $query->where("c.status is null");
+        }
 
         if ($orderCol === 'number') {
             $query->where("((c.number is not null and c.number_free is null) or (c.number_free is not null and c.number is null))");
@@ -122,6 +133,10 @@ class ContractsModelContracts extends ListModel
     {
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
+        $project = $this->getUserStateFromRequest($this->context . '.filter.project', 'filter_project');
+        $this->setState('filter.project', $project);
+        $status = $this->getUserStateFromRequest($this->context . '.filter.status', 'filter_status');
+        $this->setState('filter.status', $status);
         parent::populateState($ordering, $direction);
         ContractsHelper::check_refresh();
     }
@@ -129,6 +144,8 @@ class ContractsModelContracts extends ListModel
     protected function getStoreId($id = '')
     {
         $id .= ':' . $this->getState('filter.search');
+        $id .= ':' . $this->getState('filter.project');
+        $id .= ':' . $this->getState('filter.status');
         return parent::getStoreId($id);
     }
 
