@@ -168,6 +168,8 @@ class ContractsModelContracts extends ListModel
             $arr['number'] = $item->number_free ?? $item->number;
             $url = JRoute::_("index.php?option={$this->option}&amp;task=contract.edit&amp;id={$item->id}&amp;return={$return}");
             $arr['edit_link'] = JHtml::link($url, JText::sprintf('COM_CONTRACTS_ACTION_OPEN'));
+            $url = JRoute::_("index.php?option={$this->option}&amp;view=items&amp;contractID={$item->id}");
+            $arr['items_link'] = JHtml::link($url, JText::sprintf('COM_CONTRACTS_ACTION_ITEMS'));
             $result['items'][] = $arr;
         }
         return $result;

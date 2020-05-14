@@ -12,34 +12,28 @@ foreach ($this->items['items'] as $i => $item) :
             <?php echo ++$ii; ?>
         </td>
         <td>
-            <?php echo $item['number']; ?>
-        </td>
-        <td>
-            <?php echo $item['dat']; ?>
-        </td>
-        <td>
             <?php echo $item['edit_link']; ?>
         </td>
         <td>
-            <?php echo $item['items_link']; ?>
+            <?php echo $item['cost']; ?>
         </td>
         <td>
-            <?php echo $item['project']; ?>
+            <?php echo $item['factor']; ?>
         </td>
         <td>
-            <?php echo $item['company']; ?>
+            <?php echo $item['markup']; ?>
         </td>
         <td>
-            <?php echo $item['manager']; ?>
+            <?php echo $item['columnID']; ?>
         </td>
         <td>
-            <?php echo $item['status']; ?>
+            <?php echo $item['stand_link']; ?>
         </td>
         <td>
-            <?php echo $item['doc_status']; ?>
+            <?php echo $item['value']; ?>
         </td>
         <td>
-            <?php echo $item['amount_full']; ?>
+            <?php echo $item['amount']; ?>
         </td>
         <td>
             <?php echo $item['id']; ?>

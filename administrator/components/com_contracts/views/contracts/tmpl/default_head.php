@@ -20,6 +20,9 @@ $listDirn    = $this->escape($this->state->get('list.direction'));
         <?php echo JText::sprintf('COM_CONTRACTS_HEAD_CONTRACTS_OPEN'); ?>
     </th>
     <th>
+        <?php echo JText::sprintf('COM_CONTRACTS_HEAD_CONTRACTS_ITEMS'); ?>
+    </th>
+    <th>
         <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_CONTRACTS_PROJECT', 'p.title', $listDirn, $listOrder); ?>
     </th>
     <th>
