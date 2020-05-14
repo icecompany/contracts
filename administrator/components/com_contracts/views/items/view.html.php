@@ -29,7 +29,8 @@ class ContractsViewItems extends HtmlView
 
     private function toolbar()
     {
-        JToolBarHelper::title(JText::sprintf('COM_CONTRACTS_MENU_ITEMS'), 'cart');
+        $title = (!empty($this->items['company'])) ? JText::sprintf('COM_CONTRACTS_TITLE_ITEMS_FOR_COMPANY_BY_PROJECT', $this->items['company'], $this->items['project']) : JText::sprintf('COM_CONTRACTS_MENU_ITEMS');
+        JToolBarHelper::title($title, 'cart');
 
         if (ContractsHelper::canDo('core.create'))
         {

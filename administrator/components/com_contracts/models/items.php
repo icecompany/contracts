@@ -1,5 +1,6 @@
 <?php
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\MVC\Model\AdminModel;
 
 defined('_JEXEC') or die;
 
@@ -87,7 +88,15 @@ class ContractsModelItems extends ListModel
     public function getItems()
     {
         $items = parent::getItems();
-        $result = ['items' => []];
+        if ($this->contractID > 0) {
+            $model = AdminModel::getInstance('Contract', 'ContractsModel');
+            $contract = $model->getItem($this->contractID);
+        }
+        $result = [
+            'items' => [],
+            'company' => ($this->contractID > 0) ? $contract->company : '',
+            'project' => ($this->contractID > 0) ? $contract->project : '',
+        ];
         $return = ContractsHelper::getReturnUrl();
         foreach ($items as $item) {
             $arr = [];
