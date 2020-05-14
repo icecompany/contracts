@@ -19,6 +19,14 @@ class ContractsModelContracts extends ListModel
                 'i.doc_status',
                 'c.amount',
                 'search',
+                'catalog_info', 'i.catalog_info',
+                'catalog_logo', 'i.catalog_logo',
+                'pvn_1', 'i.pvn_1',
+                'pvn_1a', 'i.pvn_1a',
+                'pvn_1b', 'i.pvn_1b',
+                'pvn_1v', 'i.pvn_1v',
+                'pvn_1g', 'i.pvn_1g',
+                'doc_status', 'i.doc_status',
             );
         }
         parent::__construct($config);
@@ -44,7 +52,7 @@ class ContractsModelContracts extends ListModel
             ->select("p.title as project")
             ->select("e.title as company")
             ->select("u.name as manager")
-            ->select("i.doc_status")
+            ->select("i.doc_status, i.catalog_info, i.catalog_logo, i.pvn_1, i.pvn_1a, i.pvn_1b, i.pvn_1v, i.pvn_1g")
             ->from("#__mkv_contracts c")
             ->leftJoin("#__mkv_contract_statuses s on s.code = c.status")
             ->leftJoin("#__mkv_projects p on p.id = c.projectID")
@@ -80,17 +88,53 @@ class ContractsModelContracts extends ListModel
         }
         $status = $this->getState('filter.status');
         if (is_array($status) && !empty($status)) {
-            $statuses = implode(", ", $status);
-            $query->where("c.status in ($statuses)");
+            if (!in_array(100, $status)) {
+                if (in_array('', $status)) {
+                    $query->where('c.status is null');
+                }
+                else {
+                    $statuses = implode(", ", $status);
+                    $query->where("c.status in ($statuses)");
+                }
+            }
         }
-        else {
-            $query->where("c.status is null");
+        $catalog_info = $this->getState('filter.catalog_info');
+        if (is_numeric($catalog_info)) {
+            $query->where("i.catalog_info = {$this->_db->q($catalog_info)}");
+        }
+        $catalog_logo = $this->getState('filter.catalog_logo');
+        if (is_numeric($catalog_logo)) {
+            $query->where("i.catalog_logo = {$this->_db->q($catalog_logo)}");
+        }
+        $pvn_1 = $this->getState('filter.pvn_1');
+        if (is_numeric($pvn_1)) {
+            $query->where("i.pvn_1 = {$this->_db->q($pvn_1)}");
+        }
+        $pvn_1a = $this->getState('filter.pvn_1a');
+        if (is_numeric($pvn_1a)) {
+            $query->where("i.pvn_1a = {$this->_db->q($pvn_1a)}");
+        }
+        $pvn_1b = $this->getState('filter.pvn_1b');
+        if (is_numeric($pvn_1b)) {
+            $query->where("i.pvn_1b = {$this->_db->q($pvn_1b)}");
+        }
+        $pvn_1v = $this->getState('filter.pvn_1v');
+        if (is_numeric($pvn_1v)) {
+            $query->where("i.pvn_1v = {$this->_db->q($pvn_1v)}");
+        }
+        $pvn_1g = $this->getState('filter.pvn_1g');
+        if (is_numeric($pvn_1g)) {
+            $query->where("i.pvn_1g = {$this->_db->q($pvn_1g)}");
+        }
+        $doc_status = $this->getState('filter.doc_status');
+        if (is_numeric($doc_status)) {
+            $query->where("i.doc_status = {$this->_db->q($doc_status)}");
         }
 
         if ($orderCol === 'number') {
             $query->where("((c.number is not null and c.number_free is null) or (c.number_free is not null and c.number is null))");
-            if ($orderDirn === 'asc') $orderCol = 'LENGTH(num), num';
-            if ($orderDirn === 'desc') $orderCol = 'LENGTH(num) desc, num';
+            if ($orderDirn === 'DESC') $orderCol = 'LENGTH(num), num';
+            if ($orderDirn === 'desc') $orderCol = 'LENGTH(num) DESC, num';
         }
         if ($orderCol === 'c.dat') {
             $query->where("c.dat is not null");
@@ -129,14 +173,30 @@ class ContractsModelContracts extends ListModel
         return $result;
     }
 
-    protected function populateState($ordering = 'c.id', $direction = 'desc')
+    protected function populateState($ordering = 'c.id', $direction = 'DESC')
     {
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
         $project = $this->getUserStateFromRequest($this->context . '.filter.project', 'filter_project');
         $this->setState('filter.project', $project);
-        $status = $this->getUserStateFromRequest($this->context . '.filter.status', 'filter_status');
+        $status = $this->getUserStateFromRequest($this->context . '.filter.status', 'filter_status',  array(100));
         $this->setState('filter.status', $status);
+        $catalog_info = $this->getUserStateFromRequest($this->context . '.filter.catalog_info', 'filter_catalog_info');
+        $this->setState('filter.catalog_info', $catalog_info);
+        $catalog_logo = $this->getUserStateFromRequest($this->context . '.filter.catalog_logo', 'filter_catalog_logo');
+        $this->setState('filter.catalog_logo', $catalog_logo);
+        $pvn_1 = $this->getUserStateFromRequest($this->context . '.filter.pvn_1', 'filter_pvn_1');
+        $this->setState('filter.pvn_1', $pvn_1);
+        $pvn_1a = $this->getUserStateFromRequest($this->context . '.filter.pvn_1a', 'filter_pvn_1a');
+        $this->setState('filter.pvn_1a', $pvn_1a);
+        $pvn_1b = $this->getUserStateFromRequest($this->context . '.filter.pvn_1b', 'filter_pvn_1b');
+        $this->setState('filter.pvn_1b', $pvn_1b);
+        $pvn_1v = $this->getUserStateFromRequest($this->context . '.filter.pvn_1v', 'filter_pvn_1v');
+        $this->setState('filter.pvn_1v', $pvn_1v);
+        $pvn_1g = $this->getUserStateFromRequest($this->context . '.filter.pvn_1g', 'filter_pvn_1g');
+        $this->setState('filter.pvn_1g', $pvn_1g);
+        $doc_status = $this->getUserStateFromRequest($this->context . '.filter.doc_status', 'filter_doc_status');
+        $this->setState('filter.doc_status', $doc_status);
         parent::populateState($ordering, $direction);
         ContractsHelper::check_refresh();
     }
@@ -146,6 +206,14 @@ class ContractsModelContracts extends ListModel
         $id .= ':' . $this->getState('filter.search');
         $id .= ':' . $this->getState('filter.project');
         $id .= ':' . $this->getState('filter.status');
+        $id .= ':' . $this->getState('filter.catalog_info');
+        $id .= ':' . $this->getState('filter.catalog_logo');
+        $id .= ':' . $this->getState('filter.pvn_1');
+        $id .= ':' . $this->getState('filter.pvn_1a');
+        $id .= ':' . $this->getState('filter.pvn_1b');
+        $id .= ':' . $this->getState('filter.pvn_1v');
+        $id .= ':' . $this->getState('filter.pvn_1g');
+        $id .= ':' . $this->getState('filter.doc_status');
         return parent::getStoreId($id);
     }
 
