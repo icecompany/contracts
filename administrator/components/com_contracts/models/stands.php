@@ -41,6 +41,7 @@ class ContractsModelStands extends ListModel
             ->select("ci.value")
             ->select("ifnull(c.number_free, c.number) as contract_number, c.dat")
             ->select("st.title as contract_status")
+            ->select("u.name as manager")
             ->from("#__mkv_contract_stands cs")
             ->leftJoin("#__mkv_contracts c on c.id = cs.contractID")
             ->leftJoin("#__mkv_companies e on e.id = c.companyID")
@@ -48,7 +49,8 @@ class ContractsModelStands extends ListModel
             ->leftJoin("#__mkv_stands s on s.id = cs.standID")
             ->leftJoin("#__mkv_contract_items ci on ci.contractStandID = cs.id")
             ->leftJoin("#__mkv_contract_statuses st on st.code = c.status")
-            ->leftJoin("#__mkv_price_items i on i.id = ci.itemID");
+            ->leftJoin("#__mkv_price_items i on i.id = ci.itemID")
+            ->leftJoin("#__users u on u.id = c.managerID");
         $search = (!$this->export) ? $this->getState('filter.search') : JFactory::getApplication()->input->getString('search', '');
         if (!empty($search)) {
             if (stripos($search, 'cid:') !== false) { //Поиск по ID сделки
@@ -102,6 +104,9 @@ class ContractsModelStands extends ListModel
             $arr['comment'] = $item->comment;
             $arr['company'] = $item->company;
             $arr['project'] = $item->project;
+            $manager = $item->manager;
+            $manager = explode(' ', $manager);
+            $arr['manager'] = $manager[0];
             $arr['contract_status'] = $item->contract_status ?? JText::sprintf("COM_CONTRACTS_CONTRACT_STATUS_IN_PROJECT");
             $arr['contract_number'] = $item->contract_number ?? '';
             $arr['contract_dat'] = (!empty($item->dat)) ? JDate::getInstance($item->dat)->format("d.m.Y") : '';
@@ -113,6 +118,66 @@ class ContractsModelStands extends ListModel
         }
         asort($result['titles']);
         return $result;
+    }
+
+    public function export()
+    {
+        $items = $this->getItems();
+        JLoader::discover('PHPExcel', JPATH_LIBRARIES);
+        JLoader::register('PHPExcel', JPATH_LIBRARIES . '/PHPExcel.php');
+
+        $xls = new PHPExcel();
+        $xls->setActiveSheetIndex(0);
+        $sheet = $xls->getActiveSheet();
+
+        //Ширина столбцов
+        $width = ["A" => 10, "B" => 10, "C" => 60, "D" => 25, "E" => 10, "F" => 14, "G" => 17, "H" => 29];
+        foreach ($width as $col => $value) $sheet->getColumnDimension($col)->setWidth($value);
+
+        $sheet->setCellValue("A1", JText::sprintf('COM_CONTRACTS_HEAD_STANDS_NUMBER'));
+        $sheet->setCellValue("B1", JText::sprintf('COM_CONTRACTS_HEAD_STANDS_SQUARE'));
+        $sheet->setCellValue("C1", JText::sprintf('COM_CONTRACTS_HEAD_STANDS_COMPANY'));
+        $sheet->setCellValue("D1", JText::sprintf('COM_CONTRACTS_HEAD_STANDS_CONTRACT_STATUS'));
+        $sheet->setCellValue("E1", JText::sprintf('COM_CONTRACTS_HEAD_STANDS_CONTRACT_NUMBER'));
+        $sheet->setCellValue("F1", JText::sprintf('COM_CONTRACTS_HEAD_STANDS_CONTRACT_DATE'));
+        $sheet->setCellValue("G1", JText::sprintf('COM_CONTRACTS_HEAD_STANDS_MANAGER'));
+        $sheet->setCellValue("H1", JText::sprintf('COM_CONTRACTS_HEAD_STANDS_STAND_STATUS'));
+        $col = 8;
+        foreach ($items['titles'] as $id => $title) {
+            $sheet->setCellValueByColumnAndRow($col, 1, $title);
+            $col++;
+        }
+
+        $sheet->setTitle(JText::sprintf('COM_CONTRACTS_MENU_STANDS'));
+
+        //Данные. Один проход цикла - одна строка
+        $row = 2; //Строка, с которой начнаются данные
+        $col = 8;
+        foreach ($items['stands'] as $i => $stand) {
+            $sheet->setCellValue("A{$row}", $stand['number']);
+            $sheet->setCellValue("B{$row}", $stand['square_clean']);
+            $sheet->setCellValue("C{$row}", $stand['company']);
+            $sheet->setCellValue("D{$row}", $stand['contract_status']);
+            $sheet->setCellValue("E{$row}", $stand['contract_number']);
+            $sheet->setCellValue("F{$row}", $stand['contract_dat']);
+            $sheet->setCellValue("G{$row}", $stand['manager']);
+            $sheet->setCellValue("H{$row}", $stand['status']);
+            foreach ($items['titles'] as $id => $title) {
+                $sheet->setCellValueByColumnAndRow($col, $row, $items['items'][$stand['id']][$id]);
+                $col++;
+            }
+            $row++;
+            $col = 8;
+        }
+        header("Expires: Mon, 1 Apr 1974 05:00:00 GMT");
+        header("Last-Modified: " . gmdate("D,d M YH:i:s") . " GMT");
+        header("Cache-Control: no-cache, must-revalidate");
+        header("Pragma: public");
+        header("Content-type: application/vnd.ms-excel");
+        header("Content-Disposition: attachment; filename=Stands.xls");
+        $objWriter = PHPExcel_IOFactory::createWriter($xls, 'Excel5');
+        $objWriter->save('php://output');
+        jexit();
     }
 
     protected function populateState($ordering = 's.number', $direction = 'ASC')

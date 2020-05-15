@@ -19,6 +19,9 @@ HTMLHelper::_('script', 'com_contracts/contracts.js', array('version' => 'auto',
         <form action="<?php echo ContractsHelper::getActionUrl(); ?>" method="post"
               name="adminForm" id="adminForm">
             <?php echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
+            <div>
+                <a href="index.php?option=com_contracts&task=stands.execute&format=xls"><?php echo JText::sprintf('COM_CONTRACTS_ACTION_EXPORT_TO_EXCEL');?></a>
+            </div>
             <table class="table table-striped" id="itemList">
                 <thead><?php echo $this->loadTemplate('head'); ?></thead>
                 <tbody><?php echo $this->loadTemplate('body'); ?></tbody>

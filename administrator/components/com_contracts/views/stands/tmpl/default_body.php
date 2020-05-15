@@ -30,6 +30,9 @@ foreach ($this->items['stands'] as $i => $item) :
             <?php echo $item['contract_dat']; ?>
         </td>
         <td>
+            <?php echo $item['manager']; ?>
+        </td>
+        <td>
             <?php echo $item['status']; ?>
         </td>
         <?php foreach ($this->items['titles'] as $id => $title): ?>
