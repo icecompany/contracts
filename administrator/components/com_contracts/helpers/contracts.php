@@ -9,6 +9,7 @@ class ContractsHelper
     {
         HTMLHelper::_('sidebar.addEntry', JText::sprintf('COM_CONTRACTS_MENU_CONTRACTS'), 'index.php?option=com_contracts&view=contracts', $vName === 'contracts');
         HTMLHelper::_('sidebar.addEntry', JText::sprintf('COM_CONTRACTS_MENU_ITEMS'), 'index.php?option=com_contracts&view=items', $vName === 'items');
+        HTMLHelper::_('sidebar.addEntry', JText::sprintf('COM_CONTRACTS_MENU_STANDS'), 'index.php?option=com_contracts&view=stands', $vName === 'stands');
         if (ContractsHelper::canDo('core.access.statuses')) {
             HTMLHelper::_('sidebar.addEntry', JText::sprintf('COM_CONTRACTS_MENU_STATUSES'), 'index.php?option=com_contracts&view=statuses', $vName === 'statuses');
         }

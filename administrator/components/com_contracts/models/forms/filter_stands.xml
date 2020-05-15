@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fields name="filter">
+        <field
+                name="search"
+                type="text"
+                label="COM_CONTRACTS_FILTER_STANDS"
+                description="COM_CONTRACTS_FILTER_STANDS"
+                hint="COM_CONTRACTS_FILTER_STANDS"
+                autocomplete="off"
+                class="js-stools-search-string"
+        />
+        <field
+                name="status"
+                type="ContractStatus"
+                multiple="true"
+                onchange="this.form.submit();"
+                default="100"
+        >
+            <option value="">COM_CONTRACTS_CONTRACT_STATUS_IN_PROJECT</option>
+            <option value="100">COM_CONTRACTS_CONTRACT_STATUS_ALL</option>
+        </field>
+    </fields>
+    <fields name="list">
+        <field
+                name="fullordering"
+                type="list"
+                onchange="this.form.submit();"
+                default="s.number asc"
+        >
+            <option value="">JGLOBAL_SORT_BY</option>
+            <option value="s.number ASC">COM_CONTRACTS_SORTING_STAND_NUMBER_ASC</option>
+            <option value="s.number DESC">COM_CONTRACTS_SORTING_STAND_NUMBER_DESC</option>
+            <option value="s.id ASC">COM_CONTRACTS_SORTING_ID_ASC</option>
+            <option value="s.id DESC">COM_CONTRACTS_SORTING_ID_DESC</option>
+        </field>
+        <field
+                name="limit"
+                type="limitbox"
+                class="input-mini"
+                default="0"
+                onchange="this.form.submit();"
+        />
+    </fields>
+</form>
