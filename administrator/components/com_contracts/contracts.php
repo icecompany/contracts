@@ -10,8 +10,8 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_contracts'))
 }
 
 // Require the helper
-require_once JPATH_COMPONENT_ADMINISTRATOR . '/helpers/contracts.php';
 require_once JPATH_ADMINISTRATOR . "/components/com_prj/helpers/prj.php";
+require_once JPATH_COMPONENT_ADMINISTRATOR . '/helpers/contracts.php';
 
 // Execute the task
 $controller = BaseController::getInstance('contracts');

@@ -82,7 +82,7 @@ class ContractsModelContracts extends ListModel
                 }
             }
         }
-        $project = $this->getState('filter.project');
+        $project = PrjHelper::getActiveProject();
         if (is_numeric($project)) {
             $query->where("c.projectID = {$this->_db->q($project)}");
         }
@@ -179,8 +179,6 @@ class ContractsModelContracts extends ListModel
     {
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
-        $project = $this->getUserStateFromRequest($this->context . '.filter.project', 'filter_project');
-        $this->setState('filter.project', $project);
         $status = $this->getUserStateFromRequest($this->context . '.filter.status', 'filter_status',  array(100));
         $this->setState('filter.status', $status);
         $catalog_info = $this->getUserStateFromRequest($this->context . '.filter.catalog_info', 'filter_catalog_info');
@@ -206,7 +204,6 @@ class ContractsModelContracts extends ListModel
     protected function getStoreId($id = '')
     {
         $id .= ':' . $this->getState('filter.search');
-        $id .= ':' . $this->getState('filter.project');
         $id .= ':' . $this->getState('filter.status');
         $id .= ':' . $this->getState('filter.catalog_info');
         $id .= ':' . $this->getState('filter.catalog_logo');

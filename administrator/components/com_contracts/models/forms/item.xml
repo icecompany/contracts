@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form addrulepath="/administrator/components/com_contracts/models/rules">
+    <fieldset name="general">
+        <field
+                name="itemID"
+                type="PriceItem"
+                label="COM_CONTRACTS_FORM_ITEM_ITEM_LABEL"
+                description="COM_CONTRACTS_FORM_ITEM_ITEM_DESC"
+                required="true"
+                class="span12"
+                onchange="getAmount();"
+        >
+                <option value="">COM_CONTRACTS_FORM_ITEM_ITEM_DEFAULT</option>
+        </field>
+        <field
+                name="contractStandID"
+                type="ContractStand"
+                label="COM_CONTRACTS_FORM_ITEM_STAND_LABEL"
+                description="COM_CONTRACTS_FORM_ITEM_STAND_DESC"
+                readonly="true"
+                class="span12"
+                >
+            <option value="">COM_CONTRACTS_FORM_ITEM_STAND_DEFAULT</option>
+        </field>
+        <field
+                name="value"
+                type="text"
+                label="COM_CONTRACTS_FORM_ITEM_VALUE_LABEL"
+                description="COM_CONTRACTS_FORM_ITEM_VALUE_DESC"
+                hint="COM_CONTRACTS_FORM_ITEM_VALUE_HINT"
+                message="COM_CONTRACTS_FORM_ITEM_VALUE_MESSAGE"
+                autocomplete="off"
+                required="true"
+                maxlength="18"
+                validate="value"
+                readonly="true"
+                class="span12"
+                onchange="getAmount();"
+        />
+        <field
+                name="factor"
+                type="integer"
+                label="COM_CONTRACTS_FORM_ITEM_FACTOR_LABEL"
+                description="COM_CONTRACTS_FORM_ITEM_FACTOR_DESC"
+                autocomplete="off"
+                required="true"
+                maxlength="3"
+                first="0"
+                step="1"
+                last="100"
+                class="span12"
+                default="0"
+                onchange="getAmount();"
+        />
+        <field
+                name="markup"
+                type="list"
+                label="COM_CONTRACTS_FORM_ITEM_MARKUP_LABEL"
+                description="COM_CONTRACTS_FORM_ITEM_MARKUP_DESC"
+                class="span12"
+                default="1"
+                onchange="getAmount();"
+                >
+            <option value="1">0%</option>
+            <option value="1.10">10%</option>
+            <option value="1.15">15%</option>
+            <option value="1.20">20%</option>
+        </field>
+        <field
+                name="contractID"
+                type="hidden"
+        />
+        <field
+                name="id"
+                type="hidden"
+        />
+    </fieldset>
+    <fieldset name="price">
+        <field
+                name="columnID"
+                type="text"
+                filter="integer"
+                label="COM_CONTRACTS_FORM_ITEM_COLUMN_LABEL"
+                description="COM_CONTRACTS_FORM_ITEM_COLUMN_DESC"
+                readonly="true"
+                class="span12"
+        />
+        <field
+                name="cost"
+                type="text"
+                label="COM_CONTRACTS_FORM_ITEM_COST_LABEL"
+                description="COM_CONTRACTS_FORM_ITEM_COST_DESC"
+                readonly="true"
+                class="span12"
+                default="0.00"
+        />
+        <field
+                name="amount"
+                type="text"
+                label="COM_CONTRACTS_FORM_ITEM_AMOUNT_LABEL"
+                description="COM_CONTRACTS_FORM_ITEM_AMOUNT_DESC"
+                readonly="true"
+                class="span12"
+                default="0.00"
+        />
+    </fieldset>
+</form>

@@ -43,6 +43,7 @@ class ContractsModelItems extends ListModel
             ->select("pi.title as item")
             ->select("c.currency")
             ->select("s.id as standID, s.number as stand")
+            ->select("contractStandID")
             ->from("#__mkv_contract_items i")
             ->leftJoin("#__mkv_contracts c on c.id = i.contractID")
             ->leftJoin("#__mkv_companies e on e.id = c.companyID")
@@ -117,7 +118,7 @@ class ContractsModelItems extends ListModel
             $arr['stand'] = $item->stand;
             $url = JRoute::_("index.php?option={$this->option}&amp;task=item.edit&amp;id={$item->id}&amp;return={$return}");
             $arr['edit_link'] = JHtml::link($url, $item->item);
-            $url = JRoute::_("index.php?option={$this->option}&amp;task=stand.edit&amp;id={$item->standID}&amp;return={$return}");
+            $url = JRoute::_("index.php?option={$this->option}&amp;task=stand.edit&amp;id={$item->contractStandID}&amp;return={$return}");
             $arr['stand_link'] = JHtml::link($url, $item->stand);
             $result['items'][] = $arr;
         }

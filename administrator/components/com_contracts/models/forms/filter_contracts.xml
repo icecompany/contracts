@@ -11,13 +11,6 @@
                 class="js-stools-search-string"
         />
         <field
-                name="project"
-                type="Project"
-                onchange="this.form.submit();"
-                >
-            <option value="">COM_CONTRACTS_FILTER_SELECT_PROJECT</option>
-        </field>
-        <field
                 name="status"
                 type="ContractStatus"
                 multiple="true"

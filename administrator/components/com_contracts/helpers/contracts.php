@@ -12,6 +12,7 @@ class ContractsHelper
         if (ContractsHelper::canDo('core.access.statuses')) {
             HTMLHelper::_('sidebar.addEntry', JText::sprintf('COM_CONTRACTS_MENU_STATUSES'), 'index.php?option=com_contracts&view=statuses', $vName === 'statuses');
         }
+        JHtmlSidebar::addFilter(JText::sprintf("COM_CONTRACTS_FILTER_SELECT_ACTIVE_PROJECT"), "set_active_project", JHtml::_("select.options", PrjHelper::getAvailableProjects(), "value", "text", PrjHelper::getActiveProject()));
     }
 
     /**
@@ -50,6 +51,12 @@ class ContractsHelper
     {
         $uri = JUri::getInstance();
         $uri->setVar('refresh', '1');
+        $input = JFactory::getApplication()->input;
+        $view = $input->getString('view');
+        $contractID = $input->getInt('contractID', 0);
+        if ($view === 'items' && $contractID > 0) {
+            $uri->setVar('return', self::getReturnUrl());
+        }
         $query = $uri->getQuery();
         $client = (!JFactory::getApplication()->isClient('administrator')) ? 'site' : 'administrator';
         return JRoute::link($client, "index.php?{$query}");

@@ -2,17 +2,21 @@
 defined('_JEXEC') or die;
 use Joomla\CMS\MVC\Model\AdminModel;
 
-class ContractsModelContract extends AdminModel {
+class ContractsModelItem extends AdminModel {
 
     public function getItem($pk = null)
     {
         $item = parent::getItem($pk);
-        if ($item->id !== null) {
-            $company = $this->getCompany($item->companyID);
-            $project = $this->getProject($item->projectID);
-            $item->company = $company->title;
-            $item->project = $project->title;
-            $item->project_item = $project;
+        if ($item->id === null) {
+            $item->contractID = JFactory::getApplication()->getUserState($this->option.'.item.contractID');
+        }
+        else {
+            $item->item = $this->getPriceItem($item->itemID)->title;
+            $item->price_type = $this->getPriceItem($item->itemID)->type;
+        }
+        $item->contract = $this->getContract($item->contractID);
+        if ($item->id === null) {
+            $item->columnID = $item->contract->project_item->columnID;
         }
         return $item;
     }
@@ -22,22 +26,21 @@ class ContractsModelContract extends AdminModel {
         return parent::save($data);
     }
 
-    public function getCompany(int $companyID) {
-        JTable::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_companies/tables");
-        $table = JTable::getInstance('Companies', 'TableCompanies', []);
-        $table->load($companyID);
-        return $table;
-    }
-
-    public function getProject(int $projectID)
+    public function getContract(int $contractID)
     {
-        JTable::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_prj/tables");
-        $table = JTable::getInstance('Projects', 'TablePrj', []);
-        $table->load($projectID);
+        $model = AdminModel::getInstance('Contract', 'ContractsModel');
+        return $model->getItem($contractID);
+    }
+
+    public function getPriceItem(int $itemID)
+    {
+        JTable::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_prices/tables");
+        $table = JTable::getInstance('Items', 'TablePrices');
+        $table->load($itemID);
         return $table;
     }
 
-    public function getTable($name = 'Contracts', $prefix = 'TableContracts', $options = array())
+    public function getTable($name = 'Items', $prefix = 'TableContracts', $options = array())
     {
         return JTable::getInstance($name, $prefix, $options);
     }
@@ -45,10 +48,9 @@ class ContractsModelContract extends AdminModel {
     public function getForm($data = array(), $loadData = true)
     {
         $form = $this->loadForm(
-            $this->option.'.contract', 'contract', array('control' => 'jform', 'load_data' => $loadData)
+            $this->option.'.item', 'item', array('control' => 'jform', 'load_data' => $loadData)
         );
         $form->addFieldPath(JPATH_ADMINISTRATOR."/components/com_prices/models/fields");
-
         if (empty($form))
         {
             return false;
@@ -59,7 +61,7 @@ class ContractsModelContract extends AdminModel {
 
     protected function loadFormData()
     {
-        $data = JFactory::getApplication()->getUserState($this->option.'.edit.contract.data', array());
+        $data = JFactory::getApplication()->getUserState($this->option.'.edit.item.data', array());
         if (empty($data))
         {
             $data = $this->getItem();
@@ -72,7 +74,7 @@ class ContractsModelContract extends AdminModel {
     {
         $all = get_class_vars($table);
         unset($all['_errors']);
-        $nulls = []; //Поля, которые NULL
+        $nulls = ['value2']; //Поля, которые NULL
         foreach ($all as $field => $v) {
             if (empty($field)) continue;
             if (in_array($field, $nulls)) {
@@ -93,7 +95,7 @@ class ContractsModelContract extends AdminModel {
 
         if (!empty($record->id))
         {
-            return $user->authorise('core.edit.state', $this->option . '.contract.' . (int) $record->id);
+            return $user->authorise('core.edit.state', $this->option . '.item.' . (int) $record->id);
         }
         else
         {
@@ -103,6 +105,6 @@ class ContractsModelContract extends AdminModel {
 
     public function getScript()
     {
-        return 'administrator/components/' . $this->option . '/models/forms/contract.js';
+        return 'administrator/components/' . $this->option . '/models/forms/item.js';
     }
 }
