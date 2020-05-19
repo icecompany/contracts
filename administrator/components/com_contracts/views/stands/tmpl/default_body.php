@@ -2,6 +2,7 @@
 // Запрет прямого доступа.
 defined('_JEXEC') or die;
 $ii = $this->state->get('list.start', 0);
+$colspan = 11 + count($this->items['titles']);
 foreach ($this->items['stands'] as $i => $item) :
     ?>
     <tr class="row<?php echo $i % 2; ?>">
@@ -44,4 +45,11 @@ foreach ($this->items['stands'] as $i => $item) :
             <?php echo $item['id']; ?>
         </td>
     </tr>
+    <?php if (!empty($item['delegates'])): ?>
+    <tr>
+        <td colspan="<?php echo $colspan;?>">
+            <span class="icon-arrow-up-3">&nbsp;</span><span class="is_delegated"><?php echo JText::sprintf('COM_CONTRACTS_HEAD_STANDS_COMPANY_HAS_DELEGATED_STANDS_FOR', $item['company'], $item['number'], $item['delegates']);?></span>
+        </td>
+    </tr>
+    <?php endif;?>
 <?php endforeach; ?>

@@ -62,7 +62,7 @@ class ContractsModelStands extends ListModel
             }
             else {
                 $text = $this->_db->q("%{$search}%");
-                $query->where("(s.number like {$text})");
+                $query->where("(s.number like {$text} or e.title like {$text})");
             }
         }
         $project = PrjHelper::getActiveProject();
@@ -93,9 +93,11 @@ class ContractsModelStands extends ListModel
         $items = parent::getItems();
         $result = ['stands' => [], 'items' => [], 'titles' => []];
         $return = ContractsHelper::getReturnUrl();
+        $ids = [];
         foreach ($items as $item) {
             $arr = [];
             $arr['id'] = $item->id;
+            $ids[] = $item->id;
             $arr['number'] = $item->number;
             $arr['square_clean'] = $item->square;
             $arr['square'] = JText::sprintf('COM_CONTRACTS_STANDS_SQUARE', $item->square);
@@ -117,6 +119,8 @@ class ContractsModelStands extends ListModel
             if (!isset($result['items'][$item->id][$item->itemID])) $result['items'][$item->id][$item->itemID] = $item->value;
         }
         asort($result['titles']);
+        $delegates = $this->getDelegates($ids);
+        foreach ($delegates as $stand => $companies) $result['stands'][$stand]['delegates'] = implode(', ', $companies);
         return $result;
     }
 
@@ -156,7 +160,7 @@ class ContractsModelStands extends ListModel
         foreach ($items['stands'] as $i => $stand) {
             $sheet->setCellValue("A{$row}", $stand['number']);
             $sheet->setCellValue("B{$row}", $stand['square_clean']);
-            $sheet->setCellValue("C{$row}", $stand['company']);
+            $sheet->setCellValue("C{$row}", $stand['delegates'] ?? $stand['company']);
             $sheet->setCellValue("D{$row}", $stand['contract_status']);
             $sheet->setCellValue("E{$row}", $stand['contract_number']);
             $sheet->setCellValue("F{$row}", $stand['contract_dat']);
@@ -179,6 +183,15 @@ class ContractsModelStands extends ListModel
         $objWriter->save('php://output');
         jexit();
     }
+
+
+    private function getDelegates(array $ids = []): array
+    {
+        if (empty($ids)) return [];
+        $model = ListModel::getInstance('Delegates', 'ContractsModel', ['standIDs' => $ids]);
+        return $model->getItems();
+    }
+
 
     protected function populateState($ordering = 's.number', $direction = 'ASC')
     {
