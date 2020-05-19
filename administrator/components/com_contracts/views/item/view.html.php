@@ -24,6 +24,9 @@ class ContractsViewItem extends HtmlView {
                 }
             }
         }
+        else {
+            $this->form->removeField('old_amount');
+        }
 
         $this->addToolbar();
         $this->setDocument();

@@ -84,12 +84,25 @@ function getAmount() {
     contract_new_amount.value = (old_amount - old_price_value + parseFloat(amount)).toLocaleString('ru-RU', {style:'currency', currency:currency});
 }
 
+function setValue() {
+    let field = document.getElementById("jform_contractStandID");
+    let square = field.options[field.selectedIndex].getAttribute('data-square');
+    document.querySelector("#jform_value").value = square ?? 0;
+    getCost();
+}
+
 window.onload = function () {
     let list = document.querySelectorAll("#jform_factor option");
     document.querySelector("#jform_contract_old_amount").value = (old_amount).toLocaleString('ru-RU', {style:'currency', currency:currency});
     document.querySelector("#jform_contract_new_amount").value = (old_amount).toLocaleString('ru-RU', {style:'currency', currency:currency});
     document.querySelector("#jform_amount").value = parseFloat(document.querySelector("#jform_amount").value ?? 0).toLocaleString('ru-RU', {style:'currency', currency:currency});
     document.querySelector("#jform_cost").value = parseFloat(document.querySelector("#jform_cost").value ?? 0).toLocaleString('ru-RU', {style:'currency', currency:currency});
+    if (document.querySelector("#jform_old_amount") !== null) {
+        document.querySelector("#jform_old_amount").value = parseFloat(document.querySelector("#jform_old_amount").value ?? 0).toLocaleString('ru-RU', {
+            style: 'currency',
+            currency: currency
+        });
+    }
     for(let elem of list) elem.innerText += "%";
     jQuery("#jform_factor").trigger("liszt:updated");
 }

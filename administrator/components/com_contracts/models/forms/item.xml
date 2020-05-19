@@ -17,8 +17,8 @@
                 type="ContractStand"
                 label="COM_CONTRACTS_FORM_ITEM_STAND_LABEL"
                 description="COM_CONTRACTS_FORM_ITEM_STAND_DESC"
-                readonly="true"
                 class="span12"
+                onchange="setValue();"
                 >
             <option value="">COM_CONTRACTS_FORM_ITEM_STAND_DEFAULT</option>
         </field>
@@ -90,6 +90,15 @@
                 type="text"
                 label="COM_CONTRACTS_FORM_ITEM_COST_LABEL"
                 description="COM_CONTRACTS_FORM_ITEM_COST_DESC"
+                readonly="true"
+                class="span12"
+                default="0.00"
+        />
+        <field
+                name="old_amount"
+                type="text"
+                label="COM_CONTRACTS_FORM_ITEM_AMOUNT_OLD_LABEL"
+                description="COM_CONTRACTS_FORM_ITEM_AMOUNT_OLD_DESC"
                 readonly="true"
                 class="span12"
                 default="0.00"

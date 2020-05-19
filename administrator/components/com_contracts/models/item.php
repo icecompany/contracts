@@ -13,6 +13,7 @@ class ContractsModelItem extends AdminModel {
         else {
             $item->item = $this->getPriceItem($item->itemID)->title;
             $item->price_type = $this->getPriceItem($item->itemID)->type;
+            $item->factor = 100 - (100 * $item->factor);
         }
         $item->contract = $this->getContract($item->contractID);
         if ($item->id === null) {
@@ -20,6 +21,7 @@ class ContractsModelItem extends AdminModel {
         }
         else {
             $item->contract_new_amount = $item->contract->amount;
+            $item->old_amount = $item->amount;
         }
         $item->contract_old_amount = $item->contract->amount;
         return $item;

@@ -2,7 +2,6 @@
 defined('_JEXEC') or die;
 jimport('joomla.form.helper');
 JFormHelper::loadFieldClass('list');
-use Joomla\CMS\MVC\Model\ListModel;
 
 class JFormFieldContractStand extends JFormFieldList
 {
@@ -38,7 +37,9 @@ class JFormFieldContractStand extends JFormFieldList
 
         foreach ($result as $item) {
             $title = JText::sprintf('COM_CONTRACTS_STANDS_NUMBER_WITH_SQUARE', $item->number, $item->square);
-            $options[] = JHtml::_('select.option', $item->id, $title);
+            $arr = array('data-square' => $item->square);
+            $params = array('attr' => $arr, 'option.attr' => 'optionattr');
+            $options[] = JHtml::_('select.option', $item->id, $title, $params);
         }
 
         if (!$this->loadExternally) {
