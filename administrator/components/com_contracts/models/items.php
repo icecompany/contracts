@@ -97,6 +97,9 @@ class ContractsModelItems extends ListModel
             'items' => [],
             'company' => ($this->contractID > 0) ? $contract->company : '',
             'project' => ($this->contractID > 0) ? $contract->project : '',
+            'amount' => ['rub' => 0, 'usd' => 0, 'eur' => 0],
+            'values' => 0,
+            'currency' => null
         ];
         $return = ContractsHelper::getReturnUrl();
         foreach ($items as $item) {
@@ -121,8 +124,16 @@ class ContractsModelItems extends ListModel
             $url = JRoute::_("index.php?option={$this->option}&amp;task=stand.edit&amp;id={$item->contractStandID}&amp;return={$return}");
             $arr['stand_link'] = JHtml::link($url, $item->stand);
             $result['items'][] = $arr;
+            $result['amount'][$item->currency] += $item->amount;
+            $result['values'] += $item->value;
+            if ($this->contractID > 0) $result['currency'] = $item->currency;
         }
         return $result;
+    }
+
+    public function getContractID(): int
+    {
+        return $this->contractID;
     }
 
     protected function populateState($ordering = 'pi.weight', $direction = 'ASC')

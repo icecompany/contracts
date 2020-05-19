@@ -6,7 +6,7 @@ defined('_JEXEC') or die;
 class ContractsViewItems extends HtmlView
 {
     protected $sidebar = '';
-    public $items, $pagination, $uid, $state, $filterForm, $activeFilters;
+    public $items, $pagination, $uid, $state, $filterForm, $activeFilters, $contractID;
 
     public function display($tpl = null)
     {
@@ -15,6 +15,7 @@ class ContractsViewItems extends HtmlView
         $this->state = $this->get('State');
         $this->filterForm = $this->get('FilterForm');
         $this->activeFilters = $this->get('ActiveFilters');
+        $this->contractID = $this->get('contractID');
 
         // Show the toolbar
         $this->toolbar();
