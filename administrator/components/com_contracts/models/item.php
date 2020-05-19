@@ -18,6 +18,9 @@ class ContractsModelItem extends AdminModel {
         if ($item->id === null) {
             $item->columnID = $item->contract->project_item->columnID;
         }
+        else {
+            $item->contract_new_amount = $item->contract->amount;
+        }
         $item->contract_old_amount = $item->contract->amount;
         return $item;
     }

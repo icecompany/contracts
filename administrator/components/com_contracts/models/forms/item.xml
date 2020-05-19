@@ -123,5 +123,9 @@
                 class="span12"
                 default="0.00"
         />
+        <field
+                name="old_price_value"
+                type="hidden"
+        />
     </fieldset>
 </form>

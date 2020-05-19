@@ -11,6 +11,7 @@ HTMLHelper::_('script', $this->script);
 ?>
 <script>
     let currency = '<?php echo $this->item->contract->currency;?>';
+    let old_price_value = parseFloat('<?php echo $this->item->amount ?? 0;?>');
     let old_amount = parseFloat('<?php echo $this->item->contract->amount;?>');
 </script>
 <form action="<?php echo ContractsHelper::getActionUrl(); ?>"
