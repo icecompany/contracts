@@ -29,6 +29,8 @@
                 default="pi.weight ASC"
         >
             <option value="">JGLOBAL_SORT_BY</option>
+            <option value="e.title ASC">COM_CONTRACTS_SORTING_COMPANY_ASC</option>
+            <option value="e.title DESC">COM_CONTRACTS_SORTING_COMPANY_DESC</option>
             <option value="pi.weight ASC">COM_CONTRACTS_SORTING_PRICE_ITEM_ASC</option>
             <option value="pi.weight DESC">COM_CONTRACTS_SORTING_PRICE_ITEM_DESC</option>
             <option value="i.value ASC">COM_CONTRACTS_SORTING_VALUE_ASC</option>

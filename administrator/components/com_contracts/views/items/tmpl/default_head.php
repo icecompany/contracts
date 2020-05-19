@@ -10,6 +10,11 @@ $listDirn    = $this->escape($this->state->get('list.direction'));
     <th style="width: 1%;">
         №
     </th>
+    <?php if ($this->contractID === 0): ?>
+        <th>
+            <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_ITEMS_COMPANY', 'e.title', $listDirn, $listOrder); ?>
+        </th>
+    <?php endif; ?>
     <th>
         <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_ITEMS_ITEM', 'pi.weight', $listDirn, $listOrder); ?>
     </th>

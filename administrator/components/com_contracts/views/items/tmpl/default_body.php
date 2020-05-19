@@ -11,6 +11,11 @@ foreach ($this->items['items'] as $i => $item) :
         <td>
             <?php echo ++$ii; ?>
         </td>
+        <?php if ($this->contractID === 0): ?>
+            <td>
+                <?php echo $item['company']; ?>
+            </td>
+        <?php endif; ?>
         <td>
             <?php echo $item['edit_link']; ?>
         </td>

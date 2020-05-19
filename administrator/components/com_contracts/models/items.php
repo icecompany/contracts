@@ -18,6 +18,7 @@ class ContractsModelItems extends ListModel
                 'i.columnID',
                 'pi.weight',
                 'pi.title',
+                'e.title',
                 'currency',
                 'search',
             );
@@ -56,6 +57,8 @@ class ContractsModelItems extends ListModel
             $limit = 0;
         }
         else {
+            $query->select("e.title as company");
+
             $search = (!$this->export) ? $this->getState('filter.search') : JFactory::getApplication()->input->getString('search', '');
             if (!empty($search)) {
                 if (stripos($search, 'id:') !== false) { //Поиск по ID
@@ -116,6 +119,7 @@ class ContractsModelItems extends ListModel
             $arr['id'] = $item->id;
             $arr['item'] = $item->item;
             $arr['columnID'] = $item->columnID;
+            $arr['company'] = $item->company;
             $arr['factor'] = (1 - $item->factor) * 100 . "%";
             $arr['markup'] = ($item->markup - 1) * 100 . "%";
             $arr['cost_clean'] = $item->cost;
