@@ -16,6 +16,9 @@ class ContractsViewItems extends HtmlView
         $this->filterForm = $this->get('FilterForm');
         $this->activeFilters = $this->get('ActiveFilters');
         $this->contractID = $this->get('contractID');
+        if ($this->contractID > 0) {
+            $this->filterForm->removeField('currency', 'filter');
+        }
 
         // Show the toolbar
         $this->toolbar();

@@ -18,6 +18,7 @@ class ContractsModelItems extends ListModel
                 'i.columnID',
                 'pi.weight',
                 'pi.title',
+                'currency',
                 'search',
             );
         }
@@ -77,6 +78,14 @@ class ContractsModelItems extends ListModel
                             ->where("(e.title like {$text} or pi.title like {$text})");
                     }
                 }
+            }
+            $project = PrjHelper::getActiveProject();
+            if (is_numeric($project)) {
+                $query->where("c.projectID = {$this->_db->q($project)}");
+            }
+            $currency = $this->getState('filter.currency');
+            if (!empty($currency)) {
+                $query->where("c.currency like {$this->_db->q($currency)}");
             }
         }
 
@@ -140,6 +149,8 @@ class ContractsModelItems extends ListModel
     {
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
+        $currency = $this->getUserStateFromRequest($this->context . '.filter.currency', 'filter_currency');
+        $this->setState('filter.currency', $currency);
         parent::populateState($ordering, $direction);
         ContractsHelper::check_refresh();
     }
@@ -147,6 +158,7 @@ class ContractsModelItems extends ListModel
     protected function getStoreId($id = '')
     {
         $id .= ':' . $this->getState('filter.search');
+        $id .= ':' . $this->getState('filter.currency');
         return parent::getStoreId($id);
     }
 

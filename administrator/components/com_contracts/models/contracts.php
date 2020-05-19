@@ -130,6 +130,10 @@ class ContractsModelContracts extends ListModel
         if (is_numeric($doc_status)) {
             $query->where("i.doc_status = {$this->_db->q($doc_status)}");
         }
+        $currency = $this->getState('filter.currency');
+        if (!empty($currency)) {
+            $query->where("c.currency like {$this->_db->q($currency)}");
+        }
 
         if ($orderCol === 'number') {
             $query->where("((c.number is not null and c.number_free is null) or (c.number_free is not null and c.number is null))");

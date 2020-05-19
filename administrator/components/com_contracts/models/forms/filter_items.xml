@@ -10,6 +10,16 @@
                 autocomplete="off"
                 class="js-stools-search-string"
         />
+        <field
+                name="currency"
+                type="list"
+                onchange="this.form.submit();"
+        >
+            <option value="">COM_CONTRACTS_TITLE_SELECT_CURRENCY</option>
+            <option value="rub">COM_CONTRACTS_CURRENCY_RUB_SHORT</option>
+            <option value="usd">COM_CONTRACTS_CURRENCY_USD_SHORT</option>
+            <option value="eur">COM_CONTRACTS_CURRENCY_EUR_SHORT</option>
+        </field>
     </fields>
     <fields name="list">
         <field
