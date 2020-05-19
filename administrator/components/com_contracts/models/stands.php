@@ -158,7 +158,7 @@ class ContractsModelStands extends ListModel
         $row = 2; //Строка, с которой начнаются данные
         $col = 8;
         foreach ($items['stands'] as $i => $stand) {
-            $sheet->setCellValue("A{$row}", $stand['number']);
+            $sheet->setCellValueExplicit("A{$row}", $stand['number'], PHPExcel_Cell_DataType::TYPE_STRING);
             $sheet->setCellValue("B{$row}", $stand['square_clean']);
             $sheet->setCellValue("C{$row}", $stand['delegates'] ?? $stand['company']);
             $sheet->setCellValue("D{$row}", $stand['contract_status']);
