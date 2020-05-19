@@ -2,6 +2,7 @@
 defined('_JEXEC') or die;
 jimport('joomla.form.helper');
 JFormHelper::loadFieldClass('list');
+use Joomla\CMS\MVC\Model\ListModel;
 
 class JFormFieldContractStand extends JFormFieldList
 {
@@ -10,10 +11,20 @@ class JFormFieldContractStand extends JFormFieldList
 
     protected function getOptions()
     {
-        $cid = JFactory::getApplication()->input->getInt('id', null);
-        $contractID = $cid ?? JFactory::getApplication()->getUserState('com_contracts.item.contractID');
-
+        $id = JFactory::getApplication()->input->getInt('id', null);
         $db = JFactory::getDbo();
+        if ($id !== null) {
+            $query = $db->getQuery(true);
+            $query
+                ->select("ci.contractID")
+                ->from("#__mkv_contract_items ci")
+                ->where("ci.id = {$db->q($id)}");
+            $contractID = $db->setQuery($query)->loadResult() ?? 0;
+        }
+        else {
+            $contractID = JFactory::getApplication()->getUserState('com_contracts.item.contractID');
+        }
+
         $query = $db->getQuery(true);
         $query
             ->select("cs.id, s.number, s.square")
