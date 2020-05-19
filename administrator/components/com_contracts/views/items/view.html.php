@@ -46,7 +46,7 @@ class ContractsViewItems extends HtmlView
         }
         if (ContractsHelper::canDo('core.delete'))
         {
-            JToolbarHelper::deleteList('COM_CONTRACTS_CONFIRM_REMOVE_ITEM', 'item.delete');
+            JToolbarHelper::deleteList('COM_CONTRACTS_CONFIRM_REMOVE_ITEM', 'items.delete');
         }
         if (ContractsHelper::canDo('core.admin'))
         {
