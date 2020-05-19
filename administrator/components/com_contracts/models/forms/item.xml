@@ -8,7 +8,7 @@
                 description="COM_CONTRACTS_FORM_ITEM_ITEM_DESC"
                 required="true"
                 class="span12"
-                onchange="getAmount();"
+                onchange="getCost();"
         >
                 <option value="">COM_CONTRACTS_FORM_ITEM_ITEM_DEFAULT</option>
         </field>
@@ -35,7 +35,7 @@
                 validate="value"
                 readonly="true"
                 class="span12"
-                onchange="getAmount();"
+                onchange="getCost();"
         />
         <field
                 name="factor"
@@ -50,7 +50,7 @@
                 last="100"
                 class="span12"
                 default="0"
-                onchange="getAmount();"
+                onchange="getCost();"
         />
         <field
                 name="markup"
@@ -59,7 +59,7 @@
                 description="COM_CONTRACTS_FORM_ITEM_MARKUP_DESC"
                 class="span12"
                 default="1"
-                onchange="getAmount();"
+                onchange="getCost();"
                 >
             <option value="1">0%</option>
             <option value="1.10">10%</option>
@@ -99,6 +99,26 @@
                 type="text"
                 label="COM_CONTRACTS_FORM_ITEM_AMOUNT_LABEL"
                 description="COM_CONTRACTS_FORM_ITEM_AMOUNT_DESC"
+                readonly="true"
+                class="span12"
+                default="0.00"
+        />
+    </fieldset>
+    <fieldset name="contract_amount">
+        <field
+                name="contract_old_amount"
+                type="text"
+                label="COM_CONTRACTS_FORM_ITEM_CONTRACT_AMOUNT_OLD_LABEL"
+                description="COM_CONTRACTS_FORM_ITEM_CONTRACT_AMOUNT_OLD_DESC"
+                readonly="true"
+                class="span12"
+                default="0.00"
+        />
+        <field
+                name="contract_new_amount"
+                type="text"
+                label="COM_CONTRACTS_FORM_ITEM_CONTRACT_AMOUNT_NEW_LABEL"
+                description="COM_CONTRACTS_FORM_ITEM_CONTRACT_AMOUNT_NEW_DESC"
                 readonly="true"
                 class="span12"
                 default="0.00"

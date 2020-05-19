@@ -11,6 +11,7 @@ HTMLHelper::_('script', $this->script);
 ?>
 <script>
     let currency = '<?php echo $this->item->contract->currency;?>';
+    let old_amount = parseFloat('<?php echo $this->item->contract->amount;?>');
 </script>
 <form action="<?php echo ContractsHelper::getActionUrl(); ?>"
       method="post" name="adminForm" id="adminForm" xmlns="http://www.w3.org/1999/html" class="form-validate">
@@ -21,10 +22,14 @@ HTMLHelper::_('script', $this->script);
                 <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'general', JText::sprintf('COM_CONTRACTS_TITLE_TAB_GENERAL')); ?>
                 <div class="row-fluid">
                     <div class="span6">
+                        <div class="center"><h3><?php echo JText::sprintf('COM_CONTRACTS_TITLE_CONTRACT_ITEM');?></h3></div>
                         <div><?php echo $this->loadTemplate('general'); ?></div>
                     </div>
                     <div class="span6">
+                        <div class="center"><h3><?php echo JText::sprintf('COM_CONTRACTS_TITLE_CONTRACT_COST');?></h3></div>
                         <div><?php echo $this->loadTemplate('price'); ?></div>
+                        <div class="center"><h3><?php echo JText::sprintf('COM_CONTRACTS_TITLE_CONTRACT_AMOUNT');?></h3></div>
+                        <div><?php echo $this->loadTemplate('contract_amount'); ?></div>
                     </div>
                 </div>
                 <?php echo JHtml::_('bootstrap.endTab'); ?>
