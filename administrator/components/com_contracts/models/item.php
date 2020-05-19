@@ -29,6 +29,7 @@ class ContractsModelItem extends AdminModel {
 
     public function save($data)
     {
+        //exit(var_dump($data));
         return parent::save($data);
     }
 
@@ -80,7 +81,7 @@ class ContractsModelItem extends AdminModel {
     {
         $all = get_class_vars($table);
         unset($all['_errors']);
-        $nulls = ['value2']; //Поля, которые NULL
+        $nulls = ['contractStandID', 'value2']; //Поля, которые NULL
         foreach ($all as $field => $v) {
             if (empty($field)) continue;
             if (in_array($field, $nulls)) {
@@ -91,6 +92,9 @@ class ContractsModelItem extends AdminModel {
             }
             if (!empty($field)) $table->$field = trim($table->$field);
         }
+        $table->factor = (float) 1 - ($table->factor / 100);
+        $table->cost = (float) str_replace([' ₽', ' $', ' €', ' ', ','], ['', '', '', '', '.'], $table->cost);
+        $table->amount = (float) str_replace([' ₽', ' $', ' €', ' ', ','], ['', '', '', '', '.'], $table->amount);
 
         parent::prepareTable($table);
     }
