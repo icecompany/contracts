@@ -11,7 +11,6 @@ class JFormRuleValue extends FormRule
 
     public function test(\SimpleXMLElement $element, $value, $group = null, Registry $input = null, Form $form = null)
     {
-        if (!is_integer($value) && !is_float($value)) return false;
         return parent::test($element, $value, $group, $input, $form);
     }
 }
