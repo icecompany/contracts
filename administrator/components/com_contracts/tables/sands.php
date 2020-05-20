@@ -6,6 +6,7 @@ use Joomla\CMS\Table\Table;
 class TableContractsStands extends Table
 {
     var $id = null;
+    var $type = null;
     var $contractID = null;
     var $standID = null;
     var $freeze = null;
