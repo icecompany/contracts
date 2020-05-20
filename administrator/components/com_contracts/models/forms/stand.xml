@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form addrulepath="/administrator/components/com_contracts/models/rules">
+    <fieldset name="general">
+        <field
+                name="standID"
+                type="Stand"
+                label="COM_CONTRACTS_FORM_STAND_NUMBER_LABEL"
+                description="COM_CONTRACTS_FORM_STAND_NUMBER_DESC"
+                required="true"
+                class="span12"
+        />
+        <field
+                name="freeze"
+                type="text"
+                label="COM_CONTRACTS_FORM_STAND_FREEZE_LABEL"
+                description="COM_CONTRACTS_FORM_STAND_FREEZE_DESC"
+                hint="COM_CONTRACTS_FORM_STAND_FREEZE_HINT"
+                autocomplete="off"
+                class="span12"
+        />
+        <field
+                name="id"
+                type="hidden"
+        />
+        <field
+                name="contractID"
+                type="hidden"
+        />
+    </fieldset>
+</form>
