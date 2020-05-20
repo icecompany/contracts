@@ -19,6 +19,9 @@ foreach ($this->items['stands'] as $i => $item) :
             <?php echo $item['square']; ?>
         </td>
         <td>
+            <?php echo $item['stand_type']; ?>
+        </td>
+        <td>
             <?php echo $item['company']; ?>
         </td>
         <td>

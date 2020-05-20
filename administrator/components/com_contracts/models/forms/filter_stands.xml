@@ -31,6 +31,8 @@
             <option value="">JGLOBAL_SORT_BY</option>
             <option value="s.number ASC">COM_CONTRACTS_SORTING_STAND_NUMBER_ASC</option>
             <option value="s.number DESC">COM_CONTRACTS_SORTING_STAND_NUMBER_DESC</option>
+            <option value="cs.type ASC">COM_CONTRACTS_SORTING_STAND_TYPE_ASC</option>
+            <option value="cs.type DESC">COM_CONTRACTS_SORTING_STAND_TYPE_DESC</option>
             <option value="s.id ASC">COM_CONTRACTS_SORTING_ID_ASC</option>
             <option value="s.id DESC">COM_CONTRACTS_SORTING_ID_DESC</option>
         </field>

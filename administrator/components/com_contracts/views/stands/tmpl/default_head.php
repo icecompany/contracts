@@ -17,6 +17,9 @@ $listDirn    = $this->escape($this->state->get('list.direction'));
         <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_STANDS_SQUARE', 's.square', $listDirn, $listOrder); ?>
     </th>
     <th>
+        <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_STANDS_TYPE', 'cs.type', $listDirn, $listOrder); ?>
+    </th>
+    <th>
         <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_STANDS_COMPANY', 'company', $listDirn, $listOrder); ?>
     </th>
     <th>

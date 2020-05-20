@@ -10,6 +10,7 @@ class ContractsModelStands extends ListModel
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
                 's.id',
+                'cs.type',
                 's.number',
                 's.ordering',
                 'status',
@@ -33,7 +34,7 @@ class ContractsModelStands extends ListModel
         $limit = 0;
 
         $query
-            ->select("cs.id, cs.freeze, cs.status, cs.comment")
+            ->select("cs.id, cs.freeze, cs.status, cs.comment, cs.type as stand_type")
             ->select("s.square, s.number")
             ->select("i.id as itemID, i.type, i.title as item")
             ->select("e.title as company")
@@ -105,6 +106,7 @@ class ContractsModelStands extends ListModel
             $arr['status'] = JText::sprintf("COM_CONTRACTS_STAND_STATUS_{$item->status}");
             $arr['comment'] = $item->comment;
             $arr['company'] = $item->company;
+            $arr['stand_type'] = JText::sprintf("COM_CONTRACTS_STAND_TYPE_{$item->stand_type}");
             $arr['project'] = $item->project;
             $manager = $item->manager;
             $manager = explode(' ', $manager);
@@ -135,17 +137,18 @@ class ContractsModelStands extends ListModel
         $sheet = $xls->getActiveSheet();
 
         //Ширина столбцов
-        $width = ["A" => 10, "B" => 10, "C" => 60, "D" => 25, "E" => 10, "F" => 14, "G" => 17, "H" => 29];
+        $width = ["A" => 10, "B" => 10, "C" => 13, "D" => 60, "E" => 25, "F" => 10, "G" => 14, "H" => 17, "I" => 29];
         foreach ($width as $col => $value) $sheet->getColumnDimension($col)->setWidth($value);
 
         $sheet->setCellValue("A1", JText::sprintf('COM_CONTRACTS_HEAD_STANDS_NUMBER'));
         $sheet->setCellValue("B1", JText::sprintf('COM_CONTRACTS_HEAD_STANDS_SQUARE'));
-        $sheet->setCellValue("C1", JText::sprintf('COM_CONTRACTS_HEAD_STANDS_COMPANY'));
-        $sheet->setCellValue("D1", JText::sprintf('COM_CONTRACTS_HEAD_STANDS_CONTRACT_STATUS'));
-        $sheet->setCellValue("E1", JText::sprintf('COM_CONTRACTS_HEAD_STANDS_CONTRACT_NUMBER'));
-        $sheet->setCellValue("F1", JText::sprintf('COM_CONTRACTS_HEAD_STANDS_CONTRACT_DATE'));
-        $sheet->setCellValue("G1", JText::sprintf('COM_CONTRACTS_HEAD_STANDS_MANAGER'));
-        $sheet->setCellValue("H1", JText::sprintf('COM_CONTRACTS_HEAD_STANDS_STAND_STATUS'));
+        $sheet->setCellValue("C1", JText::sprintf('COM_CONTRACTS_HEAD_STANDS_TYPE'));
+        $sheet->setCellValue("D1", JText::sprintf('COM_CONTRACTS_HEAD_STANDS_COMPANY'));
+        $sheet->setCellValue("E1", JText::sprintf('COM_CONTRACTS_HEAD_STANDS_CONTRACT_STATUS'));
+        $sheet->setCellValue("F1", JText::sprintf('COM_CONTRACTS_HEAD_STANDS_CONTRACT_NUMBER'));
+        $sheet->setCellValue("G1", JText::sprintf('COM_CONTRACTS_HEAD_STANDS_CONTRACT_DATE'));
+        $sheet->setCellValue("H1", JText::sprintf('COM_CONTRACTS_HEAD_STANDS_MANAGER'));
+        $sheet->setCellValue("I1", JText::sprintf('COM_CONTRACTS_HEAD_STANDS_STAND_STATUS'));
         $col = 8;
         foreach ($items['titles'] as $id => $title) {
             $sheet->setCellValueByColumnAndRow($col, 1, $title);
@@ -156,22 +159,23 @@ class ContractsModelStands extends ListModel
 
         //Данные. Один проход цикла - одна строка
         $row = 2; //Строка, с которой начнаются данные
-        $col = 8;
+        $col = 9;
         foreach ($items['stands'] as $i => $stand) {
             $sheet->setCellValueExplicit("A{$row}", $stand['number'], PHPExcel_Cell_DataType::TYPE_STRING);
             $sheet->setCellValue("B{$row}", $stand['square_clean']);
-            $sheet->setCellValue("C{$row}", $stand['delegates'] ?? $stand['company']);
-            $sheet->setCellValue("D{$row}", $stand['contract_status']);
-            $sheet->setCellValue("E{$row}", $stand['contract_number']);
-            $sheet->setCellValue("F{$row}", $stand['contract_dat']);
-            $sheet->setCellValue("G{$row}", $stand['manager']);
-            $sheet->setCellValue("H{$row}", $stand['status']);
+            $sheet->setCellValue("C{$row}", $stand['stand_type']);
+            $sheet->setCellValue("D{$row}", $stand['delegates'] ?? $stand['company']);
+            $sheet->setCellValue("E{$row}", $stand['contract_status']);
+            $sheet->setCellValue("F{$row}", $stand['contract_number']);
+            $sheet->setCellValue("G{$row}", $stand['contract_dat']);
+            $sheet->setCellValue("H{$row}", $stand['manager']);
+            $sheet->setCellValue("I{$row}", $stand['status']);
             foreach ($items['titles'] as $id => $title) {
                 $sheet->setCellValueByColumnAndRow($col, $row, $items['items'][$stand['id']][$id]);
                 $col++;
             }
             $row++;
-            $col = 8;
+            $col = 9;
         }
         header("Expires: Mon, 1 Apr 1974 05:00:00 GMT");
         header("Last-Modified: " . gmdate("D,d M YH:i:s") . " GMT");
