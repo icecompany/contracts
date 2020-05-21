@@ -13,7 +13,7 @@ class ContractsHelper
         if (ContractsHelper::canDo('core.access.statuses')) {
             HTMLHelper::_('sidebar.addEntry', JText::sprintf('COM_CONTRACTS_MENU_STATUSES'), 'index.php?option=com_contracts&view=statuses', $vName === 'statuses');
         }
-        JHtmlSidebar::addFilter(JText::sprintf("COM_CONTRACTS_FILTER_SELECT_ACTIVE_PROJECT"), "set_active_project", JHtml::_("select.options", PrjHelper::getAvailableProjects(), "value", "text", PrjHelper::getActiveProject()));
+        PrjHelper::addActiveProjectFilter();
     }
 
     /**
