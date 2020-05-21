@@ -36,7 +36,7 @@ class ContractsViewItems extends HtmlView
         $title = (!empty($this->items['company'])) ? JText::sprintf('COM_CONTRACTS_TITLE_ITEMS_FOR_COMPANY_BY_PROJECT', $this->items['company'], $this->items['project']) : JText::sprintf('COM_CONTRACTS_MENU_ITEMS');
         JToolBarHelper::title($title, 'cart');
 
-        if (ContractsHelper::canDo('core.create'))
+        if (ContractsHelper::canDo('core.create') && $this->contractID > 0)
         {
             JToolbarHelper::addNew('item.add');
         }
