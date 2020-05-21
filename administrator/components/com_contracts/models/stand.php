@@ -6,12 +6,40 @@ class ContractsModelStand extends AdminModel {
 
     public function getItem($pk = null)
     {
-        return parent::getItem($pk);
+        $item = parent::getItem($pk);
+        if ($item->id !== null) {
+            $stand = $this->getStandFromCatalog($item->standID);
+        }
+        else {
+            $item->contractID = JFactory::getApplication()->getUserState($this->option.'.stand.contractID');
+        }
+        $item->contract = $this->getContract($item->contractID);
+        if ($item->id !== null) {
+            $item->title = JText::sprintf('COM_CONTRACTS_TITLE_STAND_EDIT', $stand->number ?? '', $item->contract->company, $item->contract->project);
+        }
+        else {
+            $item->title = JText::sprintf('COM_CONTRACTS_TITLE_STAND_ADD', $item->contract->company, $item->contract->project);
+        }
+        return $item;
     }
 
     public function save($data)
     {
         return parent::save($data);
+    }
+
+    public function getStandFromCatalog(int $standID)
+    {
+        JTable::addIncludePath(JPATH_ADMINISTRATOR."/components/com_stands/tables");
+        $table = JTable::getInstance('Stands', 'TableStands');
+        $table->load($standID);
+        return $table;
+    }
+
+    public function getContract(int $contractID)
+    {
+        $model = AdminModel::getInstance('Contract', 'ContractsModel');
+        return $model->getItem($contractID);
     }
 
     public function getTable($name = 'Stands', $prefix = 'TableContracts', $options = array())

@@ -31,10 +31,6 @@ class ContractsViewStands extends HtmlView
     {
         JToolBarHelper::title(JText::sprintf('COM_CONTRACTS_MENU_STANDS'), 'equalizer');
 
-        if (ContractsHelper::canDo('core.create'))
-        {
-            JToolbarHelper::addNew('stand.add');
-        }
         if (ContractsHelper::canDo('core.edit'))
         {
             JToolbarHelper::editList('stand.edit');

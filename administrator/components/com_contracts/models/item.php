@@ -29,7 +29,6 @@ class ContractsModelItem extends AdminModel {
 
     public function save($data)
     {
-        //exit(var_dump($data));
         return parent::save($data);
     }
 
