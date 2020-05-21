@@ -30,6 +30,7 @@ class ContractsViewResponsibles extends HtmlView
     private function toolbar()
     {
         JToolBarHelper::title(JText::sprintf('COM_CONTRACTS_MENU_RESPONSIBLES'), 'users');
+        JToolbarHelper::custom('responsibles.download', 'download', 'download', JText::sprintf('COM_CONTRACTS_ACTION_EXPORT_TO_EXCEL'), false);
 
         if (ContractsHelper::canDo('core.admin'))
         {

@@ -122,11 +122,60 @@ class ContractsModelResponsibles extends ListModel
         return $result;
     }
 
+    public function export()
+    {
+        $items = $this->getItems();
+        JLoader::discover('PHPExcel', JPATH_LIBRARIES);
+        JLoader::register('PHPExcel', JPATH_LIBRARIES . '/PHPExcel.php');
+
+        $xls = new PHPExcel();
+        $xls->setActiveSheetIndex(0);
+        $sheet = $xls->getActiveSheet();
+
+        $sheet->getStyle("A1")->getFont()->setBold(true);
+        $sheet->getStyle("B1")->getFont()->setBold(true);
+        $sheet->getStyle("C1")->getFont()->setBold(true);
+        $sheet->getStyle("D1")->getFont()->setBold(true);
+        $sheet->getStyle("E1")->getFont()->setBold(true);
+
+        //Ширина столбцов
+        $width = ["A" => 13, "B" => 60, "C" => 13, "D" => 60, "E" => 60];
+        foreach ($width as $col => $value) $sheet->getColumnDimension($col)->setWidth($value);
+
+        $sheet->setCellValue("A1", JText::sprintf('COM_CONTRACTS_HEAD_RESPONSIBLES_NUMBER'));
+        $sheet->setCellValue("B1", JText::sprintf('COM_CONTRACTS_HEAD_RESPONSIBLES_COMPANY'));
+        $sheet->setCellValue("C1", JText::sprintf('COM_CONTRACTS_HEAD_RESPONSIBLES_CONTRACT_STATUS'));
+        $sheet->setCellValue("D1", JText::sprintf('COM_CONTRACTS_HEAD_RESPONSIBLES_FOR_ACCREDITATION'));
+        $sheet->setCellValue("E1", JText::sprintf('COM_CONTRACTS_HEAD_RESPONSIBLES_FOR_BUILDING'));
+
+        $sheet->setTitle(JText::sprintf('COM_CONTRACTS_MENU_RESPONSIBLES'));
+
+        //Данные. Один проход цикла - одна строка
+        $row = 2; //Строка, с которой начнаются данные
+        foreach ($items['items'] as $contractID => $contract) {
+            $sheet->setCellValue("A{$row}", $contract['number']);
+            $sheet->setCellValue("B{$row}", $contract['company']);
+            $sheet->setCellValue("C{$row}", $contract['status']);
+            $sheet->setCellValue("D{$row}", implode(', ', $contract['for_accreditation']));
+            $sheet->setCellValue("E{$row}", implode(', ', $contract['for_building']));
+            $row++;
+        }
+        header("Expires: Mon, 1 Apr 1974 05:00:00 GMT");
+        header("Last-Modified: " . gmdate("D,d M YH:i:s") . " GMT");
+        header("Cache-Control: no-cache, must-revalidate");
+        header("Pragma: public");
+        header("Content-type: application/vnd.ms-excel");
+        header("Content-Disposition: attachment; filename=Responsibles.xls");
+        $objWriter = PHPExcel_IOFactory::createWriter($xls, 'Excel5');
+        $objWriter->save('php://output');
+        jexit();
+    }
+
     protected function populateState($ordering = 'length(number), number', $direction = 'ASC')
     {
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
-        $status = $this->getUserStateFromRequest($this->context . '.filter.status', 'filter_status',  array(100));
+        $status = $this->getUserStateFromRequest($this->context . '.filter.status', 'filter_status',  array(1));
         $this->setState('filter.status', $status);
         $without = $this->getUserStateFromRequest($this->context . '.filter.without', 'filter_without');
         $this->setState('filter.without', $without);
