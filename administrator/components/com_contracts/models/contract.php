@@ -7,13 +7,20 @@ class ContractsModelContract extends AdminModel {
     public function getItem($pk = null)
     {
         $item = parent::getItem($pk);
-        if ($item->id !== null) {
-            $company = $this->getCompany($item->companyID);
-            $project = $this->getProject($item->projectID);
-            $item->company = $company->title;
-            $item->project = $project->title;
-            $item->project_item = $project;
+        if ($item->id === null) {
+            $item->companyID = JFactory::getApplication()->getUserState($this->option.'.contract.companyID');
+            $item->projectID = JFactory::getApplication()->getUserState($this->option.'.contract.projectID');
+            $item->managerID = JFactory::getUser()->id;
         }
+        $company = $this->getCompany($item->companyID);
+        $project = $this->getProject($item->projectID);
+        $item->company = $company->title;
+        $item->project = $project->title;
+        $item->project_item = $project;
+
+        $number = $item->number_free ?? $item->number;
+
+        $item->title = $this->getTitle($item->company, $item->project, $item->dat ?? '', $number ?? '', $item->id ?? 0);
         return $item;
     }
 
@@ -37,6 +44,24 @@ class ContractsModelContract extends AdminModel {
         return $table;
     }
 
+    public function getTitle(string $company, string $project, string $date = '', string $number = '', int $id = 0): string
+    {
+        $title = '';
+        if ($id > 0) {
+            if (!empty($date)) {
+                $date = JDate::getInstance($date);
+                $title = JText::sprintf('COM_CONTRACTS_CONTRACT_TITLE_EDIT_WITH_DATE', $company, $project, $date->format("d.m.Y"));
+                if (!empty($number)) {
+                    $title = JText::sprintf('COM_CONTRACTS_CONTRACT_TITLE_EDIT_WITH_DATE_AND_NUMBER', $number, $company, $project, $date->format("d.m.Y"));
+                }
+            }
+        }
+        else {
+            $title = JText::sprintf('COM_CONTRACTS_CONTRACT_TITLE_ADD_NEW', $company, $project);
+        }
+        return $title;
+    }
+
     public function getTable($name = 'Contracts', $prefix = 'TableContracts', $options = array())
     {
         return JTable::getInstance($name, $prefix, $options);
@@ -47,6 +72,7 @@ class ContractsModelContract extends AdminModel {
         $form = $this->loadForm(
             $this->option.'.contract', 'contract', array('control' => 'jform', 'load_data' => $loadData)
         );
+        $form->addFieldPath(JPATH_ADMINISTRATOR."/components/com_mkv/models/fields");
         $form->addFieldPath(JPATH_ADMINISTRATOR."/components/com_prices/models/fields");
 
         if (empty($form))

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form addrulepath="/administrator/components/com_contracts/models/rules">
+    <fieldset name="general">
+        <field
+                name="status"
+                type="ContractStatus"
+                label="COM_CONTRACTS_FORM_CONTRACT_STATUS_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_STATUS_DESC"
+                required="true"
+                class="span12"
+        />
+        <field
+                name="number_free"
+                type="text"
+                label="COM_CONTRACTS_FORM_CONTRACT_MANUAL_NUMBER_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_MANUAL_NUMBER_DESC"
+                class="span12"
+                autocomplete="off"
+        />
+        <field
+                name="dat"
+                type="calendar"
+                label="COM_CONTRACTS_FORM_CONTRACT_DATE_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_DATE_DESC"
+                format="%d.%m.%Y"
+                filter="none"
+                autocomplete="off"
+        />
+        <field
+                name="managerID"
+                type="Manager"
+                label="COM_CONTRACTS_FORM_CONTRACT_MANAGER_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_MANAGER_DESC"
+                required="true"
+                class="span12"
+        />
+        <field
+                name="currency"
+                type="list"
+                label="COM_CONTRACTS_FORM_CONTRACT_CURRENCY_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_CURRENCY_DESC"
+                required="true"
+                class="span12"
+                >
+            <option value="rub">COM_CONTRACTS_CURRENCY_RUB</option>
+            <option value="usd">COM_CONTRACTS_CURRENCY_USD</option>
+            <option value="eur">COM_CONTRACTS_CURRENCY_EUR</option>
+        </field>
+        <field
+                name="id"
+                type="hidden"
+        />
+    </fieldset>
+</form>

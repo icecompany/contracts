@@ -8,7 +8,7 @@ JHtml::_('formbehavior.chosen', 'select');
 use Joomla\CMS\HTML\HTMLHelper;
 
 HTMLHelper::_('script', $this->script);
-HTMLHelper::_('script', 'com_contracts/status.js', array('version' => 'auto', 'relative' => true));
+HTMLHelper::_('script', 'com_contracts/contract.js', array('version' => 'auto', 'relative' => true));
 ?>
 <form action="<?php echo ContractsHelper::getActionUrl(); ?>"
       method="post" name="adminForm" id="adminForm" xmlns="http://www.w3.org/1999/html" class="form-validate">
@@ -18,10 +18,13 @@ HTMLHelper::_('script', 'com_contracts/status.js', array('version' => 'auto', 'r
             <div class="tab-content">
                 <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'general', JText::sprintf('COM_CONTRACTS_TITLE_TAB_GENERAL')); ?>
                 <div class="row-fluid">
-                    <div class="span6">
+                    <div class="span4">
                         <div><?php echo $this->loadTemplate('general'); ?></div>
                     </div>
-                    <div class="span6">
+                    <div class="span4">
+
+                    </div>
+                    <div class="span4">
 
                     </div>
                 </div>
