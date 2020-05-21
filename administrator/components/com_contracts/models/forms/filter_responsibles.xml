@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fields name="filter">
+        <field
+                name="search"
+                type="text"
+                hint="COM_CONTRACTS_FILTER_RESPONSIBLES"
+                autocomplete="off"
+                class="js-stools-search-string"
+        />
+        <field
+                name="status"
+                type="ContractStatus"
+                multiple="true"
+                onchange="this.form.submit();"
+                default="100"
+        >
+            <option value="">COM_CONTRACTS_CONTRACT_STATUS_IN_PROJECT</option>
+            <option value="100">COM_CONTRACTS_CONTRACT_STATUS_ALL</option>
+        </field>
+        <field
+                name="without"
+                type="list"
+                onchange="this.form.submit();"
+        >
+            <option value="">COM_CONTRACTS_FILTER_SELECT_IS_NOT_ACC_AND_BLDG</option>
+            <option value="1">COM_CONTRACTS_FILTER_SELECT_IS_NOT_ACC_AND_BLDG_1</option>
+            <option value="0">COM_CONTRACTS_FILTER_SELECT_IS_NOT_ACC_AND_BLDG_0</option>
+            <option value="2">COM_CONTRACTS_FILTER_SELECT_IS_NOT_ACC_AND_BLDG_2</option>
+        </field>
+    </fields>
+    <fields name="list">
+        <field
+                name="fullordering"
+                type="list"
+                onchange="this.form.submit();"
+                default="length(number), number"
+        >
+            <option value="">JGLOBAL_SORT_BY</option>
+            <option value="length(number), number ASC">COM_CONTRACTS_SORTING_CONTRACT_NUMBER_ASC</option>
+            <option value="length(number), number DESC">COM_CONTRACTS_SORTING_CONTRACT_NUMBER_DESC</option>
+            <option value="s.code ASC">COM_CONTRACTS_SORTING_STATUS_ASC</option>
+            <option value="s.code DESC">COM_CONTRACTS_SORTING_STATUS_DESC</option>
+            <option value="e.title ASC">COM_CONTRACTS_SORTING_COMPANY_ASC</option>
+            <option value="e.title DESC">COM_CONTRACTS_SORTING_COMPANY_DESC</option>
+            <option value="con.id ASC">COM_CONTRACTS_SORTING_ID_ASC</option>
+            <option value="con.id DESC">COM_CONTRACTS_SORTING_ID_DESC</option>
+        </field>
+        <field
+                name="limit"
+                type="limitbox"
+                class="input-mini"
+                default="0"
+                onchange="this.form.submit();"
+        />
+    </fields>
+</form>
