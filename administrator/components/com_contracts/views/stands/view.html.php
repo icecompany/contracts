@@ -39,6 +39,9 @@ class ContractsViewStands extends HtmlView
         {
             JToolbarHelper::deleteList('COM_CONTRACTS_CONFIRM_REMOVE_STAND', 'stands.delete');
         }
+
+        JToolbarHelper::custom('stands.download', 'download', 'download', JText::sprintf('COM_MKV_BUTTON_EXPORT_TO_EXCEL'), false);
+
         if (ContractsHelper::canDo('core.admin'))
         {
             JToolBarHelper::preferences('com_contracts');

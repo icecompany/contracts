@@ -9,4 +9,11 @@ class ContractsControllerStands extends AdminController
     {
         return parent::getModel($name, $prefix, $config);
     }
+
+    public function download(): void
+    {
+        echo "<script>window.open('index.php?option=com_contracts&task=stands.execute&format=xls');</script>";
+        echo "<script>location.href='{$_SERVER['HTTP_REFERER']}'</script>";
+        jexit();
+    }
 }
