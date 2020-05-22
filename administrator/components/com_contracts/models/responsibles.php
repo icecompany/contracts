@@ -13,6 +13,7 @@ class ContractsModelResponsibles extends ListModel
                 'length(number), number',
                 'e.title',
                 's.code',
+                'u.name',
                 'search',
                 'status',
                 'without',
@@ -39,6 +40,7 @@ class ContractsModelResponsibles extends ListModel
             ->select("e.title as company, c.companyID")
             ->select("s.title as status")
             ->select("c.id as contractID")
+            ->select("u.name as manager")
             ->select("con.fio, con.post, con.for_accreditation, con.for_building, con.phone_work_additional")
             ->select("aes_decrypt(con.phone_work,@pass) as phone_work")
             ->select("aes_decrypt(con.phone_mobile,@pass) as phone_mobile")
@@ -46,7 +48,8 @@ class ContractsModelResponsibles extends ListModel
             ->from("#__mkv_contracts c")
             ->leftJoin("#__mkv_contract_statuses s on s.code = c.status")
             ->leftJoin("#__mkv_companies e on e.id = c.companyID")
-            ->leftJoin("#__mkv_companies_contacts con on con.companyID = c.companyID");
+            ->leftJoin("#__mkv_companies_contacts con on con.companyID = c.companyID")
+            ->leftJoin("#__users u on u.id = c.managerID");
 
         $search = (!$this->export) ? $this->getState('filter.search') : JFactory::getApplication()->input->getString('search', '');
         if (!empty($search)) {
@@ -92,6 +95,7 @@ class ContractsModelResponsibles extends ListModel
             if (!isset($result['items'][$item->contractID])) {
                 $result['items'][$item->contractID] = [];
                 $result['items'][$item->contractID]['number'] = $item->number;
+                $result['items'][$item->contractID]['manager'] = MkvHelper::getLastName($item->manager);
                 $url = JRoute::_("index.php?option=com_companies&amp;task=company.edit&amp;id={$item->companyID}&amp;return={$return}");
                 $result['items'][$item->contractID]['edit_link'] = JHtml::link($url, $item->company);
                 $result['items'][$item->contractID]['company'] = $item->company;

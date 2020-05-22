@@ -17,7 +17,10 @@ $listDirn    = $this->escape($this->state->get('list.direction'));
         <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_RESPONSIBLES_CONTRACT_STATUS', 's.code', $listDirn, $listOrder); ?>
     </th>
     <th>
-        <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_RESPONSIBLES_COMPANY', 'e.title', $listDirn, $listOrder); ?>
+        <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_MANAGER', 'u.name', $listDirn, $listOrder); ?>
+    </th>
+    <th>
+        <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_COMPANY', 'e.title', $listDirn, $listOrder); ?>
     </th>
     <th>
         <?php echo JText::sprintf('COM_CONTRACTS_HEAD_RESPONSIBLES_FOR_ACCREDITATION'); ?>

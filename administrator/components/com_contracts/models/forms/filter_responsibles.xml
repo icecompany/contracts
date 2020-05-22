@@ -34,17 +34,19 @@
                 name="fullordering"
                 type="list"
                 onchange="this.form.submit();"
-                default="length(number), number"
+                default="length(number), number ASC"
         >
             <option value="">JGLOBAL_SORT_BY</option>
-            <option value="length(number), number ASC">COM_CONTRACTS_SORTING_CONTRACT_NUMBER_ASC</option>
-            <option value="length(number), number DESC">COM_CONTRACTS_SORTING_CONTRACT_NUMBER_DESC</option>
-            <option value="s.code ASC">COM_CONTRACTS_SORTING_STATUS_ASC</option>
-            <option value="s.code DESC">COM_CONTRACTS_SORTING_STATUS_DESC</option>
-            <option value="e.title ASC">COM_CONTRACTS_SORTING_COMPANY_ASC</option>
-            <option value="e.title DESC">COM_CONTRACTS_SORTING_COMPANY_DESC</option>
-            <option value="con.id ASC">COM_CONTRACTS_SORTING_ID_ASC</option>
-            <option value="con.id DESC">COM_CONTRACTS_SORTING_ID_DESC</option>
+            <option value="length(number), number ASC">COM_MKV_SORTING_CONTRACT_NUMBER_ASC</option>
+            <option value="length(number), number DESC">COM_MKV_SORTING_CONTRACT_NUMBER_DESC</option>
+            <option value="s.code ASC">COM_MKV_SORTING_STATUS_ASC</option>
+            <option value="s.code DESC">COM_MKV_SORTING_STATUS_DESC</option>
+            <option value="e.title ASC">COM_MKV_SORTING_COMPANY_ASC</option>
+            <option value="e.title DESC">COM_MKV_SORTING_COMPANY_DESC</option>
+            <option value="u.name ASC">COM_MKV_SORTING_MANAGER_ASC</option>
+            <option value="u.name DESC">COM_MKV_SORTING_MANAGER_DESC</option>
+            <option value="con.id ASC">COM_MKV_SORTING_ID_ASC</option>
+            <option value="con.id DESC">COM_MKV_SORTING_ID_DESC</option>
         </field>
         <field
                 name="limit"
