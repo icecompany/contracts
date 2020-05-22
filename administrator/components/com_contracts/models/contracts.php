@@ -136,7 +136,6 @@ class ContractsModelContracts extends ListModel
         }
 
         if ($orderCol === 'number') {
-            $query->where("((c.number is not null and c.number_free is null) or (c.number_free is not null and c.number is null))");
             if ($orderDirn === 'DESC') $orderCol = 'LENGTH(num), num';
             if ($orderDirn === 'desc') $orderCol = 'LENGTH(num) DESC, num';
         }
