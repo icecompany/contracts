@@ -61,6 +61,10 @@ class ContractsModelResponsibles extends ListModel
         if (is_numeric($project)) {
             $query->where("c.projectID = {$this->_db->q($project)}");
         }
+        $manager = $this->getState('filter.manager');
+        if (is_numeric($manager)) {
+            $query->where("c.managerID = {$this->_db->q($manager)}");
+        }
         $status = $this->getState('filter.status');
         if (is_array($status) && !empty($status)) {
             if (!in_array(100, $status)) {
@@ -79,10 +83,6 @@ class ContractsModelResponsibles extends ListModel
             if ($without == '0') $query->where("(o.for_accreditation = 0 and o.for_building = 0)");
             if ($without == '1') $query->where("(o.for_accreditation > 0 and o.for_building > 0)");
             if ($without == '2') $query->where("((o.for_accreditation = 0 and o.for_building > 0) or (o.for_accreditation > 0 and o.for_building = 0))");
-        }
-        $manager = $this->getState('filter.manager');
-        if (is_numeric($manager)) {
-            $query->where("c.managerID = {$this->_db->q($manager)}");
         }
 
         $query->order($this->_db->escape($orderCol . ' ' . $orderDirn));
