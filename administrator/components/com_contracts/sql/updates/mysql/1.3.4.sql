@@ -1,0 +1,1 @@
+drop view `#__mkv_companies_contacts_occupancy`;
