@@ -16,5 +16,4 @@ class ContractsControllerResponsibles extends AdminController
         echo "<script>location.href='{$_SERVER['HTTP_REFERER']}'</script>";
         jexit();
     }
-
 }
