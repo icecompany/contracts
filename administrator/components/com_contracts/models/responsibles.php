@@ -62,16 +62,15 @@ class ContractsModelResponsibles extends ListModel
             if (!in_array(100, $status)) {
                 if (in_array('', $status)) {
                     $query->where('c.status is null');
-                }
-                else {
+                } else {
                     $statuses = implode(", ", $status);
-                    $query->where("c.status in ($statuses)");
+                    $query->where("c.status in ({$statuses})");
                 }
             }
         }
         $without = $this->getState('filter.without');
         if (is_numeric($without)) {
-            $query->leftJoin("#__mkv_companies_contacts_occupancy as o on o.companyID = c.companyID");
+            $query->leftJoin("#__mkv_companies_contacts_occupancy_new as o on o.companyID = c.companyID");
 
             if ($without == '0') $query->where("(o.for_accreditation = 0 and o.for_building = 0)");
             if ($without == '1') $query->where("(o.for_accreditation > 0 and o.for_building > 0)");
