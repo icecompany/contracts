@@ -11,10 +11,10 @@ $listDirn    = $this->escape($this->state->get('list.direction'));
         №
     </th>
     <th>
-        <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_RESPONSIBLES_NUMBER', 'length(number), number', $listDirn, $listOrder); ?>
+        <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_CONTRACT_NUMBER', 'length(number), number', $listDirn, $listOrder); ?>
     </th>
     <th>
-        <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_RESPONSIBLES_CONTRACT_STATUS', 's.code', $listDirn, $listOrder); ?>
+        <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_CONTRACT_STATUS', 's.code', $listDirn, $listOrder); ?>
     </th>
     <th>
         <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_MANAGER', 'u.name', $listDirn, $listOrder); ?>

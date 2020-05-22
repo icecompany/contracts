@@ -16,6 +16,7 @@ class ContractsModelResponsibles extends ListModel
                 'u.name',
                 'search',
                 'status',
+                'manager',
                 'without',
             );
         }
@@ -79,6 +80,10 @@ class ContractsModelResponsibles extends ListModel
             if ($without == '1') $query->where("(o.for_accreditation > 0 and o.for_building > 0)");
             if ($without == '2') $query->where("((o.for_accreditation = 0 and o.for_building > 0) or (o.for_accreditation > 0 and o.for_building = 0))");
         }
+        $manager = $this->getState('filter.manager');
+        if (is_numeric($manager)) {
+            $query->where("c.managerID = {$this->_db->q($manager)}");
+        }
 
         $query->order($this->_db->escape($orderCol . ' ' . $orderDirn));
         $this->setState('list.limit', $limit);
@@ -140,16 +145,18 @@ class ContractsModelResponsibles extends ListModel
         $sheet->getStyle("C1")->getFont()->setBold(true);
         $sheet->getStyle("D1")->getFont()->setBold(true);
         $sheet->getStyle("E1")->getFont()->setBold(true);
+        $sheet->getStyle("F1")->getFont()->setBold(true);
 
         //Ширина столбцов
-        $width = ["A" => 13, "B" => 60, "C" => 13, "D" => 60, "E" => 60];
+        $width = ["A" => 13, "B" => 60, "C" => 13, "D" => 13, "E" => 60, "F" => 60];
         foreach ($width as $col => $value) $sheet->getColumnDimension($col)->setWidth($value);
 
-        $sheet->setCellValue("A1", JText::sprintf('COM_CONTRACTS_HEAD_RESPONSIBLES_NUMBER'));
-        $sheet->setCellValue("B1", JText::sprintf('COM_CONTRACTS_HEAD_RESPONSIBLES_COMPANY'));
-        $sheet->setCellValue("C1", JText::sprintf('COM_CONTRACTS_HEAD_RESPONSIBLES_CONTRACT_STATUS'));
-        $sheet->setCellValue("D1", JText::sprintf('COM_CONTRACTS_HEAD_RESPONSIBLES_FOR_ACCREDITATION'));
-        $sheet->setCellValue("E1", JText::sprintf('COM_CONTRACTS_HEAD_RESPONSIBLES_FOR_BUILDING'));
+        $sheet->setCellValue("A1", JText::sprintf('COM_MKV_HEAD_CONTRACT_NUMBER'));
+        $sheet->setCellValue("B1", JText::sprintf('COM_MKV_HEAD_COMPANY'));
+        $sheet->setCellValue("C1", JText::sprintf('COM_MKV_HEAD_CONTRACT_STATUS'));
+        $sheet->setCellValue("D1", JText::sprintf('COM_MKV_HEAD_MANAGER'));
+        $sheet->setCellValue("E1", JText::sprintf('COM_CONTRACTS_HEAD_RESPONSIBLES_FOR_ACCREDITATION'));
+        $sheet->setCellValue("F1", JText::sprintf('COM_CONTRACTS_HEAD_RESPONSIBLES_FOR_BUILDING'));
 
         $sheet->setTitle(JText::sprintf('COM_CONTRACTS_MENU_RESPONSIBLES'));
 
@@ -159,8 +166,9 @@ class ContractsModelResponsibles extends ListModel
             $sheet->setCellValue("A{$row}", $contract['number']);
             $sheet->setCellValue("B{$row}", $contract['company']);
             $sheet->setCellValue("C{$row}", $contract['status']);
-            $sheet->setCellValue("D{$row}", implode(', ', $contract['for_accreditation']));
-            $sheet->setCellValue("E{$row}", implode(', ', $contract['for_building']));
+            $sheet->setCellValue("D{$row}", $contract['manager']);
+            $sheet->setCellValue("E{$row}", implode(', ', $contract['for_accreditation']));
+            $sheet->setCellValue("F{$row}", implode(', ', $contract['for_building']));
             $row++;
         }
         header("Expires: Mon, 1 Apr 1974 05:00:00 GMT");
@@ -182,6 +190,8 @@ class ContractsModelResponsibles extends ListModel
         $this->setState('filter.status', $status);
         $without = $this->getUserStateFromRequest($this->context . '.filter.without', 'filter_without');
         $this->setState('filter.without', $without);
+        $manager = $this->getUserStateFromRequest($this->context . '.filter.manager', 'filter_manager');
+        $this->setState('filter.manager', $manager);
         parent::populateState($ordering, $direction);
         ContractsHelper::check_refresh();
     }
@@ -191,6 +201,7 @@ class ContractsModelResponsibles extends ListModel
         $id .= ':' . $this->getState('filter.search');
         $id .= ':' . $this->getState('filter.status');
         $id .= ':' . $this->getState('filter.without');
+        $id .= ':' . $this->getState('filter.manager');
         return parent::getStoreId($id);
     }
 
