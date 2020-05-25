@@ -189,15 +189,9 @@ class ContractsModelContracts extends ListModel
         $result = [];
         $tmp = [];
         foreach ($items as $contractID => $data) {
-            foreach ($data as $item) {
-                $url = JRoute::_("index.php?option=com_contracts&amp;task=stand.edit&amp;id={$item['id']}&amp;return={$this->return}");
-                $title = sprintf("%s (%s)", $item['number'], $item['square']);
-                $tmp[$contractID][] = JHtml::link($url, $title);
-            }
+            foreach ($data as $item) $tmp[$contractID][] = $item['edit_link'];
         }
-        foreach ($tmp as $contractID => $stand) {
-            $result[$contractID] = implode('<br>', $stand);
-        }
+        foreach ($tmp as $contractID => $stand) $result[$contractID] = implode('<br>', $stand);
         return $result;
     }
 
