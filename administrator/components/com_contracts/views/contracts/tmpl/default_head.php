@@ -11,10 +11,13 @@ $listDirn    = $this->escape($this->state->get('list.direction'));
         №
     </th>
     <th>
-        <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_CONTRACTS_NUMBER', 'number', $listDirn, $listOrder); ?>
+        <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_NUMBER', 'number', $listDirn, $listOrder); ?>
     </th>
     <th>
-        <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_CONTRACTS_DATE', 'c.dat', $listDirn, $listOrder); ?>
+        <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_DATE', 'c.dat', $listDirn, $listOrder); ?>
+    </th>
+    <th>
+        <?php echo JText::sprintf('COM_MKV_HEAD_STANDS'); ?>
     </th>
     <th>
         <?php echo JText::sprintf('COM_CONTRACTS_HEAD_CONTRACTS_OPEN'); ?>
@@ -23,22 +26,22 @@ $listDirn    = $this->escape($this->state->get('list.direction'));
         <?php echo JText::sprintf('COM_CONTRACTS_HEAD_CONTRACTS_ITEMS'); ?>
     </th>
     <th>
-        <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_CONTRACTS_PROJECT', 'p.title', $listDirn, $listOrder); ?>
+        <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_PROJECT', 'p.title', $listDirn, $listOrder); ?>
     </th>
     <th>
-        <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_CONTRACTS_COMPANY', 'company', $listDirn, $listOrder); ?>
+        <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_COMPANY', 'company', $listDirn, $listOrder); ?>
     </th>
     <th>
-        <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_CONTRACTS_MANAGER', 'manager', $listDirn, $listOrder); ?>
+        <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_MANAGER', 'manager', $listDirn, $listOrder); ?>
     </th>
     <th>
-        <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_CONTRACTS_STATUS', 's.ordering', $listDirn, $listOrder); ?>
+        <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_STATUS', 's.ordering', $listDirn, $listOrder); ?>
     </th>
     <th>
         <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_CONTRACTS_ORIGINAL', 'i.doc_status', $listDirn, $listOrder); ?>
     </th>
     <th>
-        <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_CONTRACTS_AMOUNT', 'c.amount', $listDirn, $listOrder); ?>
+        <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_AMOUNT', 'c.amount', $listDirn, $listOrder); ?>
     </th>
     <th style="width: 1%;">
         <?php echo JHtml::_('searchtools.sort', 'ID', 'c.id', $listDirn, $listOrder); ?>

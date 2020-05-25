@@ -32,6 +32,7 @@ class ContractsModelContracts extends ListModel
         parent::__construct($config);
         $input = JFactory::getApplication()->input;
         $this->export = ($input->getString('format', 'html') === 'html') ? false : true;
+        $this->return = ContractsHelper::getReturnUrl();
     }
 
     protected function _getListQuery()
@@ -152,11 +153,12 @@ class ContractsModelContracts extends ListModel
     public function getItems()
     {
         $items = parent::getItems();
-        $result = ['items' => []];
-        $return = ContractsHelper::getReturnUrl();
+        $result = ['items' => [], 'stands' => []];
+        $ids = [];
         foreach ($items as $item) {
             $arr = [];
             $arr['id'] = $item->id;
+            $ids[] = $item->id;
             $arr['company'] = $item->company;
             $arr['project'] = $item->project;
             $arr['status'] = $item->status ?? JText::sprintf('COM_CONTRACTS_CONTRACT_STATUS_IN_PROJECT');
@@ -169,11 +171,32 @@ class ContractsModelContracts extends ListModel
             $arr['amount_full'] = JText::sprintf("COM_CONTRACTS_CURRENCY_{$currency}_AMOUNT_SHORT", $amount);
             $arr['doc_status'] = JText::sprintf("COM_CONTRACTS_DOC_STATUS_{$item->doc_status}_SHORT");
             $arr['number'] = $item->number_free ?? $item->number;
-            $url = JRoute::_("index.php?option={$this->option}&amp;task=contract.edit&amp;id={$item->id}&amp;return={$return}");
+            $url = JRoute::_("index.php?option={$this->option}&amp;task=contract.edit&amp;id={$item->id}&amp;return={$this->return}");
             $arr['edit_link'] = JHtml::link($url, JText::sprintf('COM_CONTRACTS_ACTION_OPEN'));
             $url = JRoute::_("index.php?option={$this->option}&amp;view=items&amp;contractID={$item->id}");
             $arr['items_link'] = JHtml::link($url, JText::sprintf('COM_CONTRACTS_ACTION_ITEMS'));
             $result['items'][] = $arr;
+        }
+        $result['stands'] = $this->getStands($ids);
+        return $result;
+    }
+
+    private function getStands(array $ids = []): array
+    {
+        if (empty($ids)) return [];
+        $model = ListModel::getInstance('StandsLight', 'ContractsModel', ['contractIDs' => $ids, 'byContractID' => true, 'byCompanyID' => false]);
+        $items = $model->getItems();
+        $result = [];
+        $tmp = [];
+        foreach ($items as $contractID => $data) {
+            foreach ($data as $item) {
+                $url = JRoute::_("index.php?option=com_contracts&amp;task=stand.edit&amp;id={$item['id']}&amp;return={$this->return}");
+                $title = sprintf("%s (%s)", $item['number'], $item['square']);
+                $tmp[$contractID][] = JHtml::link($url, $title);
+            }
+        }
+        foreach ($tmp as $contractID => $stand) {
+            $result[$contractID] = implode('<br>', $stand);
         }
         return $result;
     }
@@ -219,5 +242,5 @@ class ContractsModelContracts extends ListModel
         return parent::getStoreId($id);
     }
 
-    private $export;
+    private $export, $return;
 }
