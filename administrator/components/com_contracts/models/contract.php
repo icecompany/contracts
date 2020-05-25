@@ -1,6 +1,7 @@
 <?php
 defined('_JEXEC') or die;
 use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\MVC\Model\ListModel;
 
 class ContractsModelContract extends AdminModel {
 
@@ -42,6 +43,17 @@ class ContractsModelContract extends AdminModel {
         $table = JTable::getInstance('Projects', 'TablePrj', []);
         $table->load($projectID);
         return $table;
+    }
+
+    public function getStands()
+    {
+        $id = JFactory::getApplication()->input->getInt('id', 0);
+        if ($id > 0) {
+            $model = ListModel::getInstance('StandsLight', 'ContractsModel', ['contractIDs' => [$id], 'byContractID' => true, 'byCompanyID' => false]);
+            $items = $model->getItems();
+            return $items[$id];
+        }
+        else return [];
     }
 
     public function getTitle(string $company, string $project, string $date = '', string $number = '', int $id = 0): string

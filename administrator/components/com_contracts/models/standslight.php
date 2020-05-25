@@ -22,6 +22,7 @@ class ContractsModelStandsLight extends ListModel
         $this->byCompanyID = $config['byCompanyID'] ?? false;
         $this->byContractID = $config['byContractID'] ?? false;
         $this->export = ($input->getString('format', 'html') === 'html') ? false : true;
+        $this->return = ContractsHelper::getReturnUrl();
     }
 
     protected function _getListQuery()
@@ -32,7 +33,7 @@ class ContractsModelStandsLight extends ListModel
         $limit = 0;
 
         $query
-            ->select("cs.id, cs.status, cs.contractID")
+            ->select("cs.id, cs.status, cs.type, cs.freeze, cs.comment, cs.contractID")
             ->select("s.square, s.number")
             ->select("e.title as company, e.id as companyID")
             ->from("#__mkv_contract_stands cs")
@@ -58,8 +59,13 @@ class ContractsModelStandsLight extends ListModel
             $arr['id'] = $item->id;
             $arr['number'] = $item->number;
             $arr['square'] = JText::sprintf('COM_CONTRACTS_STANDS_SQUARE', $item->square);
-            $arr['status'] = JText::sprintf("COM_CONTRACTS_STAND_STATUS_{$item->status}");
+            $arr['status'] = JText::sprintf("COM_MKV_STAND_STATUS_{$item->status}");
             $arr['company'] = $item->company;
+            $arr['type'] = JText::sprintf("COM_CONTRACTS_STAND_TYPE_{$item->type}");
+            $arr['freeze'] = $item->freeze;
+            $arr['comment'] = $item->comment;
+            $url = JRoute::_("index.php?option={$this->option}&amp;task=stand.edit&amp;id={$item->id}&amp;return={$this->return}");
+            $arr['edit_link'] = JHtml::link($url, JText::sprintf('COM_CONTRACTS_STANDS_NUMBER_WITH_SQUARE', $item->number, $item->square));
             if ($this->byCompanyID) $result[$item->companyID][] = $item->number;
             if ($this->byContractID) $result[$item->contractID][] = $arr;
         }
@@ -82,5 +88,5 @@ class ContractsModelStandsLight extends ListModel
         return parent::getStoreId($id);
     }
 
-    private $export, $contractIDs, $byCompanyID, $byContractID;
+    private $export, $contractIDs, $byCompanyID, $byContractID, $return;
 }
