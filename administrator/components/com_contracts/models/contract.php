@@ -27,6 +27,11 @@ class ContractsModelContract extends AdminModel {
                 $item->no_exhibit = $incoming->no_exhibit;
                 $item->info_arrival = $incoming->info_arrival;
             }
+            $parent = $this->getParent($item->id);
+            if (!empty($parent)) {
+                $item->parent_id = $parent['parentID'];
+                $item->parent_title = $parent['title'];
+            }
         }
         $company = $this->getCompany($item->companyID);
         $project = $this->getProject($item->projectID);
@@ -46,6 +51,17 @@ class ContractsModelContract extends AdminModel {
             $this->saveIncomingInfo($data['id'], $data);
         }
         return parent::save($data);
+    }
+
+    public function getParent(int $contractID): array
+    {
+        $table = JTable::getInstance('Parents', 'TableContracts');
+        $table->load(['contractID' => $contractID]);
+        if ($table->companyID !== null) {
+            $company = $this->getCompany($table->companyID);
+            return ['parentID' => $table->companyID, 'title' => $company->title];
+        }
+        else return [];
     }
 
     public function getCompany(int $companyID) {

@@ -6,7 +6,7 @@ JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 
 use Joomla\CMS\HTML\HTMLHelper;
-
+HTMLHelper::_('script', 'https://code.jquery.com/ui/1.11.4/jquery-ui.min.js', array('relative' => true));
 HTMLHelper::_('script', $this->script);
 HTMLHelper::_('script', 'com_contracts/contract.js', array('version' => 'auto', 'relative' => true));
 ?>
@@ -22,7 +22,7 @@ HTMLHelper::_('script', 'com_contracts/contract.js', array('version' => 'auto', 
                         <div><?php echo $this->loadTemplate('general'); ?></div>
                     </div>
                     <div class="span4">
-
+                        <div><?php echo $this->loadTemplate('parent'); ?></div>
                     </div>
                     <div class="span4">
 

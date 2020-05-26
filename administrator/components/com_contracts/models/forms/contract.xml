@@ -61,6 +61,24 @@
                 type="hidden"
         />
     </fieldset>
+    <fieldset name="parent">
+        <field
+                name="parentID"
+                type="list"
+                label="COM_CONTRACTS_FORM_CONTRACT_PARENT_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_PARENT_DESC"
+                class="span12">
+            <option value=""></option>
+        </field>
+        <field
+                name="parent_id"
+                type="hidden"
+        />
+        <field
+                name="parent_title"
+                type="hidden"
+        />
+    </fieldset>
     <fieldset name="forms">
         <field
                 name="doc_status"
