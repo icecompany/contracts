@@ -13,6 +13,21 @@ class ContractsModelContract extends AdminModel {
             $item->projectID = JFactory::getApplication()->getUserState($this->option.'.contract.projectID');
             $item->managerID = JFactory::getUser()->id;
         }
+        else {
+            $incoming = $this->getIncomingInfo($item->id);
+            if ($incoming !== null) {
+                $item->doc_status = $incoming->doc_status;
+                $item->pvn_1 = $incoming->pvn_1;
+                $item->pvn_1a = $incoming->pvn_1a;
+                $item->pvn_1b = $incoming->pvn_1b;
+                $item->pvn_1v = $incoming->pvn_1v;
+                $item->pvn_1g = $incoming->pvn_1g;
+                $item->catalog_info = $incoming->catalog_info;
+                $item->catalog_logo = $incoming->catalog_logo;
+                $item->no_exhibit = $incoming->no_exhibit;
+                $item->info_arrival = $incoming->info_arrival;
+            }
+        }
         $company = $this->getCompany($item->companyID);
         $project = $this->getProject($item->projectID);
         $item->company = $company->title;
@@ -55,6 +70,13 @@ class ContractsModelContract extends AdminModel {
             return $items[$id];
         }
         else return [];
+    }
+
+    public function getIncomingInfo(int $contractID)
+    {
+        $table = JTable::getInstance('Incoming', 'TableContracts');
+        $table->load(['contractID' => $contractID]);
+        return $table;
     }
 
     public function getContractItems(): array
