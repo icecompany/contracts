@@ -18,6 +18,17 @@ class ContractsHelper
         PrjHelper::addActiveProjectFilter();
     }
 
+    public static function getNextContractNumber(int $projectID)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query
+            ->select("ifnull(max(number), 0) + 1")
+            ->from("#__mkv_contracts")
+            ->where("projectID = {$db->q($projectID)}");
+        return $db->setQuery($query)->loadResult();
+    }
+
     /**
      * Проверяет необходимость перезагрузить страницу. Используется для возврата на предыдущую страницу при отправке формы в админке
      * @throws Exception

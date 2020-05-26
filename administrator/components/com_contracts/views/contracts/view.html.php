@@ -46,6 +46,7 @@ class ContractsViewContracts extends HtmlView
         {
             JToolbarHelper::deleteList('COM_CONTRACTS_CONFIRM_REMOVE_CONTRACT', 'contracts.delete');
         }
+        JToolbarHelper::custom('contracts.setContractNumber', 'pencil-2', 'pencil-2', JText::sprintf('COM_CONTRACTS_BUTTON_SET_CONTRACTS_NUMBERS'));
         if (ContractsHelper::canDo('core.admin'))
         {
             JToolBarHelper::preferences('com_contracts');

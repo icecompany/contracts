@@ -56,6 +56,28 @@ class ContractsModelContract extends AdminModel {
         return parent::save($data);
     }
 
+    public function setContractNumber($pk = null): int
+    {
+        $item = parent::getItem($pk);
+        if ($item->id !== null) {
+            if ($item->status != '1') {
+                $app = JFactory::getApplication();
+                $error = JText::sprintf('COM_CONTRACTS_ERROR_NUMBER_ONLY_FOR_CONTRACTS');
+                $app->enqueueMessage($error, 'error');
+                $app->redirect("index.php?option={$this->option}&view=contracts");
+                jexit();
+            }
+            $number = ContractsHelper::getNextContractNumber($item->projectID);
+            $table = $this->getTable();
+            $table->load($item->id);
+            $table->save(['id' => $item->id, 'number' => $number]);
+            return (int) $number;
+        }
+        else {
+            return 0;
+        }
+    }
+
     public function getParent(int $contractID): array
     {
         $table = JTable::getInstance('Parents', 'TableContracts');
@@ -75,7 +97,9 @@ class ContractsModelContract extends AdminModel {
             $arr = ['id' => $table->id ?? null, 'contractID' => $contractID, 'companyID' => $companyID];
             $table->save($arr);
         }
-        else $table->delete($table->id);
+        else {
+            if ($table->id !== null) $table->delete($table->id);
+        }
     }
 
     public function getCompany(int $companyID) {
