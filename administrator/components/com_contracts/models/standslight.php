@@ -66,6 +66,8 @@ class ContractsModelStandsLight extends ListModel
             $arr['comment'] = $item->comment;
             $url = JRoute::_("index.php?option={$this->option}&amp;task=stand.edit&amp;id={$item->id}&amp;return={$this->return}");
             $arr['edit_link'] = JHtml::link($url, JText::sprintf('COM_CONTRACTS_STANDS_NUMBER_WITH_SQUARE', $item->number, $item->square));
+            $url = JRoute::_("index.php?option={$this->option}&amp;task=stands.delete&amp;cid[]={$item->id}");
+            $arr['delete_link'] = JHtml::link($url, JText::sprintf('COM_MKV_ACTION_DELETE'));
             if ($this->byCompanyID) $result[$item->companyID][] = $item->number;
             if ($this->byContractID) $result[$item->contractID][] = $arr;
         }

@@ -11,6 +11,7 @@ defined('_JEXEC') or die;
                 <th><?php echo JText::sprintf('COM_MKV_HEAD_STATUS'); ?></th>
                 <th><?php echo JText::sprintf('COM_CONTRACTS_HEAD_STAND_FREEZE'); ?></th>
                 <th><?php echo JText::sprintf('COM_MKV_HEAD_COMMENT'); ?></th>
+                <th><?php echo JText::sprintf('COM_MKV_ACTION_DELETE'); ?></th>
             </tr>
             </thead>
             <tbody>
@@ -21,6 +22,7 @@ defined('_JEXEC') or die;
                 <td><?php echo $stand['status']; ?></td>
                 <td><?php echo $stand['freeze']; ?></td>
                 <td><?php echo $stand['comment']; ?></td>
+                <td><?php echo $stand['delete_link']; ?></td>
             </tr>
             <?php endforeach; ?>
             </tbody>
