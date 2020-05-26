@@ -51,6 +51,7 @@ class ContractsModelContract extends AdminModel {
         if ($id > 0) {
             $model = ListModel::getInstance('StandsLight', 'ContractsModel', ['contractIDs' => [$id], 'byContractID' => true, 'byCompanyID' => false]);
             $items = $model->getItems();
+            if (empty($items)) return [];
             return $items[$id];
         }
         else return [];

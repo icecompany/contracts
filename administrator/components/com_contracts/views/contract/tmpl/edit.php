@@ -39,6 +39,11 @@ HTMLHelper::_('script', 'com_contracts/contract.js', array('version' => 'auto', 
                     <div><?php echo $this->loadTemplate('stands'); ?></div>
                     <?php echo JHtml::_('bootstrap.endTab'); ?>
                 <?php endif;?>
+                <?php if ($this->item->id !== null): ?>
+                    <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'forms', JText::sprintf('COM_CONTRACTS_TITLE_TAB_FORM_TO_CATALOG')); ?>
+                    <div><?php echo $this->loadTemplate('forms'); ?></div>
+                    <?php echo JHtml::_('bootstrap.endTab'); ?>
+                <?php endif;?>
             </div>
             <?php echo JHtml::_('bootstrap.endTabSet'); ?>
         </div>

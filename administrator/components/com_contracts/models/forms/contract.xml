@@ -51,4 +51,105 @@
                 type="hidden"
         />
     </fieldset>
+    <fieldset name="forms">
+        <field
+                name="catalog_info"
+                type="radio"
+                label="COM_CONTRACTS_FORM_CONTRACT_INFO_CATALOG_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_INFO_CATALOG_DESC"
+                class="btn-group btn-group-yesno"
+                default="0"
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field
+                name="catalog_logo"
+                type="radio"
+                label="COM_CONTRACTS_FORM_CONTRACT_LOGO_CATALOG_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_LOGO_CATALOG_DESC"
+                class="btn-group btn-group-yesno"
+                default="0"
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field
+                name="pvn_1"
+                type="radio"
+                label="COM_CONTRACTS_FORM_CONTRACT_PVN_1_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_PVN_1_DESC"
+                class="btn-group btn-group-yesno"
+                default="0"
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field
+                name="pvn_1a"
+                type="radio"
+                label="COM_CONTRACTS_FORM_CONTRACT_PVN_1A_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_PVN_1A_DESC"
+                class="btn-group btn-group-yesno"
+                default="0"
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field
+                name="pvn_1b"
+                type="radio"
+                label="COM_CONTRACTS_FORM_CONTRACT_PVN_1B_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_PVN_1B_DESC"
+                class="btn-group btn-group-yesno"
+                default="0"
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field
+                name="pvn_1v"
+                type="radio"
+                label="COM_CONTRACTS_FORM_CONTRACT_PVN_1V_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_PVN_1V_DESC"
+                class="btn-group btn-group-yesno"
+                default="0"
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field
+                name="pvn_1g"
+                type="radio"
+                label="COM_CONTRACTS_FORM_CONTRACT_PVN_1G_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_PVN_1G_DESC"
+                class="btn-group btn-group-yesno"
+                default="0"
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field
+                name="no_exhibit"
+                type="radio"
+                label="COM_CONTRACTS_FORM_CONTRACT_NO_EXHIBIT_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_NO_EXHIBIT_DESC"
+                class="btn-group btn-group-yesno"
+                default="0"
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field
+                name="info_arrival"
+                type="radio"
+                label="COM_CONTRACTS_FORM_CONTRACT_INFO_ARRIVAL_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_INFO_ARRIVAL_DESC"
+                class="btn-group btn-group-yesno"
+                default="0"
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+    </fieldset>
 </form>
