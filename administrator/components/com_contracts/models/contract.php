@@ -110,7 +110,7 @@ class ContractsModelContract extends AdminModel {
     {
         $all = get_class_vars($table);
         unset($all['_errors']);
-        $nulls = []; //Поля, которые NULL
+        $nulls = ['status', 'dat', 'number', 'number_free']; //Поля, которые NULL
         foreach ($all as $field => $v) {
             if (empty($field)) continue;
             if (in_array($field, $nulls)) {
@@ -119,7 +119,13 @@ class ContractsModelContract extends AdminModel {
                     continue;
                 }
             }
-            if (!empty($field)) $table->$field = trim($table->$field);
+            if (!empty($field)) {
+                $table->$field = trim($table->$field);
+                //Приводим дату в нужный формат
+                if ($field === 'dat') {
+                    $table->$field = JDate::getInstance($table->$field)->toSql();
+                }
+            }
         }
 
         parent::prepareTable($table);
