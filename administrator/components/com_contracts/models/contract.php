@@ -48,7 +48,10 @@ class ContractsModelContract extends AdminModel {
     public function save($data)
     {
         if ($data['id'] != '') {
+            //Сохраняем заполненность формы
             $this->saveIncomingInfo($data['id'], $data);
+            //Сохраняем компанию-родителя соэкспонента
+            $this->saveParentID($data['id'], is_numeric($data['parentID']) ? $data['parentID'] : 0);
         }
         return parent::save($data);
     }
@@ -62,6 +65,17 @@ class ContractsModelContract extends AdminModel {
             return ['parentID' => $table->companyID, 'title' => $company->title];
         }
         else return [];
+    }
+
+    public function saveParentID(int $contractID, int $companyID)
+    {
+        $table = JTable::getInstance('Parents', 'TableContracts');
+        $table->load(['contractID' => $contractID]);
+        if ($companyID > 0) {
+            $arr = ['id' => $table->id ?? null, 'contractID' => $contractID, 'companyID' => $companyID];
+            $table->save($arr);
+        }
+        else $table->delete($table->id);
     }
 
     public function getCompany(int $companyID) {

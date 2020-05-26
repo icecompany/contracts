@@ -7,7 +7,7 @@ class TableContractsParents extends Table
 {
     var $id = null;
     var $contractID = null;
-    var $parentID = null;
+    var $companyID = null;
 	public function __construct(JDatabaseDriver $db)
 	{
 		parent::__construct('#__mkv_contract_parents', 'id', $db);
