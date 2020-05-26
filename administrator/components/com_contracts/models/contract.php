@@ -32,6 +32,7 @@ class ContractsModelContract extends AdminModel {
                 $item->parent_id = $parent['parentID'];
                 $item->parent_title = $parent['title'];
             }
+            $item->thematics = $this->getThematics($item->id);
         }
         $company = $this->getCompany($item->companyID);
         $project = $this->getProject($item->projectID);
@@ -76,6 +77,12 @@ class ContractsModelContract extends AdminModel {
         else {
             return 0;
         }
+    }
+
+    public function getThematics(int $contractID)
+    {
+        $model = ListModel::getInstance('Thematics', 'ContractsModel', ['contractID' => $contractID]);
+        return $model->getItems();
     }
 
     public function getChildren()
@@ -207,6 +214,7 @@ class ContractsModelContract extends AdminModel {
         );
         $form->addFieldPath(JPATH_ADMINISTRATOR."/components/com_mkv/models/fields");
         $form->addFieldPath(JPATH_ADMINISTRATOR."/components/com_prices/models/fields");
+        $form->addFieldPath(JPATH_ADMINISTRATOR."/components/com_prj/models/fields");
 
         if (empty($form))
         {

@@ -48,25 +48,15 @@
             <option value="usd">COM_CONTRACTS_CURRENCY_USD</option>
             <option value="eur">COM_CONTRACTS_CURRENCY_EUR</option>
         </field>
+    </fieldset>
+    <fieldset name="thematics_activities">
         <field
-                name="projectID"
-                type="hidden"
-        />
-        <field
-                name="companyID"
-                type="hidden"
-        />
-        <field
-                name="id"
-                type="hidden"
-        />
-        <field
-                name="parent_id"
-                type="hidden"
-        />
-        <field
-                name="parent_title"
-                type="hidden"
+                name="thematics"
+                type="Thematics"
+                label="COM_CONTRACTS_FORM_CONTRACT_THEMATICS_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_THEMATICS_DESC"
+                class="span12"
+                multiple="true"
         />
     </fieldset>
     <fieldset name="parent">
@@ -190,5 +180,27 @@
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
+    </fieldset>
+    <fieldset name="ids">
+        <field
+                name="id"
+                type="hidden"
+        />
+        <field
+                name="parent_id"
+                type="hidden"
+        />
+        <field
+                name="parent_title"
+                type="hidden"
+        />
+        <field
+                name="projectID"
+                type="hidden"
+        />
+        <field
+                name="companyID"
+                type="hidden"
+        />
     </fieldset>
 </form>
