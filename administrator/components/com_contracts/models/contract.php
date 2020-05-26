@@ -53,6 +53,8 @@ class ContractsModelContract extends AdminModel {
             $this->saveIncomingInfo($data['id'], $data);
             //Сохраняем компанию-родителя соэкспонента
             $this->saveParentID($data['id'], is_numeric($data['parentID']) ? $data['parentID'] : 0);
+            //Сохраняем тематические рубрики
+            $this->saveThematics($data['id'], $data['thematics'] ?? []);
         }
         return parent::save($data);
     }
@@ -79,12 +81,6 @@ class ContractsModelContract extends AdminModel {
         }
     }
 
-    public function getThematics(int $contractID)
-    {
-        $model = ListModel::getInstance('Thematics', 'ContractsModel', ['contractID' => $contractID]);
-        return $model->getItems();
-    }
-
     public function getChildren()
     {
         $item = parent::getItem();
@@ -105,6 +101,7 @@ class ContractsModelContract extends AdminModel {
         }
         else return [];
     }
+
 
     public function saveParentID(int $contractID, int $companyID)
     {
@@ -259,6 +256,46 @@ class ContractsModelContract extends AdminModel {
 
         parent::prepareTable($table);
     }
+
+    private function getThematics(int $contractID)
+    {
+        $model = ListModel::getInstance('Thematics', 'ContractsModel', ['contractID' => $contractID]);
+        return $model->getItems();
+    }
+
+    private function saveThematics(int $contractID, array $thematics = [])
+    {
+        $model = ListModel::getInstance('Thematics', 'ContractsModel', ['contractID' => $contractID]);
+        $current = $model->getItems();
+        if (empty($current)) {
+            if (empty($thematics)) return;
+            foreach ($thematics as $thematicID)
+                $this->addThematic($contractID, $thematicID);
+        }
+        else {
+            foreach ($thematics as $item)
+                if (($key = array_search($item, $current)) === false)
+                    $this->addThematic($contractID, $item);
+            foreach ($current as $item)
+                if (($key = array_search($item, $thematics)) === false)
+                    $this->deleteThematic($contractID, $item);
+        }
+    }
+
+    private function addThematic(int $contractID, int $thematicID)
+    {
+        $table = $this->getTable('Thematics', 'TableContracts');
+        $data = ['id' => null, 'contractID' => $contractID, 'thematicID' => $thematicID];
+        $table->save($data);
+    }
+
+    private function deleteThematic(int $contractID, int $thematicID)
+    {
+        $table = $this->getTable('Thematics', 'TableContracts');
+        $table->load(['contractID' => $contractID, 'thematicID' => $thematicID]);
+        $table->delete($table->id);
+    }
+
 
     protected function canEditState($record)
     {
