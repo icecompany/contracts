@@ -29,6 +29,7 @@ class ContractsViewContract extends HtmlView {
         if ($this->item->id !== null) {
             JToolbarHelper::custom('item.add', 'cart', 'cart', JText::sprintf('COM_MKV_BUTTON_ADD_PRICE_ITEM'), false);
             JToolbarHelper::custom('stand.add', 'cube', 'cube', JText::sprintf('COM_MKV_BUTTON_ADD_STAND'), false);
+            JToolbarHelper::custom('contract.go_to_company', 'vcard', 'vcard', JText::sprintf('COM_CONTRACTS_BUTTON_GO_TO_COMPANY'), false);
         }
         JToolbarHelper::cancel('contract.cancel', 'JTOOLBAR_CLOSE');
         JFactory::getApplication()->input->set('hidemainmenu', true);
