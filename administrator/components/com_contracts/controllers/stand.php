@@ -8,6 +8,11 @@ class ContractsControllerStand extends FormController {
     {
         $uri = JUri::getInstance();
         $contractID = $uri->getVar('contractID', 0);
+        $referer = JUri::getInstance($_SERVER['HTTP_REFERER']);
+        if ($referer->getVar('view') === 'contract') {
+            $contractID = $referer->getVar('id');
+            $this->input->set('return', base64_encode($_SERVER['HTTP_REFERER']));
+        }
         if ($contractID > 0) JFactory::getApplication()->setUserState($this->option . '.stand.contractID', $contractID);
         return parent::add();
     }

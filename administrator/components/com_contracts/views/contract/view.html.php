@@ -25,6 +25,9 @@ class ContractsViewContract extends HtmlView {
 	    JToolBarHelper::apply('contract.apply', 'JTOOLBAR_APPLY');
         JToolbarHelper::save('contract.save', 'JTOOLBAR_SAVE');
         JToolbarHelper::cancel('contract.cancel', 'JTOOLBAR_CLOSE');
+        if ($this->item->id !== null) {
+            JToolbarHelper::custom('stand.add', 'cube', 'cube', JText::sprintf('COM_MKV_BUTTON_ADD_STAND'), false);
+        }
         JFactory::getApplication()->input->set('hidemainmenu', true);
     }
 
