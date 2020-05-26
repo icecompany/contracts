@@ -21,11 +21,11 @@ HTMLHelper::_('script', 'com_contracts/contract.js', array('version' => 'auto', 
                     <div class="span4">
                         <div><?php echo $this->loadTemplate('general'); ?></div>
                     </div>
-                    <div class="span4">
-                        <div><?php echo $this->loadTemplate('parent'); ?></div>
-                    </div>
-                    <div class="span4">
-
+                    <div class="span8">
+                        <?php if ($this->item->id !== null): ?>
+                            <div><?php echo $this->loadTemplate('parent'); ?></div>
+                            <div><?php echo $this->loadTemplate('children'); ?></div>
+                        <?php endif;?>
                     </div>
                 </div>
                 <?php echo JHtml::_('bootstrap.endTab'); ?>

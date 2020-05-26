@@ -78,6 +78,16 @@ class ContractsModelContract extends AdminModel {
         }
     }
 
+    public function getChildren()
+    {
+        $item = parent::getItem();
+        if ($item->id !== null) {
+            $model = ListModel::getInstance('Parents', 'ContractsModel', ['companyID' => $item->companyID, 'projectID' => $item->projectID]);
+            return $model->getItems();
+        }
+        else return [];
+    }
+
     public function getParent(int $contractID): array
     {
         $table = JTable::getInstance('Parents', 'TableContracts');

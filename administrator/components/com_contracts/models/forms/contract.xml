@@ -60,6 +60,14 @@
                 name="id"
                 type="hidden"
         />
+        <field
+                name="parent_id"
+                type="hidden"
+        />
+        <field
+                name="parent_title"
+                type="hidden"
+        />
     </fieldset>
     <fieldset name="parent">
         <field
@@ -70,14 +78,6 @@
                 class="span12">
             <option value=""></option>
         </field>
-        <field
-                name="parent_id"
-                type="hidden"
-        />
-        <field
-                name="parent_title"
-                type="hidden"
-        />
     </fieldset>
     <fieldset name="forms">
         <field

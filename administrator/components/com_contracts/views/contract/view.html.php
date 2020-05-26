@@ -3,12 +3,13 @@ defined('_JEXEC') or die;
 use Joomla\CMS\MVC\View\HtmlView;
 
 class ContractsViewContract extends HtmlView {
-    protected $item, $form, $script, $stands, $contractItems;
+    protected $item, $form, $script, $stands, $contractItems, $children;
 
     public function display($tmp = null) {
         $this->form = $this->get('Form');
         $this->item = $this->get('Item');
         $this->script = $this->get('Script');
+        $this->children = $this->get('Children');
         $this->stands = $this->get('Stands');
         $this->contractItems = $this->get('ContractItems');
 
