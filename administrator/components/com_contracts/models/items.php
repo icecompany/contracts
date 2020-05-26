@@ -27,6 +27,10 @@ class ContractsModelItems extends ListModel
         $input = JFactory::getApplication()->input;
         $this->export = ($input->getString('format', 'html') === 'html') ? false : true;
         $this->contractID = $input->getInt('contractID', 0);
+        if (!empty($config['contractID'])) {
+            $this->export = true;
+            $this->contractID = $config['contractID'];
+        }
     }
 
     protected function _getListQuery()
@@ -134,6 +138,8 @@ class ContractsModelItems extends ListModel
             $arr['stand'] = $item->stand;
             $url = JRoute::_("index.php?option={$this->option}&amp;task=item.edit&amp;id={$item->id}&amp;return={$return}");
             $arr['edit_link'] = JHtml::link($url, $item->item);
+            $url = JRoute::_("index.php?option={$this->option}&amp;task=items.delete&amp;cid[]={$item->id}");
+            $arr['delete_link'] = JHtml::link($url, JText::sprintf('COM_MKV_ACTION_DELETE'));
             $url = JRoute::_("index.php?option={$this->option}&amp;task=stand.edit&amp;id={$item->contractStandID}&amp;return={$return}");
             $arr['stand_link'] = JHtml::link($url, $item->stand);
             $result['items'][] = $arr;

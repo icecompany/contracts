@@ -45,13 +45,23 @@ class ContractsModelContract extends AdminModel {
         return $table;
     }
 
-    public function getStands()
+    public function getStands(): array
     {
         $id = JFactory::getApplication()->input->getInt('id', 0);
         if ($id > 0) {
             $model = ListModel::getInstance('StandsLight', 'ContractsModel', ['contractIDs' => [$id], 'byContractID' => true, 'byCompanyID' => false]);
             $items = $model->getItems();
             return $items[$id];
+        }
+        else return [];
+    }
+
+    public function getContractItems(): array
+    {
+        $id = JFactory::getApplication()->input->getInt('id', 0);
+        if ($id > 0) {
+            $model = ListModel::getInstance('Items', 'ContractsModel', ['contractID' => $id]);
+            return $model->getItems();
         }
         else return [];
     }

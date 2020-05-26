@@ -13,7 +13,6 @@ class ContractsControllerItems extends AdminController
 
     public function delete()
     {
-        $this->checkToken();
         $cid = $this->input->get('cid', array(), 'array');
         if (!is_array($cid) || count($cid) < 1)
         {
