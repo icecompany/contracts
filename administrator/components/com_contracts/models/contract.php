@@ -113,7 +113,6 @@ class ContractsModelContract extends AdminModel {
 
     public function getTitle(string $company, string $project, string $date = '', string $number = '', int $id = 0): string
     {
-        $title = '';
         if ($id > 0) {
             if (!empty($date)) {
                 $date = JDate::getInstance($date);
@@ -121,6 +120,9 @@ class ContractsModelContract extends AdminModel {
                 if (!empty($number)) {
                     $title = JText::sprintf('COM_CONTRACTS_CONTRACT_TITLE_EDIT_WITH_DATE_AND_NUMBER', $number, $company, $project, $date->format("d.m.Y"));
                 }
+            }
+            else {
+                $title = JText::sprintf('COM_CONTRACTS_CONTRACT_TITLE_EDIT_CONTRACT', $company, $project);
             }
         }
         else {

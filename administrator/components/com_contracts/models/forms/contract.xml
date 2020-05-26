@@ -6,9 +6,11 @@
                 type="ContractStatus"
                 label="COM_CONTRACTS_FORM_CONTRACT_STATUS_LABEL"
                 description="COM_CONTRACTS_FORM_CONTRACT_STATUS_DESC"
-                required="true"
+                default=""
                 class="span12"
-        />
+        >
+                <option value="">COM_CONTRACTS_CONTRACT_STATUS_IN_PROJECT</option>
+        </field>
         <field
                 name="number_free"
                 type="text"
@@ -46,6 +48,14 @@
             <option value="usd">COM_CONTRACTS_CURRENCY_USD</option>
             <option value="eur">COM_CONTRACTS_CURRENCY_EUR</option>
         </field>
+        <field
+                name="projectID"
+                type="hidden"
+        />
+        <field
+                name="companyID"
+                type="hidden"
+        />
         <field
                 name="id"
                 type="hidden"
