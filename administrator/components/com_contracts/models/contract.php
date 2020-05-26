@@ -42,6 +42,9 @@ class ContractsModelContract extends AdminModel {
 
     public function save($data)
     {
+        if ($data['id'] != '') {
+            $this->saveIncomingInfo($data['id'], $data);
+        }
         return parent::save($data);
     }
 
@@ -77,6 +80,25 @@ class ContractsModelContract extends AdminModel {
         $table = JTable::getInstance('Incoming', 'TableContracts');
         $table->load(['contractID' => $contractID]);
         return $table;
+    }
+
+    public function saveIncomingInfo(int $contractID, array $data)
+    {
+        $table = JTable::getInstance('Incoming', 'TableContracts');
+        $table->load(['contractID' => $contractID]);
+        $arr = [];
+        $arr['id'] = $table->id ?? null;
+        $arr['doc_status'] = $data['doc_status'];
+        $arr['pvn_1'] = $data['pvn_1'];
+        $arr['pvn_1a'] = $data['pvn_1a'];
+        $arr['pvn_1b'] = $data['pvn_1b'];
+        $arr['pvn_1v'] = $data['pvn_1v'];
+        $arr['pvn_1g'] = $data['pvn_1g'];
+        $arr['catalog_info'] = $data['catalog_info'];
+        $arr['catalog_logo'] = $data['catalog_logo'];
+        $arr['no_exhibit'] = $data['no_exhibit'];
+        $arr['info_arrival'] = $data['info_arrival'];
+        $table->save($arr);
     }
 
     public function getContractItems(): array

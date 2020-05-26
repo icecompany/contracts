@@ -53,6 +53,17 @@
     </fieldset>
     <fieldset name="forms">
         <field
+                name="doc_status"
+                type="list"
+                label="COM_CONTRACTS_FORM_CONTRACT_DOC_STATUS_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_DOC_STATUS_DESC"
+                default="0"
+                >
+            <option value="0">COM_CONTRACTS_FORM_CONTRACT_DOC_STATUS_0</option>
+            <option value="1">COM_CONTRACTS_FORM_CONTRACT_DOC_STATUS_1</option>
+            <option value="2">COM_CONTRACTS_FORM_CONTRACT_DOC_STATUS_2</option>
+        </field>
+        <field
                 name="catalog_info"
                 type="radio"
                 label="COM_CONTRACTS_FORM_CONTRACT_INFO_CATALOG_LABEL"
