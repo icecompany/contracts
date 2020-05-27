@@ -38,6 +38,14 @@ class ContractsModelItem extends AdminModel {
         return parent::save($data);
     }
 
+    public function getPayer(int $payerID)
+    {
+        JTable::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_companies/tables");
+        $table = JTable::getInstance('Companies', 'TableCompanies');
+        $table->load($payerID);
+        return $table;
+    }
+
     public function getTable($name = 'Items', $prefix = 'TableContracts', $options = array())
     {
         return JTable::getInstance($name, $prefix, $options);
@@ -88,14 +96,6 @@ class ContractsModelItem extends AdminModel {
         $table->amount = (float) str_replace([' ₽', ' $', ' €', ' ', ','], ['', '', '', '', '.'], $table->amount);
 
         parent::prepareTable($table);
-    }
-
-    private function getPayer(int $payerID)
-    {
-        JTable::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_companies/tables");
-        $table = JTable::getInstance('Companies', 'TableCompanies');
-        $table->load($payerID);
-        return $table;
     }
 
     private function getContract(int $contractID)

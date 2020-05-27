@@ -109,6 +109,7 @@ class ContractsModelItems extends ListModel
             $model = AdminModel::getInstance('Contract', 'ContractsModel');
             $contract = $model->getItem($this->contractID);
         }
+        $im = AdminModel::getInstance('Item', 'ContractsModel');
         $result = [
             'items' => [],
             'company' => ($this->contractID > 0) ? $contract->company : '',
@@ -120,8 +121,14 @@ class ContractsModelItems extends ListModel
         $return = ContractsHelper::getReturnUrl();
         foreach ($items as $item) {
             $arr = [];
+            $link_option = [];
             $arr['id'] = $item->id;
             $arr['item'] = $item->item;
+            if ($item->payerID !== null) {
+                $payer = $im->getPayer($item->payerID);
+                $item->item .= ' ' . JText::sprintf('COM_MKV_TEXT_ADDING_PAYER', $payer->title);
+                $link_option = ['style' => 'color: red'];
+            }
             $arr['columnID'] = $item->columnID;
             $arr['company'] = $item->company;
             $arr['factor'] = (1 - $item->factor) * 100 . "%";
@@ -137,7 +144,7 @@ class ContractsModelItems extends ListModel
             $arr['amount'] = JText::sprintf("COM_CONTRACTS_CURRENCY_{$currency}_AMOUNT_SHORT", $amount);
             $arr['stand'] = $item->stand;
             $url = JRoute::_("index.php?option={$this->option}&amp;task=item.edit&amp;id={$item->id}&amp;return={$return}");
-            $arr['edit_link'] = JHtml::link($url, $item->item);
+            $arr['edit_link'] = JHtml::link($url, $item->item, $link_option);
             $url = JRoute::_("index.php?option={$this->option}&amp;task=items.delete&amp;cid[]={$item->id}");
             $arr['delete_link'] = JHtml::link($url, JText::sprintf('COM_MKV_ACTION_DELETE'));
             $url = JRoute::_("index.php?option={$this->option}&amp;task=stand.edit&amp;id={$item->contractStandID}&amp;return={$return}");
