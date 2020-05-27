@@ -66,6 +66,17 @@
             <option value="1.15">15%</option>
             <option value="1.20">20%</option>
         </field>
+    </fieldset>
+    <fieldset name="payer">
+        <field
+                name="payerID"
+                type="list"
+                label="COM_CONTRACTS_FORM_ITEM_PAYER_LABEL"
+                description="COM_CONTRACTS_FORM_ITEM_PAYER_DESC"
+                class="span12"
+        >
+            <option value=""></option>
+        </field>
         <field
                 name="contractID"
                 type="hidden"
