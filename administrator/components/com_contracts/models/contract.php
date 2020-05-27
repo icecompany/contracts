@@ -56,6 +56,8 @@ class ContractsModelContract extends AdminModel {
             $this->saveParentID($data['id'], is_numeric($data['parentID']) ? $data['parentID'] : 0);
             //Сохраняем тематические рубрики
             $this->saveThematics($data['id'], $data['thematics'] ?? []);
+            //Сохраняем виды деятельности
+            $this->saveActivities($data['companyID'], $data['activities'] ?? []);
         }
         return parent::save($data);
     }
@@ -267,6 +269,14 @@ class ContractsModelContract extends AdminModel {
         $result = [];
         foreach ($items as $item) $result[] = $item['activityID'];
         return $result;
+    }
+
+    private function saveActivities(int $companyID, array $activities = [])
+    {
+        JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_companies/models", 'CompaniesModel');
+        JTable::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_companies/tables");
+        $cm = JModelLegacy::getInstance('Company', 'CompaniesModel');
+        $cm->saveActivities($companyID, $activities ?? []);
     }
 
     private function getThematics(int $contractID)
