@@ -85,6 +85,14 @@
                 name="id"
                 type="hidden"
         />
+        <field
+                name="payer_id"
+                type="hidden"
+        />
+        <field
+                name="payer_title"
+                type="hidden"
+        />
     </fieldset>
     <fieldset name="price">
         <field

@@ -6,6 +6,7 @@ JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 
 use Joomla\CMS\HTML\HTMLHelper;
+HTMLHelper::_('script', 'https://code.jquery.com/ui/1.11.4/jquery-ui.min.js', array('relative' => true));
 
 HTMLHelper::_('script', $this->script);
 ?>

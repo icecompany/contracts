@@ -1,4 +1,43 @@
 'use strict';
+let url_exhibitors = "index.php?option=com_companies&task=companies.execute&format=json";
+
+let Company = {
+    searchByName: function (title) {
+        jQuery.getJSON(`${url_exhibitors}&search=${title}`, function (json) {
+            UI.Fields.par.elem.empty();
+            jQuery.each(json.data, function (idx, obj) {
+                UI.Fields.par.elem.append(`<option value="${obj.id}">${obj.title} (${obj.city})</option>`);
+                UI.Fields.unlock(UI.Fields.par);
+                UI.Fields.par.inp.value = title;
+            })
+        })
+    },
+    load: function () {
+        let id = document.querySelector("#jform_payer_id").value;
+        let value = document.querySelector("#jform_payer_title").value;
+        if (id !== '' && value !== '') {
+            UI.Fields.par.elem.append(`<option value="${id}" selected>${value}</option>`);
+            UI.Fields.unlock(UI.Fields.par);
+        }
+    },
+};
+
+let UI = {
+    Fields: {
+        par: {
+            chzn: '',
+            inp: '',
+            elem: ''
+        },
+        unlock: function (e) {
+            e.elem.chosen({width: "95%"});
+            e.elem.trigger("liszt:updated");
+            e.chzn.classList.remove("chzn-container-single-nosearch");
+            e.inp.removeAttribute('readonly');
+        }
+    },
+};
+
 Joomla.submitbutton = function (task) {
     let form = document.querySelector('#adminForm');
     let valid = document.formvalidator.isValid(form);
@@ -92,6 +131,17 @@ function setValue() {
 }
 
 window.onload = function () {
+    UI.Fields.par.elem = jQuery("#jform_payerID");
+    UI.Fields.par.chzn = document.querySelector("#jform_payerID_chzn");
+    UI.Fields.par.inp = document.querySelector("#jform_payerID_chzn .chzn-drop .chzn-search input");
+    UI.Fields.unlock(UI.Fields.par);
+    Company.load();
+    jQuery(UI.Fields.par.inp).autocomplete({source: function () {
+            let val = UI.Fields.par.inp.value;
+            if (val.length < 3) return;
+            Company.searchByName(val);
+        }
+    });
     let list = document.querySelectorAll("#jform_factor option");
     document.querySelector("#jform_contract_old_amount").value = (old_amount).toLocaleString('ru-RU', {style:'currency', currency:currency});
     document.querySelector("#jform_contract_new_amount").value = (old_amount).toLocaleString('ru-RU', {style:'currency', currency:currency});

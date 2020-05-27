@@ -14,6 +14,12 @@ class ContractsModelItem extends AdminModel {
             $item->item = $this->getPriceItem($item->itemID)->title;
             $item->price_type = $this->getPriceItem($item->itemID)->type;
             $item->factor = 100 - (100 * $item->factor);
+            if ($item->payerID !== null) {
+                $payer = $this->getPayer($item->payerID);
+                $item->payer_id = $payer->id;
+                $item->payer_title = $payer->title;
+            }
+
         }
         $item->contract = $this->getContract($item->contractID);
         if ($item->id === null) {
@@ -30,20 +36,6 @@ class ContractsModelItem extends AdminModel {
     public function save($data)
     {
         return parent::save($data);
-    }
-
-    public function getContract(int $contractID)
-    {
-        $model = AdminModel::getInstance('Contract', 'ContractsModel');
-        return $model->getItem($contractID);
-    }
-
-    public function getPriceItem(int $itemID)
-    {
-        JTable::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_prices/tables");
-        $table = JTable::getInstance('Items', 'TablePrices');
-        $table->load($itemID);
-        return $table;
     }
 
     public function getTable($name = 'Items', $prefix = 'TableContracts', $options = array())
@@ -80,7 +72,7 @@ class ContractsModelItem extends AdminModel {
     {
         $all = get_class_vars($table);
         unset($all['_errors']);
-        $nulls = ['contractStandID', 'value2']; //Поля, которые NULL
+        $nulls = ['contractStandID', 'value2', 'payerID']; //Поля, которые NULL
         foreach ($all as $field => $v) {
             if (empty($field)) continue;
             if (in_array($field, $nulls)) {
@@ -97,6 +89,29 @@ class ContractsModelItem extends AdminModel {
 
         parent::prepareTable($table);
     }
+
+    private function getPayer(int $payerID)
+    {
+        JTable::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_companies/tables");
+        $table = JTable::getInstance('Companies', 'TableCompanies');
+        $table->load($payerID);
+        return $table;
+    }
+
+    private function getContract(int $contractID)
+    {
+        $model = AdminModel::getInstance('Contract', 'ContractsModel');
+        return $model->getItem($contractID);
+    }
+
+    private function getPriceItem(int $itemID)
+    {
+        JTable::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_prices/tables");
+        $table = JTable::getInstance('Items', 'TablePrices');
+        $table->load($itemID);
+        return $table;
+    }
+
 
     protected function canEditState($record)
     {
