@@ -51,6 +51,14 @@
     </fieldset>
     <fieldset name="thematics_activities">
         <field
+                name="activities"
+                type="Activity"
+                label="COM_CONTRACTS_FORM_CONTRACT_ACTIVITIES_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_ACTIVITIES_DESC"
+                class="span12"
+                multiple="true"
+        />
+        <field
                 name="thematics"
                 type="Thematics"
                 label="COM_CONTRACTS_FORM_CONTRACT_THEMATICS_LABEL"

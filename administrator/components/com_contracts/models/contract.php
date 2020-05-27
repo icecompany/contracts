@@ -32,6 +32,7 @@ class ContractsModelContract extends AdminModel {
                 $item->parent_id = $parent['parentID'];
                 $item->parent_title = $parent['title'];
             }
+            $item->activities = $this->getActivities($item->companyID);
             $item->thematics = $this->getThematics($item->id);
         }
         $company = $this->getCompany($item->companyID);
@@ -212,6 +213,7 @@ class ContractsModelContract extends AdminModel {
         $form->addFieldPath(JPATH_ADMINISTRATOR."/components/com_mkv/models/fields");
         $form->addFieldPath(JPATH_ADMINISTRATOR."/components/com_prices/models/fields");
         $form->addFieldPath(JPATH_ADMINISTRATOR."/components/com_prj/models/fields");
+        $form->addFieldPath(JPATH_ADMINISTRATOR."/components/com_companies/models/fields");
 
         if (empty($form))
         {
@@ -255,6 +257,16 @@ class ContractsModelContract extends AdminModel {
         }
 
         parent::prepareTable($table);
+    }
+
+    private function getActivities(int $companyID)
+    {
+        JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_companies/models", 'CompaniesModel');
+        $model = JModelLegacy::getInstance('Companies_activities', 'CompaniesModel', ['companyID' => $companyID, 'ignore_request' => true]);
+        $items = $model->getItems();
+        $result = [];
+        foreach ($items as $item) $result[] = $item['activityID'];
+        return $result;
     }
 
     private function getThematics(int $contractID)
