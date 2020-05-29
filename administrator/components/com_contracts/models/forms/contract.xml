@@ -12,6 +12,39 @@
                 <option value="">COM_CONTRACTS_CONTRACT_STATUS_IN_PROJECT</option>
         </field>
         <field
+                name="managerID"
+                type="Manager"
+                label="COM_CONTRACTS_FORM_CONTRACT_MANAGER_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_MANAGER_DESC"
+                required="true"
+                class="span12"
+        />
+        <field
+                name="currency"
+                type="list"
+                label="COM_CONTRACTS_FORM_CONTRACT_CURRENCY_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_CURRENCY_DESC"
+                required="true"
+                class="span12"
+        >
+            <option value="rub">COM_CONTRACTS_CURRENCY_RUB</option>
+            <option value="usd">COM_CONTRACTS_CURRENCY_USD</option>
+            <option value="eur">COM_CONTRACTS_CURRENCY_EUR</option>
+        </field>
+    </fieldset>
+    <fieldset name="contract">
+        <field
+                name="number"
+                type="text"
+                label="COM_CONTRACTS_FORM_CONTRACT_NUMBER_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_NUMBER_DESC"
+                hint="COM_CONTRACTS_FORM_CONTRACT_NUMBER_HINT"
+                message="COM_CONTRACTS_FORM_CONTRACT_NUMBER_MESSAGE"
+                autocomplete="off"
+                validate="contractnumber"
+                class="span12"
+        />
+        <field
                 name="number_free"
                 type="text"
                 label="COM_CONTRACTS_FORM_CONTRACT_MANUAL_NUMBER_LABEL"
@@ -28,26 +61,6 @@
                 filter="none"
                 autocomplete="off"
         />
-        <field
-                name="managerID"
-                type="Manager"
-                label="COM_CONTRACTS_FORM_CONTRACT_MANAGER_LABEL"
-                description="COM_CONTRACTS_FORM_CONTRACT_MANAGER_DESC"
-                required="true"
-                class="span12"
-        />
-        <field
-                name="currency"
-                type="list"
-                label="COM_CONTRACTS_FORM_CONTRACT_CURRENCY_LABEL"
-                description="COM_CONTRACTS_FORM_CONTRACT_CURRENCY_DESC"
-                required="true"
-                class="span12"
-                >
-            <option value="rub">COM_CONTRACTS_CURRENCY_RUB</option>
-            <option value="usd">COM_CONTRACTS_CURRENCY_USD</option>
-            <option value="eur">COM_CONTRACTS_CURRENCY_EUR</option>
-        </field>
     </fieldset>
     <fieldset name="thematics_activities">
         <field

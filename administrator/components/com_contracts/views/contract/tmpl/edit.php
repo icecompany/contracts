@@ -20,6 +20,7 @@ HTMLHelper::_('script', 'com_contracts/contract.js', array('version' => 'auto', 
                 <div class="row-fluid">
                     <div class="span4">
                         <div><?php echo $this->loadTemplate('general'); ?></div>
+                        <div><?php echo $this->loadTemplate('contract'); ?></div>
                         <?php if ($this->item->id !== null): ?>
                             <div><?php echo $this->loadTemplate('thematics_activities'); ?></div>
                         <?php endif;?>
