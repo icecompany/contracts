@@ -94,6 +94,15 @@ class ContractsModelContract extends AdminModel {
         else return [];
     }
 
+    public function getTasks(): array
+    {
+        $item = parent::getItem();
+        if ($item->id === null) return [];
+        JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_scheduler/models");
+        $model = JModelLegacy::getInstance('Tasks', 'SchedulerModel', ['contractID' => $item->id]);
+        return $model->getItems();
+    }
+
     public function getParent(int $contractID): array
     {
         $table = JTable::getInstance('Parents', 'TableContracts');

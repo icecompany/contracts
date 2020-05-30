@@ -40,6 +40,11 @@ HTMLHelper::_('script', 'com_contracts/contract.js', array('version' => 'auto', 
                     <?php echo JHtml::_('bootstrap.endTab'); ?>
                 <?php endif;?>
                 <?php if ($this->item->id !== null): ?>
+                    <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'tasks', JText::sprintf('COM_CONTRACTS_TITLE_TAB_TASKS')); ?>
+                    <div><?php echo $this->loadTemplate('tasks'); ?></div>
+                    <?php echo JHtml::_('bootstrap.endTab'); ?>
+                <?php endif;?>
+                <?php if ($this->item->id !== null): ?>
                     <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'stands', JText::sprintf('COM_CONTRACTS_TITLE_TAB_STANDS')); ?>
                     <div><?php echo $this->loadTemplate('stands'); ?></div>
                     <?php echo JHtml::_('bootstrap.endTab'); ?>
