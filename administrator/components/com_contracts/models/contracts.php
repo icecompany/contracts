@@ -168,7 +168,7 @@ class ContractsModelContracts extends ListModel
             $ids[] = $item->id;
             $arr['company'] = $item->company;
             $arr['project'] = $item->project;
-            $arr['status'] = $item->status ?? JText::sprintf('COM_CONTRACTS_CONTRACT_STATUS_IN_PROJECT');
+            $arr['status'] = $item->status ?? JText::sprintf('COM_MKV_STATUS_IN_PROJECT');
             $manager = explode(' ', $item->manager);
             $arr['manager'] = $manager[0];
             $currency = mb_strtoupper($item->currency);
@@ -182,7 +182,7 @@ class ContractsModelContracts extends ListModel
             $url = JRoute::_("index.php?option={$this->option}&amp;task=contract.edit&amp;id={$item->id}&amp;return={$this->return}");
             $arr['edit_link'] = JHtml::link($url, JText::sprintf('COM_CONTRACTS_ACTION_OPEN'));
             $url = JRoute::_("index.php?option={$this->option}&amp;task=contract.edit&amp;id={$item->id}&amp;return={$this->return}");
-            $arr['status_link'] = JHtml::link($url, $item->status);
+            $arr['status_link'] = JHtml::link($url, $item->status ?? JText::sprintf('COM_MKV_STATUS_IN_PROJECT'));
             $url = JRoute::_("index.php?option={$this->option}&amp;view=items&amp;contractID={$item->id}");
             $arr['items_link'] = JHtml::link($url, JText::sprintf('COM_CONTRACTS_ACTION_ITEMS'));
             $result['items'][] = $arr;

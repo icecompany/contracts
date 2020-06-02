@@ -11,6 +11,7 @@ class JFormRuleContractnumber extends FormRule
 
     public function test(\SimpleXMLElement $element, $value, $group = null, Registry $input = null, Form $form = null)
     {
+        if (empty($value)) return true;
         return parent::test($element, $value, $group, $input, $form);
     }
 }
