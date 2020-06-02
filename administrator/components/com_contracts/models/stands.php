@@ -149,7 +149,7 @@ class ContractsModelStands extends ListModel
         $sheet->setCellValue("G1", JText::sprintf('COM_CONTRACTS_HEAD_STANDS_CONTRACT_DATE'));
         $sheet->setCellValue("H1", JText::sprintf('COM_CONTRACTS_HEAD_STANDS_MANAGER'));
         $sheet->setCellValue("I1", JText::sprintf('COM_CONTRACTS_HEAD_STANDS_STAND_STATUS'));
-        $col = 8;
+        $col = 9;
         foreach ($items['titles'] as $id => $title) {
             $sheet->setCellValueByColumnAndRow($col, 1, $title);
             $col++;
