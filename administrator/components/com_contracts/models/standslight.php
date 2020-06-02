@@ -22,7 +22,7 @@ class ContractsModelStandsLight extends ListModel
         $this->byCompanyID = $config['byCompanyID'] ?? false;
         $this->byContractID = $config['byContractID'] ?? false;
         $this->export = ($input->getString('format', 'html') === 'html') ? false : true;
-        $this->return = ContractsHelper::getReturnUrl();
+        $this->return = PrjHelper::getReturnUrl();
     }
 
     protected function _getListQuery()
