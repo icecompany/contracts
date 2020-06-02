@@ -32,7 +32,9 @@ class ContractsModelContracts extends ListModel
         parent::__construct($config);
         $input = JFactory::getApplication()->input;
         $this->export = ($input->getString('format', 'html') === 'html') ? false : true;
-        $this->return = ContractsHelper::getReturnUrl();
+        $this->companyID = $config['companyID'] ?? 0;
+        $this->return = PrjHelper::getReturnUrl();
+        if ($this->companyID > 0) $this->export = true;
     }
 
     protected function _getListQuery()
@@ -60,88 +62,93 @@ class ContractsModelContracts extends ListModel
             ->leftJoin("#__mkv_companies e on e.id = c.companyID")
             ->leftJoin("#__users u on u.id = c.managerID")
             ->leftJoin("#__mkv_contract_incoming_info i on i.contractID = c.id");
-        $search = (!$this->export) ? $this->getState('filter.search') : JFactory::getApplication()->input->getString('search', '');
-        if (!empty($search)) {
-            if (stripos($search, 'id:') !== false) { //Поиск по ID
-                $id = explode(':', $search);
-                $id = $id[1];
-                if (is_numeric($id)) {
-                    $query->where("c.id = {$this->_db->q($id)}");
-                }
-            }
-            else {
-                if (stripos($search, 'num:') !== false) { //Поиск по номеру договора
-                    $num = explode(':', $search);
-                    $num = $num[1];
-                    if (is_numeric($num)) {
-                        $query->where("c.number = {$this->_db->q($num)}");
+        if ($this->companyID > 0) {
+            $query
+                ->where("c.companyID = {$this->_db->q($this->companyID)}");
+            $orderCol = 'c.id';
+            $orderDirn = 'desc';
+        }
+        else {
+            $search = (!$this->export) ? $this->getState('filter.search') : JFactory::getApplication()->input->getString('search', '');
+            if (!empty($search)) {
+                if (stripos($search, 'id:') !== false) { //Поиск по ID
+                    $id = explode(':', $search);
+                    $id = $id[1];
+                    if (is_numeric($id)) {
+                        $query->where("c.id = {$this->_db->q($id)}");
+                    }
+                } else {
+                    if (stripos($search, 'num:') !== false) { //Поиск по номеру договора
+                        $num = explode(':', $search);
+                        $num = $num[1];
+                        if (is_numeric($num)) {
+                            $query->where("c.number = {$this->_db->q($num)}");
+                        }
+                    } else {
+                        $text = $this->_db->q("%{$search}%");
+                        $query->where("(e.title like {$text} or e.title_full like {$text} or e.title_en like {$text})");
                     }
                 }
-                else {
-                    $text = $this->_db->q("%{$search}%");
-                    $query->where("(e.title like {$text} or e.title_full like {$text} or e.title_en like {$text})");
+            }
+            $project = PrjHelper::getActiveProject();
+            if (is_numeric($project)) {
+                $query->where("c.projectID = {$this->_db->q($project)}");
+            }
+            $status = $this->getState('filter.status');
+            if (is_array($status) && !empty($status)) {
+                if (!in_array(100, $status)) {
+                    if (in_array('', $status)) {
+                        $query->where('c.status is null');
+                    } else {
+                        $statuses = implode(", ", $status);
+                        $query->where("c.status in ($statuses)");
+                    }
                 }
             }
-        }
-        $project = PrjHelper::getActiveProject();
-        if (is_numeric($project)) {
-            $query->where("c.projectID = {$this->_db->q($project)}");
-        }
-        $status = $this->getState('filter.status');
-        if (is_array($status) && !empty($status)) {
-            if (!in_array(100, $status)) {
-                if (in_array('', $status)) {
-                    $query->where('c.status is null');
-                }
-                else {
-                    $statuses = implode(", ", $status);
-                    $query->where("c.status in ($statuses)");
-                }
+            $catalog_info = $this->getState('filter.catalog_info');
+            if (is_numeric($catalog_info)) {
+                $query->where("i.catalog_info = {$this->_db->q($catalog_info)}");
             }
-        }
-        $catalog_info = $this->getState('filter.catalog_info');
-        if (is_numeric($catalog_info)) {
-            $query->where("i.catalog_info = {$this->_db->q($catalog_info)}");
-        }
-        $catalog_logo = $this->getState('filter.catalog_logo');
-        if (is_numeric($catalog_logo)) {
-            $query->where("i.catalog_logo = {$this->_db->q($catalog_logo)}");
-        }
-        $pvn_1 = $this->getState('filter.pvn_1');
-        if (is_numeric($pvn_1)) {
-            $query->where("i.pvn_1 = {$this->_db->q($pvn_1)}");
-        }
-        $pvn_1a = $this->getState('filter.pvn_1a');
-        if (is_numeric($pvn_1a)) {
-            $query->where("i.pvn_1a = {$this->_db->q($pvn_1a)}");
-        }
-        $pvn_1b = $this->getState('filter.pvn_1b');
-        if (is_numeric($pvn_1b)) {
-            $query->where("i.pvn_1b = {$this->_db->q($pvn_1b)}");
-        }
-        $pvn_1v = $this->getState('filter.pvn_1v');
-        if (is_numeric($pvn_1v)) {
-            $query->where("i.pvn_1v = {$this->_db->q($pvn_1v)}");
-        }
-        $pvn_1g = $this->getState('filter.pvn_1g');
-        if (is_numeric($pvn_1g)) {
-            $query->where("i.pvn_1g = {$this->_db->q($pvn_1g)}");
-        }
-        $doc_status = $this->getState('filter.doc_status');
-        if (is_numeric($doc_status)) {
-            $query->where("i.doc_status = {$this->_db->q($doc_status)}");
-        }
-        $currency = $this->getState('filter.currency');
-        if (!empty($currency)) {
-            $query->where("c.currency like {$this->_db->q($currency)}");
-        }
+            $catalog_logo = $this->getState('filter.catalog_logo');
+            if (is_numeric($catalog_logo)) {
+                $query->where("i.catalog_logo = {$this->_db->q($catalog_logo)}");
+            }
+            $pvn_1 = $this->getState('filter.pvn_1');
+            if (is_numeric($pvn_1)) {
+                $query->where("i.pvn_1 = {$this->_db->q($pvn_1)}");
+            }
+            $pvn_1a = $this->getState('filter.pvn_1a');
+            if (is_numeric($pvn_1a)) {
+                $query->where("i.pvn_1a = {$this->_db->q($pvn_1a)}");
+            }
+            $pvn_1b = $this->getState('filter.pvn_1b');
+            if (is_numeric($pvn_1b)) {
+                $query->where("i.pvn_1b = {$this->_db->q($pvn_1b)}");
+            }
+            $pvn_1v = $this->getState('filter.pvn_1v');
+            if (is_numeric($pvn_1v)) {
+                $query->where("i.pvn_1v = {$this->_db->q($pvn_1v)}");
+            }
+            $pvn_1g = $this->getState('filter.pvn_1g');
+            if (is_numeric($pvn_1g)) {
+                $query->where("i.pvn_1g = {$this->_db->q($pvn_1g)}");
+            }
+            $doc_status = $this->getState('filter.doc_status');
+            if (is_numeric($doc_status)) {
+                $query->where("i.doc_status = {$this->_db->q($doc_status)}");
+            }
+            $currency = $this->getState('filter.currency');
+            if (!empty($currency)) {
+                $query->where("c.currency like {$this->_db->q($currency)}");
+            }
 
-        if ($orderCol === 'number') {
-            if ($orderDirn === 'DESC') $orderCol = 'LENGTH(num), num';
-            if ($orderDirn === 'desc') $orderCol = 'LENGTH(num) DESC, num';
-        }
-        if ($orderCol === 'c.dat') {
-            $query->where("c.dat is not null");
+            if ($orderCol === 'number') {
+                if ($orderDirn === 'DESC') $orderCol = 'LENGTH(num), num';
+                if ($orderDirn === 'desc') $orderCol = 'LENGTH(num) DESC, num';
+            }
+            if ($orderCol === 'c.dat') {
+                $query->where("c.dat is not null");
+            }
         }
 
         $query->order($this->_db->escape($orderCol . ' ' . $orderDirn));
@@ -219,7 +226,7 @@ class ContractsModelContracts extends ListModel
         $doc_status = $this->getUserStateFromRequest($this->context . '.filter.doc_status', 'filter_doc_status');
         $this->setState('filter.doc_status', $doc_status);
         parent::populateState($ordering, $direction);
-        ContractsHelper::check_refresh();
+        PrjHelper::check_refresh();
     }
 
     protected function getStoreId($id = '')
@@ -237,5 +244,5 @@ class ContractsModelContracts extends ListModel
         return parent::getStoreId($id);
     }
 
-    private $export, $return;
+    private $export, $return, $companyID;
 }
