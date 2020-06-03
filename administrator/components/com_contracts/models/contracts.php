@@ -187,7 +187,7 @@ class ContractsModelContracts extends ListModel
                 $arr['debt_full'] = JHtml::link($url, $arr['debt_full']);
             }
             if ($item->payments > 0) {
-                $url = JRoute::_("index.php?option=com_finances&amp;view=scores&amp;contractID={$item->id}&amp;return={$this->return}");
+                $url = JRoute::_("index.php?option=com_finances&amp;view=scores&amp;contractID={$item->id}");
                 $arr['payments_full'] = JHtml::link($url, $arr['payments_full']);
             }
             if (empty($item->doc_status)) $item->doc_status = 0;
