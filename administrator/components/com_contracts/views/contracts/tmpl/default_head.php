@@ -43,6 +43,12 @@ $listDirn    = $this->escape($this->state->get('list.direction'));
     <th>
         <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_AMOUNT', 'c.amount', $listDirn, $listOrder); ?>
     </th>
+    <th>
+        <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_PAYED', 'c.payments', $listDirn, $listOrder); ?>
+    </th>
+    <th>
+        <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_DEBT', 'c.debt', $listDirn, $listOrder); ?>
+    </th>
     <th style="width: 1%;">
         <?php echo JHtml::_('searchtools.sort', 'ID', 'c.id', $listDirn, $listOrder); ?>
     </th>

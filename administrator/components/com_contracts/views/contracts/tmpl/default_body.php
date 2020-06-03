@@ -45,6 +45,12 @@ foreach ($this->items['items'] as $i => $item) :
             <?php echo $item['amount_full']; ?>
         </td>
         <td>
+            <?php echo $item['payments_full']; ?>
+        </td>
+        <td>
+            <?php echo $item['debt_full']; ?>
+        </td>
+        <td>
             <?php echo $item['id']; ?>
         </td>
     </tr>

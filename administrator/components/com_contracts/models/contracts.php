@@ -49,7 +49,7 @@ class ContractsModelContracts extends ListModel
         $limit = (!$this->export) ? $this->getState('list.limit') : 0;
 
         $query
-            ->select("c.id, c.dat, c.number, c.number_free, c.currency, c.amount")
+            ->select("c.id, c.dat, c.number, c.number_free, c.currency, c.amount, c.payments, c.debt")
             ->select("ifnull(c.number_free, c.number) as num")
             ->select("s.title as status")
             ->select("p.title as project")
@@ -169,13 +169,20 @@ class ContractsModelContracts extends ListModel
             $arr['company'] = $item->company;
             $arr['project'] = $item->project;
             $arr['status'] = $item->status ?? JText::sprintf('COM_MKV_STATUS_IN_PROJECT');
-            $manager = explode(' ', $item->manager);
-            $arr['manager'] = $manager[0];
+            $arr['manager'] = MkvHelper::getLastAndFirstNames($item->manager);
             $currency = mb_strtoupper($item->currency);
             $amount = number_format((float) $item->amount ?? 0, 2, '.', ' ');
+            $payments = number_format((float) $item->payments ?? 0, 2, '.', ' ');
+            $debt = number_format((float) $item->debt ?? 0, 2, '.', ' ');
             $arr['dat'] = (!empty($item->dat)) ? JDate::getInstance($item->dat)->format("d.m.Y") : '';
             $arr['currency'] = JText::sprintf("COM_CONTRACTS_CURRENCY_{$currency}_SHORT");
-            $arr['amount_full'] = JText::sprintf("COM_CONTRACTS_CURRENCY_{$currency}_AMOUNT_SHORT", $amount);
+            $arr['amount_full'] = JText::sprintf("COM_MKV_AMOUNT_{$currency}_SHORT", $amount);
+            $arr['payments_full'] = JText::sprintf("COM_MKV_AMOUNT_{$currency}_SHORT", $payments);
+            $arr['debt_full'] = JText::sprintf("COM_MKV_AMOUNT_{$currency}_SHORT", $debt);
+            if ($item->debt > 0) {
+                $url = JRoute::_("index.php?option=com_finances&amp;task=score.add&amp;contractID={$item->id}&amp;return={$this->return}");
+                $arr['debt_full'] = JHtml::link($url, $arr['debt_full']);
+            }
             if (empty($item->doc_status)) $item->doc_status = 0;
             $arr['doc_status'] = JText::sprintf("COM_CONTRACTS_DOC_STATUS_{$item->doc_status}_SHORT");
             $arr['number'] = $item->number_free ?? $item->number;
