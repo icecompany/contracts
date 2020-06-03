@@ -10,10 +10,10 @@ $listDirn    = $this->escape($this->state->get('list.direction'));
     <th style="width: 1%;">
         №
     </th>
-    <th>
+    <th style="width: 5%;">
         <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_NUMBER', 'number', $listDirn, $listOrder); ?>
     </th>
-    <th>
+    <th style="width: 5%;">
         <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_DATE', 'c.dat', $listDirn, $listOrder); ?>
     </th>
     <th>
@@ -40,13 +40,13 @@ $listDirn    = $this->escape($this->state->get('list.direction'));
     <th>
         <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_CONTRACTS_ORIGINAL', 'i.doc_status', $listDirn, $listOrder); ?>
     </th>
-    <th>
+    <th style="width: 9%;">
         <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_AMOUNT', 'c.amount', $listDirn, $listOrder); ?>
     </th>
-    <th>
+    <th style="width: 9%;">
         <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_PAYED', 'c.payments', $listDirn, $listOrder); ?>
     </th>
-    <th>
+    <th style="width: 9%;">
         <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_DEBT', 'c.debt', $listDirn, $listOrder); ?>
     </th>
     <th style="width: 1%;">

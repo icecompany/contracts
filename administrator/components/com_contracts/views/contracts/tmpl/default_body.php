@@ -30,7 +30,7 @@ foreach ($this->items['items'] as $i => $item) :
             <?php echo $item['project']; ?>
         </td>
         <td>
-            <?php echo $item['company']; ?>
+            <?php echo $item['company_link']; ?>
         </td>
         <td>
             <?php echo $item['manager']; ?>

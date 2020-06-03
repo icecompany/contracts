@@ -49,7 +49,7 @@ class ContractsModelContracts extends ListModel
         $limit = (!$this->export) ? $this->getState('list.limit') : 0;
 
         $query
-            ->select("c.id, c.dat, c.number, c.number_free, c.currency, c.amount, c.payments, c.debt")
+            ->select("c.id, c.companyID, c.dat, c.number, c.number_free, c.currency, c.amount, c.payments, c.debt")
             ->select("ifnull(c.number_free, c.number) as num")
             ->select("s.title as status")
             ->select("p.title as project")
@@ -168,6 +168,9 @@ class ContractsModelContracts extends ListModel
             $ids[] = $item->id;
             $arr['company'] = $item->company;
             $arr['project'] = $item->project;
+            $arr['amount'] = $item->amount;
+            $arr['payments'] = $item->payments;
+            $arr['debt'] = $item->debt;
             $arr['status'] = $item->status ?? JText::sprintf('COM_MKV_STATUS_IN_PROJECT');
             $arr['manager'] = MkvHelper::getLastAndFirstNames($item->manager);
             $currency = mb_strtoupper($item->currency);
@@ -183,11 +186,17 @@ class ContractsModelContracts extends ListModel
                 $url = JRoute::_("index.php?option=com_finances&amp;task=score.add&amp;contractID={$item->id}&amp;return={$this->return}");
                 $arr['debt_full'] = JHtml::link($url, $arr['debt_full']);
             }
+            if ($item->payments > 0) {
+                $url = JRoute::_("index.php?option=com_finances&amp;view=scores&amp;contractID={$item->id}&amp;return={$this->return}");
+                $arr['payments_full'] = JHtml::link($url, $arr['payments_full']);
+            }
             if (empty($item->doc_status)) $item->doc_status = 0;
             $arr['doc_status'] = JText::sprintf("COM_CONTRACTS_DOC_STATUS_{$item->doc_status}_SHORT");
             $arr['number'] = $item->number_free ?? $item->number;
             $url = JRoute::_("index.php?option={$this->option}&amp;task=contract.edit&amp;id={$item->id}&amp;return={$this->return}");
             $arr['edit_link'] = JHtml::link($url, JText::sprintf('COM_CONTRACTS_ACTION_OPEN'));
+            $url = JRoute::_("index.php?option=com_companies&amp;task=company.edit&amp;id={$item->companyID}&amp;return={$this->return}");
+            $arr['company_link'] = JHtml::link($url, $item->company);
             $url = JRoute::_("index.php?option={$this->option}&amp;task=contract.edit&amp;id={$item->id}&amp;return={$this->return}");
             $arr['status_link'] = JHtml::link($url, $item->status ?? JText::sprintf('COM_MKV_STATUS_IN_PROJECT'));
             $url = JRoute::_("index.php?option={$this->option}&amp;view=items&amp;contractID={$item->id}");
