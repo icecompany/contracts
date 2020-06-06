@@ -2,6 +2,7 @@
 defined('_JEXEC') or die;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Helper\UserGroupsHelper;
 
 class ContractsModelContract extends AdminModel {
 
@@ -191,7 +192,31 @@ class ContractsModelContract extends AdminModel {
         $arr['catalog_logo'] = $data['catalog_logo'];
         $arr['no_exhibit'] = $data['no_exhibit'];
         $arr['info_arrival'] = $data['info_arrival'];
+        if ($table->doc_status == '0' && $data['doc_status'] != 0) {
+            $this->sendNotifyNewDocStatus($contractID, $data['companyID'], $data['doc_status']);
+        }
         $table->save($arr);
+    }
+
+    private function sendNotifyNewDocStatus(int $contractID, int $companyID, int $new_status): void
+    {
+        if (ContractsHelper::getConfig('notify_new_doc_status_status') != '1') return;
+        $groupID = ContractsHelper::getConfig('notify_new_doc_status_group');
+        if (empty($groupID) || $groupID === null) return;
+        $members = MkvHelper::getGroupUsers($groupID);
+        if (empty($members)) return;
+        $company = $this->getCompany($companyID);
+        $data['text'] = JText::sprintf('COM_CONTRACTS_NOTIFY_NEW_DOC_STATUS', $company->title, JText::sprintf("COM_CONTRACTS_DOC_STATUS_{$new_status}_SHORT"));
+        $data['contractID'] = $contractID;
+        foreach ($members as $member) {
+            $data['managerID'] = $member;
+            $push = [];
+            $push['id'] = ContractsHelper::getConfig('notify_new_doc_status_chanel_id');
+            $push['key'] = ContractsHelper::getConfig('notify_new_doc_status_chanel_key');
+            $push['title'] = JText::sprintf('COM_CONTRACTS_NOTIFY_NEW_DOC_STATUS_TITLE');
+            $push['text'] = $data['text'];
+            SchedulerHelper::sendNotify($data, $push);
+        }
     }
 
     public function getContractItems(): array

@@ -15,6 +15,7 @@ JFactory::getLanguage()->load('com_prices', JPATH_ADMINISTRATOR . "/components/c
 require_once JPATH_ADMINISTRATOR . "/components/com_mkv/helpers/mkv.php";
 require_once JPATH_ADMINISTRATOR . "/components/com_prj/helpers/prj.php";
 require_once JPATH_ADMINISTRATOR . "/components/com_finances/helpers/finances.php";
+require_once JPATH_ADMINISTRATOR . "/components/com_scheduler/helpers/scheduler.php";
 require_once JPATH_COMPONENT_ADMINISTRATOR . '/helpers/contracts.php';
 require_once JPATH_COMPONENT_ADMINISTRATOR . '/passwd.php';
 $db = JFactory::getDbo();

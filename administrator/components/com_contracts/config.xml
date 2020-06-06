@@ -1,5 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
+	<fieldset name="notifies" label="COM_CONTRACTS_CONFIG_NOTIFIES_LABEL" description="COM_CONTRACTS_CONFIG_NOTIFIES_DESC">
+		<field
+				name="notify_new_doc_status_status"
+				type="radio"
+				class="btn-group btn-group-yesno"
+				label="COM_CONTRACTS_CONFIG_NOTIFY_STATUS_NEW_DOC_STATUS_LABEL"
+				description="COM_CONTRACTS_CONFIG_NOTIFY_STATUS_NEW_DOC_STATUS_DESC"
+				filter="integer"
+				default="0"
+				required="true"
+				component="com_contracts"
+				section="component"
+		>
+				<option value="0">JNO</option>
+				<option value="1">JYES</option>
+		</field>
+		<field
+				name="notify_new_doc_status_chanel_id"
+				type="text"
+				default="0"
+				filter="integer"
+				label="COM_CONTRACTS_CONFIG_NOTIFY_STATUS_NEW_DOC_CHANEL_ID_LABEL"
+				description="COM_CONTRACTS_CONFIG_NOTIFY_STATUS_NEW_DOC_CHANEL_ID_DESC"
+				component="com_contracts"
+				section="component"
+		/>
+		<field
+				name="notify_new_doc_status_chanel_key"
+				type="text"
+				label="COM_CONTRACTS_CONFIG_NOTIFY_STATUS_NEW_DOC_CHANEL_KEY_LABEL"
+				description="COM_CONTRACTS_CONFIG_NOTIFY_STATUS_NEW_DOC_CHANEL_KEY_DESC"
+				component="com_contracts"
+				section="component"
+		/>
+		<field
+				name="notify_new_doc_status_group"
+				type="usergroup"
+				label="COM_CONTRACTS_CONFIG_NOTIFY_GROUP_NEW_DOC_STATUS_LABEL"
+				description="COM_CONTRACTS_CONFIG_NOTIFY_GROUP_NEW_DOC_STATUS_DESC"
+				component="com_contracts"
+				section="component"
+		/>
+	</fieldset>
 	<fieldset name="permissions" label="JCONFIG_PERMISSIONS_LABEL" description="JCONFIG_PERMISSIONS_DESC">
 		<field name="rules"
 			   type="rules"
