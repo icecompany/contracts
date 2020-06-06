@@ -16,6 +16,7 @@ class ContractsViewContracts extends HtmlView
         $this->filterForm = $this->get('FilterForm');
         $this->activeFilters = $this->get('ActiveFilters');
 
+        $this->filterForm->addFieldPath(JPATH_ADMINISTRATOR . "/components/com_mkv/models/fields");
         $this->filterForm->addFieldPath(JPATH_ADMINISTRATOR . "/components/com_prj/models/fields");
 
         // Show the toolbar
@@ -23,7 +24,6 @@ class ContractsViewContracts extends HtmlView
 
         // Show the sidebar
         ContractsHelper::addSubmenu('contracts');
-        //JHtmlSidebar::addFilter(JText::sprintf('COM_CONTRACTS_FILTER_SELECT_PROJECT'), "filter_global_project", JHtml::_('select.options', PrjHelper::getAvailableProjects(), 'value', 'text', $this->state->get('filter.global.project')));
         $this->sidebar = JHtmlSidebar::render();
 
         // Display it all

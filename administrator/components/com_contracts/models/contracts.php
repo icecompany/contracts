@@ -94,6 +94,10 @@ class ContractsModelContracts extends ListModel
             if (is_numeric($project)) {
                 $query->where("c.projectID = {$this->_db->q($project)}");
             }
+            $manager = $this->getState('filter.manager');
+            if (is_numeric($manager)) {
+                $query->where("c.managerID = {$this->_db->q($manager)}");
+            }
             $status = $this->getState('filter.status');
             if (is_array($status) && !empty($status)) {
                 if (!in_array(100, $status)) {
@@ -227,6 +231,8 @@ class ContractsModelContracts extends ListModel
         $this->setState('filter.search', $search);
         $status = $this->getUserStateFromRequest($this->context . '.filter.status', 'filter_status',  array(100));
         $this->setState('filter.status', $status);
+        $manager = $this->getUserStateFromRequest($this->context . '.filter.manager', 'filter_manager',  '', 'integer');
+        $this->setState('filter.manager', $manager);
         $catalog_info = $this->getUserStateFromRequest($this->context . '.filter.catalog_info', 'filter_catalog_info');
         $this->setState('filter.catalog_info', $catalog_info);
         $catalog_logo = $this->getUserStateFromRequest($this->context . '.filter.catalog_logo', 'filter_catalog_logo');
@@ -251,6 +257,7 @@ class ContractsModelContracts extends ListModel
     {
         $id .= ':' . $this->getState('filter.search');
         $id .= ':' . $this->getState('filter.status');
+        $id .= ':' . $this->getState('filter.manager');
         $id .= ':' . $this->getState('filter.catalog_info');
         $id .= ':' . $this->getState('filter.catalog_logo');
         $id .= ':' . $this->getState('filter.pvn_1');
