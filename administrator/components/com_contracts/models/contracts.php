@@ -18,7 +18,10 @@ class ContractsModelContracts extends ListModel
                 'number',
                 'i.doc_status',
                 'c.amount',
+                'c.payments',
+                'c.debt',
                 'search',
+                'num',
                 'catalog_info', 'i.catalog_info',
                 'catalog_logo', 'i.catalog_logo',
                 'pvn_1', 'i.pvn_1',
@@ -146,9 +149,13 @@ class ContractsModelContracts extends ListModel
                 $query->where("c.currency like {$this->_db->q($currency)}");
             }
 
-            if ($orderCol === 'number') {
-                if ($orderDirn === 'DESC') $orderCol = 'LENGTH(num), num';
-                if ($orderDirn === 'desc') $orderCol = 'LENGTH(num) DESC, num';
+            if ($orderCol === 'num') {
+                if ($orderDirn == 'DESC') {
+                    $orderCol = 'LENGTH(num) desc, num';
+                }
+                else {
+                    $orderCol = 'LENGTH(num) asc, num';
+                }
             }
             if ($orderCol === 'c.dat') {
                 $query->where("c.dat is not null");
@@ -186,7 +193,7 @@ class ContractsModelContracts extends ListModel
             $arr['amount_full'] = JText::sprintf("COM_MKV_AMOUNT_{$currency}_SHORT", $amount);
             $arr['payments_full'] = JText::sprintf("COM_MKV_AMOUNT_{$currency}_SHORT", $payments);
             $arr['debt_full'] = JText::sprintf("COM_MKV_AMOUNT_{$currency}_SHORT", $debt);
-            if ($item->debt > 0) {
+            if ($item->debt > 0 && FinancesHelper::canDo('core.create')) {
                 $url = JRoute::_("index.php?option=com_finances&amp;task=score.add&amp;contractID={$item->id}&amp;return={$this->return}");
                 $arr['debt_full'] = JHtml::link($url, $arr['debt_full']);
             }
@@ -231,7 +238,7 @@ class ContractsModelContracts extends ListModel
         $this->setState('filter.search', $search);
         $status = $this->getUserStateFromRequest($this->context . '.filter.status', 'filter_status',  array(100));
         $this->setState('filter.status', $status);
-        $manager = $this->getUserStateFromRequest($this->context . '.filter.manager', 'filter_manager',  '', 'integer');
+        $manager = $this->getUserStateFromRequest($this->context . '.filter.manager', 'filter_manager', JFactory::getUser()->id, 'integer');
         $this->setState('filter.manager', $manager);
         $catalog_info = $this->getUserStateFromRequest($this->context . '.filter.catalog_info', 'filter_catalog_info');
         $this->setState('filter.catalog_info', $catalog_info);

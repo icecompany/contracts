@@ -143,12 +143,24 @@ class ContractsModelItems extends ListModel
             $amount = number_format((float) $item->amount, 2, '.', ' ');
             $arr['amount'] = JText::sprintf("COM_CONTRACTS_CURRENCY_{$currency}_AMOUNT_SHORT", $amount);
             $arr['stand'] = $item->stand;
-            $url = JRoute::_("index.php?option={$this->option}&amp;task=item.edit&amp;id={$item->id}&amp;return={$return}");
-            $arr['edit_link'] = JHtml::link($url, $item->item, $link_option);
-            $url = JRoute::_("index.php?option={$this->option}&amp;task=items.delete&amp;cid[]={$item->id}");
-            $arr['delete_link'] = JHtml::link($url, JText::sprintf('COM_MKV_ACTION_DELETE'));
-            $url = JRoute::_("index.php?option={$this->option}&amp;task=stand.edit&amp;id={$item->contractStandID}&amp;return={$return}");
-            $arr['stand_link'] = JHtml::link($url, $item->stand);
+            if ($contract->managerID == JFactory::getUser()->id || ContractsHelper::canDo('core.edit.all')) {
+                $url = JRoute::_("index.php?option={$this->option}&amp;task=item.edit&amp;id={$item->id}&amp;return={$return}");
+                $arr['edit_link'] = JHtml::link($url, $item->item, $link_option);
+            }
+            else {
+                $arr['edit_link'] = $item->item;
+            }
+            if (($contract->managerID == JFactory::getUser()->id && ContractsHelper::canDo('core.delete')) || ContractsHelper::canDo('core.edit.all')) {
+                $url = JRoute::_("index.php?option={$this->option}&amp;task=items.delete&amp;cid[]={$item->id}");
+                $arr['delete_link'] = JHtml::link($url, JText::sprintf('COM_MKV_ACTION_DELETE'));
+            }
+            if (($contract->managerID == JFactory::getUser()->id && ContractsHelper::canDo('core.edit')) || ContractsHelper::canDo('core.edit.all')) {
+                $url = JRoute::_("index.php?option={$this->option}&amp;task=stand.edit&amp;id={$item->contractStandID}&amp;return={$return}");
+                $arr['stand_link'] = JHtml::link($url, $item->stand);
+            }
+            else {
+                $arr['stand_link'] = $item->stand;
+            }
             $result['items'][] = $arr;
             $result['amount'][$item->currency] += $item->amount;
             $result['values'] += $item->value;

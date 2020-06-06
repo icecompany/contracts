@@ -26,9 +26,11 @@ foreach ($this->items['items'] as $i => $item) :
         <td>
             <?php echo $item['items_link']; ?>
         </td>
-        <td>
-            <?php echo $item['project']; ?>
-        </td>
+        <?php if (!is_numeric($this->activeProject)): ?>
+            <td>
+                <?php echo $item['project']; ?>
+            </td>
+        <?php endif; ?>
         <td>
             <?php echo $item['company_link']; ?>
         </td>

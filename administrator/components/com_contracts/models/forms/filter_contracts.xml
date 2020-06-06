@@ -117,29 +117,9 @@
     <fields name="list">
         <field
                 name="fullordering"
-                type="list"
+                type="hidden"
                 onchange="this.form.submit();"
-                default="c.id desc"
-        >
-            <option value="number ASC">COM_CONTRACTS_SORTING_CONTRACT_NUMBER_ASC</option>
-            <option value="number DESC">COM_CONTRACTS_SORTING_CONTRACT_NUMBER_DESC</option>
-            <option value="c.dat ASC">COM_CONTRACTS_SORTING_DATE_ASC</option>
-            <option value="c.dat DESC">COM_CONTRACTS_SORTING_DATE_DESC</option>
-            <option value="p.title ASC">COM_CONTRACTS_SORTING_PROJECT_ASC</option>
-            <option value="p.title DESC">COM_CONTRACTS_SORTING_PROJECT_DESC</option>
-            <option value="company ASC">COM_CONTRACTS_SORTING_COMPANY_ASC</option>
-            <option value="company DESC">COM_CONTRACTS_SORTING_COMPANY_DESC</option>
-            <option value="manager ASC">COM_CONTRACTS_SORTING_MANAGER_ASC</option>
-            <option value="manager DESC">COM_CONTRACTS_SORTING_MANAGER_DESC</option>
-            <option value="s.ordering ASC">COM_CONTRACTS_SORTING_STATUS_ASC</option>
-            <option value="s.ordering DESC">COM_CONTRACTS_SORTING_STATUS_DESC</option>
-            <option value="i.doc_status ASC">COM_CONTRACTS_SORTING_DOC_STATUS_ASC</option>
-            <option value="i.doc_status DESC">COM_CONTRACTS_SORTING_DOC_STATUS_DESC</option>
-            <option value="c.amount ASC">COM_CONTRACTS_SORTING_CONTRACT_AMOUNT_ASC</option>
-            <option value="c.amount DESC">COM_CONTRACTS_SORTING_CONTRACT_AMOUNT_DESC</option>
-            <option value="c.id ASC">COM_CONTRACTS_SORTING_ID_ASC</option>
-            <option value="c.id DESC">COM_CONTRACTS_SORTING_ID_DESC</option>
-        </field>
+        />
         <field
                 name="limit"
                 type="limitbox"

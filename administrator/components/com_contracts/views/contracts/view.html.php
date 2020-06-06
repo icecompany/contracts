@@ -6,7 +6,7 @@ defined('_JEXEC') or die;
 class ContractsViewContracts extends HtmlView
 {
     protected $sidebar = '';
-    public $items, $pagination, $uid, $state, $filterForm, $activeFilters;
+    public $items, $pagination, $uid, $state, $filterForm, $activeFilters, $activeProject;
 
     public function display($tpl = null)
     {
@@ -15,9 +15,12 @@ class ContractsViewContracts extends HtmlView
         $this->state = $this->get('State');
         $this->filterForm = $this->get('FilterForm');
         $this->activeFilters = $this->get('ActiveFilters');
+        $this->activeProject = PrjHelper::getActiveProject();
 
         $this->filterForm->addFieldPath(JPATH_ADMINISTRATOR . "/components/com_mkv/models/fields");
         $this->filterForm->addFieldPath(JPATH_ADMINISTRATOR . "/components/com_prj/models/fields");
+
+        $this->filterForm->setValue('manager', 'filter', $this->state->get('filter.manager'));
 
         // Show the toolbar
         $this->toolbar();
@@ -42,7 +45,10 @@ class ContractsViewContracts extends HtmlView
         {
             JToolbarHelper::deleteList('COM_CONTRACTS_CONFIRM_REMOVE_CONTRACT', 'contracts.delete');
         }
-        JToolbarHelper::custom('contracts.setContractNumber', 'pencil-2', 'pencil-2', JText::sprintf('COM_CONTRACTS_BUTTON_SET_CONTRACTS_NUMBERS'));
+        if (ContractsHelper::canDo('core.create'))
+        {
+            JToolbarHelper::custom('contracts.setContractNumber', 'pencil-2', 'pencil-2', JText::sprintf('COM_CONTRACTS_BUTTON_SET_CONTRACTS_NUMBERS'));
+        }
         if (ContractsHelper::canDo('core.admin'))
         {
             JToolBarHelper::preferences('com_contracts');

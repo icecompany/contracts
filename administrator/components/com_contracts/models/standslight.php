@@ -36,6 +36,7 @@ class ContractsModelStandsLight extends ListModel
             ->select("cs.id, cs.status, cs.type, cs.freeze, cs.comment, cs.contractID")
             ->select("s.square, s.number")
             ->select("e.title as company, e.id as companyID")
+            ->select("c.managerID")
             ->from("#__mkv_contract_stands cs")
             ->leftJoin("#__mkv_contracts c on c.id = cs.contractID")
             ->leftJoin("#__mkv_companies e on e.id = c.companyID")
@@ -64,10 +65,17 @@ class ContractsModelStandsLight extends ListModel
             $arr['type'] = JText::sprintf("COM_MKV_STAND_TYPE_{$item->type}");
             $arr['freeze'] = $item->freeze;
             $arr['comment'] = $item->comment;
-            $url = JRoute::_("index.php?option={$this->option}&amp;task=stand.edit&amp;id={$item->id}&amp;return={$this->return}");
-            $arr['edit_link'] = JHtml::link($url, JText::sprintf('COM_MKV_STANDS_NUMBER_WITH_SQUARE', $item->number, $item->square));
-            $url = JRoute::_("index.php?option={$this->option}&amp;task=stands.delete&amp;cid[]={$item->id}");
-            $arr['delete_link'] = JHtml::link($url, JText::sprintf('COM_MKV_ACTION_DELETE'));
+            if (($item->managerID == JFactory::getUser()->id && ContractsHelper::canDo('core.edit')) || ContractsHelper::canDo('core.edit.all')) {
+                $url = JRoute::_("index.php?option={$this->option}&amp;task=stand.edit&amp;id={$item->id}&amp;return={$this->return}");
+                $arr['edit_link'] = JHtml::link($url, JText::sprintf('COM_MKV_STANDS_NUMBER_WITH_SQUARE', $item->number, $item->square));
+            }
+            else {
+                $arr['edit_link'] = JText::sprintf('COM_MKV_STANDS_NUMBER_WITH_SQUARE', $item->number, $item->square);
+            }
+            if (($item->managerID == JFactory::getUser()->id && ContractsHelper::canDo('core.delete')) || ContractsHelper::canDo('core.edit.all')) {
+                $url = JRoute::_("index.php?option={$this->option}&amp;task=stands.delete&amp;cid[]={$item->id}");
+                $arr['delete_link'] = JHtml::link($url, JText::sprintf('COM_MKV_ACTION_DELETE'));
+            }
             if ($this->byCompanyID) $result[$item->companyID][] = $item->number;
             if ($this->byContractID) $result[$item->contractID][] = $arr;
         }

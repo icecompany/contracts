@@ -5,5 +5,5 @@ use Joomla\CMS\MVC\Controller\BaseController;
 
 class ContractsController extends BaseController
 {
-	protected $default_view = 'statuses';
+	protected $default_view = 'contracts';
 }

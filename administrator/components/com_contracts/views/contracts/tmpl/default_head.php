@@ -11,7 +11,7 @@ $listDirn    = $this->escape($this->state->get('list.direction'));
         №
     </th>
     <th style="width: 5%;">
-        <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_NUMBER', 'number', $listDirn, $listOrder); ?>
+        <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_NUMBER', 'num', $listDirn, $listOrder); ?>
     </th>
     <th style="width: 5%;">
         <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_DATE', 'c.dat', $listDirn, $listOrder); ?>
@@ -25,9 +25,11 @@ $listDirn    = $this->escape($this->state->get('list.direction'));
     <th>
         <?php echo JText::sprintf('COM_CONTRACTS_HEAD_CONTRACTS_ITEMS'); ?>
     </th>
-    <th>
-        <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_PROJECT', 'p.title', $listDirn, $listOrder); ?>
-    </th>
+    <?php if (!is_numeric($this->activeProject)): ?>
+        <th>
+            <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_PROJECT', 'p.title', $listDirn, $listOrder); ?>
+        </th>
+    <?php endif;?>
     <th>
         <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_COMPANY', 'company', $listDirn, $listOrder); ?>
     </th>
