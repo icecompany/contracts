@@ -26,12 +26,18 @@ class ContractsViewContract extends HtmlView {
     }
 
     protected function addToolbar() {
-	    JToolBarHelper::apply('contract.apply', 'JTOOLBAR_APPLY');
-        JToolbarHelper::save('contract.save', 'JTOOLBAR_SAVE');
+	    if ($this->item->id === null) {
+            JToolBarHelper::apply('contract.apply', 'JTOOLBAR_APPLY');
+            JToolbarHelper::save('contract.save', 'JTOOLBAR_SAVE');
+        }
         if ($this->item->id !== null) {
-            JToolbarHelper::custom('item.add', 'cart', 'cart', JText::sprintf('COM_MKV_BUTTON_ADD_PRICE_ITEM'), false);
-            JToolbarHelper::custom('task.add', 'calendar', 'calendar', JText::sprintf('COM_MKV_BUTTON_ADD_TASK'), false);
-            JToolbarHelper::custom('stand.add', 'cube', 'cube', JText::sprintf('COM_MKV_BUTTON_ADD_STAND'), false);
+            if ($this->item->managerID == JFactory::getUser()->id || ($this->item->managerID != JFactory::getUser()->id && ContractsHelper::canDo('core.edit.all'))) {
+                JToolBarHelper::apply('contract.apply', 'JTOOLBAR_APPLY');
+                JToolbarHelper::save('contract.save', 'JTOOLBAR_SAVE');
+                JToolbarHelper::custom('item.add', 'cart', 'cart', JText::sprintf('COM_MKV_BUTTON_ADD_PRICE_ITEM'), false);
+                JToolbarHelper::custom('task.add', 'calendar', 'calendar', JText::sprintf('COM_MKV_BUTTON_ADD_TASK'), false);
+                JToolbarHelper::custom('stand.add', 'cube', 'cube', JText::sprintf('COM_MKV_BUTTON_ADD_STAND'), false);
+            }
             JToolbarHelper::custom('contract.go_to_company', 'vcard', 'vcard', JText::sprintf('COM_CONTRACTS_BUTTON_GO_TO_COMPANY'), false);
         }
         JToolbarHelper::cancel('contract.cancel', 'JTOOLBAR_CLOSE');

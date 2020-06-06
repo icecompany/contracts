@@ -34,10 +34,6 @@ class ContractsViewContracts extends HtmlView
     {
         JToolBarHelper::title(JText::sprintf('COM_CONTRACTS_MENU_CONTRACTS'), 'briefcase');
 
-        if (ContractsHelper::canDo('core.create'))
-        {
-            JToolbarHelper::addNew('contract.add');
-        }
         if (ContractsHelper::canDo('core.edit'))
         {
             JToolbarHelper::editList('contract.edit');
