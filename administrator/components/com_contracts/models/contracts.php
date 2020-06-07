@@ -21,6 +21,8 @@ class ContractsModelContracts extends ListModel
                 'c.payments',
                 'c.debt',
                 'search',
+                'c.tasks_count',
+                'c.tasks_date',
                 'num',
                 'catalog_info', 'i.catalog_info',
                 'catalog_logo', 'i.catalog_logo',
@@ -53,6 +55,7 @@ class ContractsModelContracts extends ListModel
 
         $query
             ->select("c.id, c.companyID, c.dat, c.number, c.number_free, c.currency, c.amount, c.payments, c.debt")
+            ->select("c.tasks_count, c.tasks_date")
             ->select("ifnull(c.number_free, c.number) as num")
             ->select("s.title as status")
             ->select("p.title as project")
@@ -182,6 +185,8 @@ class ContractsModelContracts extends ListModel
             $arr['amount'] = $item->amount;
             $arr['payments'] = $item->payments;
             $arr['debt'] = $item->debt;
+            $arr['tasks_count'] = $item->tasks_count;
+            $arr['tasks_date'] = (!empty($item->tasks_date)) ? JDate::getInstance($item->tasks_date)->format("d.m.Y") : '';
             $arr['status'] = $item->status ?? JText::sprintf('COM_MKV_STATUS_IN_PROJECT');
             $arr['manager'] = MkvHelper::getLastAndFirstNames($item->manager);
             $currency = mb_strtoupper($item->currency);
@@ -234,7 +239,7 @@ class ContractsModelContracts extends ListModel
         return $result;
     }
 
-    protected function populateState($ordering = 'c.id', $direction = 'DESC')
+    protected function populateState($ordering = 'c.tasks_date', $direction = 'ASC')
     {
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);

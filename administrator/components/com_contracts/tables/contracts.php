@@ -17,6 +17,8 @@ class TableContractsContracts extends Table
     var $amount = null;
     var $payments = null;
     var $debt = null;
+    var $tasks_count = null;
+    var $tasks_date = null;
     var $checked_out = null;
     var $checked_out_time = null;
 
