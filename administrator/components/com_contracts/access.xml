@@ -12,5 +12,6 @@
 		<action name="core.edit.value" title="JACTION_EDITVALUE" description="JACTION_EDITVALUE_COMPONENT_DESC" />
 		<action name="core.edit.all" title="COM_CONTRACTS_ACCESS_EDIT_ALL_LABEL" description="COM_CONTRACTS_ACCESS_EDIT_ALL_DESC" />
 		<action name="core.access.statuses" title="COM_CONTRACTS_ACCESS_STATUSES_LABEL" description="COM_CONTRACTS_ACCESS_STATUSES_DESC" />
+		<action name="core.project.amount" title="COM_CONTRACTS_ACCESS_PROJECT_AMOUNT_LABEL" description="COM_CONTRACTS_ACCESS_PROJECT_AMOUNT_DESC" />
 	</section>
 </access>

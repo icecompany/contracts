@@ -171,7 +171,7 @@ class ContractsModelContracts extends ListModel
     public function getItems()
     {
         $items = parent::getItems();
-        $result = ['items' => [], 'stands' => []];
+        $result = ['items' => [], 'stands' => [], 'amount' => []];
         $ids = [];
         foreach ($items as $item) {
             $arr = [];
@@ -215,6 +215,8 @@ class ContractsModelContracts extends ListModel
             $result['items'][] = $arr;
         }
         $result['stands'] = $this->getStands($ids);
+        $project = PrjHelper::getActiveProject();
+        if (is_numeric($project) && ContractsHelper::canDo('core.project.amount')) $result['amount'] = ContractsHelper::getProjectAmount((int) $project);
         return $result;
     }
 

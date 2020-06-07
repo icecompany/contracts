@@ -18,6 +18,32 @@ class ContractsHelper
         PrjHelper::addActiveProjectFilter();
     }
 
+    public static function getProjectAmount(int $projectID = 0): array
+    {
+        $result = ['rub' => 0, 'usd' => 0, 'eur' => 0];
+        if ($projectID === 0) return $result;
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query
+            ->select("currency, ifnull(sum(amount), 0) as amount, ifnull(sum(payments), 0) as payments, ifnull(sum(debt), 0) as debt")
+            ->from("#__mkv_contracts")
+            ->where("projectID = {$db->q($projectID)}")
+            ->where("status in (1, 5, 10)")
+            ->group("currency");
+        $items = $db->setQuery($query)->loadAssocList('currency');
+        foreach ($items as $currency => $arr) {
+            foreach ($arr as $type => $amount) {
+                if ($type === 'currency') {
+                    unset($items[$currency][$type]);
+                    continue;
+                }
+                $c = mb_strtoupper($currency);
+                $items[$currency][$type] = JText::sprintf("COM_MKV_AMOUNT_{$c}_SHORT", number_format((float) $amount, 2, '.', ' '));
+            }
+        }
+        return $items;
+    }
+
     public static function getNextContractNumber(int $projectID)
     {
         $db = JFactory::getDbo();
