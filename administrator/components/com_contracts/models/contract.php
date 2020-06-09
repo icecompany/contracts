@@ -28,6 +28,12 @@ class ContractsModelContract extends AdminModel {
                 $item->no_exhibit = $incoming->no_exhibit;
                 $item->info_arrival = $incoming->info_arrival;
             }
+            $sent = $this->getSentInfo($item->id);
+            if ($sent !== null) {
+                $item->invite_date = $sent->invite_date;
+                $item->invite_outgoing_number = $sent->invite_outgoing_number;
+                $item->invite_incoming_number = $sent->invite_incoming_number;
+            }
             $parent = $this->getParent($item->id);
             if (!empty($parent)) {
                 $item->parent_id = $parent['parentID'];
@@ -53,6 +59,7 @@ class ContractsModelContract extends AdminModel {
         if ($data['id'] != '') {
             //Сохраняем заполненность формы
             $this->saveIncomingInfo($data['id'], $data);
+            $this->saveSentInfo($data['id'], $data);
             //Сохраняем компанию-родителя соэкспонента
             $this->saveParentID($data['id'], is_numeric($data['parentID']) ? $data['parentID'] : 0);
             //Сохраняем тематические рубрики
@@ -176,6 +183,13 @@ class ContractsModelContract extends AdminModel {
         return $table;
     }
 
+    public function getSentInfo(int $contractID)
+    {
+        $table = JTable::getInstance('Sent', 'TableContracts');
+        $table->load(['contractID' => $contractID]);
+        return $table;
+    }
+
     public function saveIncomingInfo(int $contractID, array $data)
     {
         $table = JTable::getInstance('Incoming', 'TableContracts');
@@ -196,6 +210,18 @@ class ContractsModelContract extends AdminModel {
             $this->sendNotifyNewDocStatus($contractID, $data['companyID'], $data['doc_status']);
         }
         $table->save($arr);
+    }
+
+    public function saveSentInfo(int $contractID, array $data)
+    {
+        $model = AdminModel::getInstance('Sent', 'ContractsModel');
+        $item = $model->getItem(['contractID' => $contractID]);
+        $arr = [];
+        $arr['id'] = $item->id ?? null;
+        $arr['invite_date'] = $data['invite_date'];
+        $arr['invite_outgoing_number'] = $data['invite_outgoing_number'];
+        $arr['invite_incoming_number'] = $data['invite_incoming_number'];
+        $model->save($arr);
     }
 
     private function sendNotifyNewDocStatus(int $contractID, int $companyID, int $new_status): void
