@@ -123,26 +123,7 @@ class ContractsModelContracts extends ListModel
             if (is_numeric($catalog_logo)) {
                 $query->where("i.catalog_logo = {$this->_db->q($catalog_logo)}");
             }
-            $pvn_1 = $this->getState('filter.pvn_1');
-            if (is_numeric($pvn_1)) {
-                $query->where("i.pvn_1 = {$this->_db->q($pvn_1)}");
-            }
-            $pvn_1a = $this->getState('filter.pvn_1a');
-            if (is_numeric($pvn_1a)) {
-                $query->where("i.pvn_1a = {$this->_db->q($pvn_1a)}");
-            }
-            $pvn_1b = $this->getState('filter.pvn_1b');
-            if (is_numeric($pvn_1b)) {
-                $query->where("i.pvn_1b = {$this->_db->q($pvn_1b)}");
-            }
-            $pvn_1v = $this->getState('filter.pvn_1v');
-            if (is_numeric($pvn_1v)) {
-                $query->where("i.pvn_1v = {$this->_db->q($pvn_1v)}");
-            }
-            $pvn_1g = $this->getState('filter.pvn_1g');
-            if (is_numeric($pvn_1g)) {
-                $query->where("i.pvn_1g = {$this->_db->q($pvn_1g)}");
-            }
+            
             $doc_status = $this->getState('filter.doc_status');
             if (is_numeric($doc_status)) {
                 $query->where("i.doc_status = {$this->_db->q($doc_status)}");
@@ -150,6 +131,20 @@ class ContractsModelContracts extends ListModel
             $currency = $this->getState('filter.currency');
             if (!empty($currency)) {
                 $query->where("c.currency like {$this->_db->q($currency)}");
+            }
+            $pvn_1 = $this->getState('filter.pvn_1');
+            $pvn_1a = $this->getState('filter.pvn_1a');
+            $pvn_1b = $this->getState('filter.pvn_1b');
+            $pvn_1v = $this->getState('filter.pvn_1v');
+            $pvn_1g = $this->getState('filter.pvn_1g');
+            $no_exhibit = $this->getState('filter.no_exhibit');
+            if (is_numeric($pvn_1) or is_numeric($pvn_1a) or is_numeric($pvn_1b) or is_numeric($pvn_1v) or is_numeric($pvn_1g) or is_numeric($no_exhibit)) {
+                if ($pvn_1 == '0' and $pvn_1a == '0' and $pvn_1b == '0' and $pvn_1g == '0' and $no_exhibit == '0') {
+                    $query->where("(i.pvn_1 = 0 and i.pvn_1a = 0 and i.pvn_1b = 0 and i.pvn_1v = 0 and i.pvn_1g = 0 and i.no_exhibit = 0)");
+                }
+                else {
+                    $query->where("(i.pvn_1 = {$this->_db->q($pvn_1)} or i.pvn_1a = {$this->_db->q($pvn_1a)} or i.pvn_1b = {$this->_db->q($pvn_1b)} or i.pvn_1v = {$this->_db->q($pvn_1v)} or i.pvn_1g = {$this->_db->q($pvn_1g)} or i.no_exhibit = {$this->_db->q($no_exhibit)})");
+                }
             }
 
             if ($orderCol === 'num') {
@@ -263,6 +258,8 @@ class ContractsModelContracts extends ListModel
         $this->setState('filter.pvn_1g', $pvn_1g);
         $doc_status = $this->getUserStateFromRequest($this->context . '.filter.doc_status', 'filter_doc_status');
         $this->setState('filter.doc_status', $doc_status);
+        $no_exhibits = $this->getUserStateFromRequest($this->context . '.filter.no_exhibits', 'filter_no_exhibits');
+        $this->setState('filter.no_exhibits', $no_exhibits);
         parent::populateState($ordering, $direction);
         PrjHelper::check_refresh();
     }
@@ -280,6 +277,7 @@ class ContractsModelContracts extends ListModel
         $id .= ':' . $this->getState('filter.pvn_1v');
         $id .= ':' . $this->getState('filter.pvn_1g');
         $id .= ':' . $this->getState('filter.doc_status');
+        $id .= ':' . $this->getState('filter.no_exhibits');
         return parent::getStoreId($id);
     }
 
