@@ -38,6 +38,9 @@ class ContractsViewContract extends HtmlView {
                 JToolbarHelper::custom('task.add', 'calendar', 'calendar', JText::sprintf('COM_MKV_BUTTON_ADD_TASK'), false);
                 JToolbarHelper::custom('stand.add', 'cube', 'cube', JText::sprintf('COM_MKV_BUTTON_ADD_STAND'), false);
             }
+            if (FinancesHelper::canDo('core.create') && $this->item->debt > 0) {
+                JToolbarHelper::custom('score.add', 'credit', 'credit', JText::sprintf('COM_CONTRACTS_BUTTON_ADD_SCORE'), false);
+            }
             JToolbarHelper::custom('contract.go_to_company', 'vcard', 'vcard', JText::sprintf('COM_CONTRACTS_BUTTON_GO_TO_COMPANY'), false);
         }
         JToolbarHelper::cancel('contract.cancel', 'JTOOLBAR_CLOSE');
