@@ -35,9 +35,9 @@ class ContractsViewContract extends HtmlView {
                 JToolBarHelper::apply('contract.apply', 'JTOOLBAR_APPLY');
                 JToolbarHelper::save('contract.save', 'JTOOLBAR_SAVE');
                 JToolbarHelper::custom('item.add', 'cart', 'cart', JText::sprintf('COM_MKV_BUTTON_ADD_PRICE_ITEM'), false);
-                JToolbarHelper::custom('task.add', 'calendar', 'calendar', JText::sprintf('COM_MKV_BUTTON_ADD_TASK'), false);
                 JToolbarHelper::custom('stand.add', 'cube', 'cube', JText::sprintf('COM_MKV_BUTTON_ADD_STAND'), false);
             }
+            JToolbarHelper::custom('task.add', 'calendar', 'calendar', JText::sprintf('COM_MKV_BUTTON_ADD_TASK'), false);
             if (FinancesHelper::canDo('core.create') && $this->item->debt > 0) {
                 JToolbarHelper::custom('score.add', 'credit', 'credit', JText::sprintf('COM_CONTRACTS_BUTTON_ADD_SCORE'), false);
             }
