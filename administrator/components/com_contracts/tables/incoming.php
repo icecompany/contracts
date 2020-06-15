@@ -17,6 +17,8 @@ class TableContractsIncoming extends Table
     var $catalog_logo = null;
     var $no_exhibit = null;
     var $info_arrival = null;
+    var $scheme_title_ru = null;
+    var $scheme_title_en = null;
 
 	public function __construct(JDatabaseDriver $db)
 	{

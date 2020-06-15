@@ -27,6 +27,8 @@ class ContractsModelContract extends AdminModel {
                 $item->catalog_logo = $incoming->catalog_logo;
                 $item->no_exhibit = $incoming->no_exhibit;
                 $item->info_arrival = $incoming->info_arrival;
+                $item->scheme_title_ru = $incoming->scheme_title_ru;
+                $item->scheme_title_en = $incoming->scheme_title_en;
             }
             $sent = $this->getSentInfo($item->id);
             if ($sent !== null) {
@@ -206,6 +208,8 @@ class ContractsModelContract extends AdminModel {
         $arr['catalog_logo'] = $data['catalog_logo'];
         $arr['no_exhibit'] = $data['no_exhibit'];
         $arr['info_arrival'] = $data['info_arrival'];
+        $arr['scheme_title_ru'] = $data['scheme_title_ru'] ?? null;
+        $arr['scheme_title_en'] = $data['scheme_title_en'] ?? null;
         if ($table->doc_status == '0' && $data['doc_status'] != 0) {
             $this->sendNotifyNewDocStatus($contractID, $data['companyID'], $data['doc_status']);
         }
