@@ -61,7 +61,6 @@ function getCost() {
     let value = document.querySelector("#jform_value");
     if (val < 1) {
         value.value = (0).toLocaleString('ru-RU', {style:'currency', currency:currency});
-        value.setAttribute('readonly', true);
         stand.setAttribute('disabled', true);
         jQuery(stand).trigger("liszt:updated");
         cost.value = (0).toLocaleString('ru-RU', {style:'currency', currency:currency});
@@ -96,7 +95,6 @@ function getCost() {
                 stand.setAttribute('disabled', true);
                 jQuery(stand).trigger("liszt:updated");
             }
-            value.removeAttribute('readonly');
             getAmount();
         })
         .catch(function (error) {
