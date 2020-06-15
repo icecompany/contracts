@@ -41,7 +41,7 @@ foreach ($this->items['items'] as $i => $item) :
             <?php echo $item['status']; ?>
         </td>
         <td>
-            <?php echo $item['tasks_count']; ?>
+            <?php echo $item['tasks_link'] ?? $item['tasks_count']; ?>
         </td>
         <td>
             <?php echo $item['tasks_date']; ?>

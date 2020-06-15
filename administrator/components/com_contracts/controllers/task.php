@@ -22,6 +22,16 @@ class ContractsControllerTask extends FormController {
         return parent::add();
     }
 
+    public function find()
+    {
+        $uri = JUri::getInstance();
+        $contractID = $uri->getVar('contractID', 0);
+        $return = base64_encode($_SERVER['HTTP_REFERER']);
+        $this->setRedirect("index.php?option=com_scheduler&task=task.gotoContractActiveTask&contractID={$contractID}&return={$return}");
+        $this->redirect();
+        jexit();
+    }
+
     public function display($cachable = false, $urlparams = array())
     {
         return parent::display($cachable, $urlparams);
