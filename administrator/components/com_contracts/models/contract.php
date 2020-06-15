@@ -238,6 +238,7 @@ class ContractsModelContract extends AdminModel {
         $company = $this->getCompany($companyID);
         $data['text'] = JText::sprintf('COM_CONTRACTS_NOTIFY_NEW_DOC_STATUS', $company->title, JText::sprintf("COM_CONTRACTS_DOC_STATUS_{$new_status}_SHORT"));
         $data['contractID'] = $contractID;
+        $need_push = true;
         foreach ($members as $member) {
             $data['managerID'] = $member;
             $push = [];
@@ -245,7 +246,8 @@ class ContractsModelContract extends AdminModel {
             $push['key'] = ContractsHelper::getConfig('notify_new_doc_status_chanel_key');
             $push['title'] = JText::sprintf('COM_CONTRACTS_NOTIFY_NEW_DOC_STATUS_TITLE');
             $push['text'] = $data['text'];
-            SchedulerHelper::sendNotify($data, $push);
+            SchedulerHelper::sendNotify($data, (!$need_push) ? [] : $push);
+            $need_push = false;
         }
     }
 
