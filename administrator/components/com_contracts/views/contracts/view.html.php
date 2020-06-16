@@ -49,6 +49,7 @@ class ContractsViewContracts extends HtmlView
         {
             JToolbarHelper::custom('contracts.setContractNumber', 'pencil-2', 'pencil-2', JText::sprintf('COM_CONTRACTS_BUTTON_SET_CONTRACTS_NUMBERS'));
         }
+        JToolbarHelper::custom('contracts.assign_to_me', 'signup', 'signup', JText::sprintf('COM_CONTRACTS_BUTTON_ASSIGN_CONTRACTS_TO_ME'));
         if (ContractsHelper::canDo('core.admin'))
         {
             JToolBarHelper::preferences('com_contracts');
