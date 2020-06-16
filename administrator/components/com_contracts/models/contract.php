@@ -68,6 +68,9 @@ class ContractsModelContract extends AdminModel {
             $this->saveThematics($data['id'], $data['thematics'] ?? []);
             //Сохраняем виды деятельности
             $this->saveActivities($data['companyID'], $data['activities'] ?? []);
+            //Переносим задачи
+            $item = parent::getItem();
+            if ($item->managerID != $data['managerID']) SchedulerHelper::updateTaskManager($data['id'], $data['managerID']);
         }
         return parent::save($data);
     }
