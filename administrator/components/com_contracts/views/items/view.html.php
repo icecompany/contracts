@@ -52,6 +52,7 @@ class ContractsViewItems extends HtmlView
         {
             JToolbarHelper::deleteList('COM_CONTRACTS_CONFIRM_REMOVE_ITEM', 'items.delete');
         }
+        JToolbarHelper::custom('items.download', 'download', 'download', JText::sprintf('COM_MKV_BUTTON_EXPORT_TO_EXCEL'), false);
         if (ContractsHelper::canDo('core.admin'))
         {
             JToolBarHelper::preferences('com_contracts');

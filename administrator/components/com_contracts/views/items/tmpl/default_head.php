@@ -12,7 +12,7 @@ $listDirn = $this->escape($this->state->get('list.direction'));
     </th>
     <?php if ($this->contractID === 0): ?>
         <th>
-            <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_ITEMS_COMPANY', 'e.title', $listDirn, $listOrder); ?>
+            <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_COMPANY', 'e.title', $listDirn, $listOrder); ?>
         </th>
     <?php endif; ?>
     <th>

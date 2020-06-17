@@ -32,6 +32,18 @@ class ContractsModelItems extends ListModel
             $this->export = true;
             $this->contractID = $config['contractID'];
         }
+        $this->heads = [
+            'company' => 'COM_MKV_HEAD_COMPANY',
+            'manager' => 'COM_MKV_HEAD_MANAGER',
+            'item' => 'COM_CONTRACTS_HEAD_ITEMS_ITEM',
+            'cost_clean' => 'COM_CONTRACTS_HEAD_ITEMS_COST',
+            'factor' => 'COM_CONTRACTS_HEAD_ITEMS_FACTOR',
+            'markup' => 'COM_CONTRACTS_HEAD_ITEMS_MARKUP',
+            'columnID' => 'COM_CONTRACTS_HEAD_ITEMS_COLUMN',
+            'stand' => 'COM_CONTRACTS_HEAD_ITEMS_STAND',
+            'value' => 'COM_CONTRACTS_HEAD_ITEMS_VALUE',
+            'amount_clean' => 'COM_CONTRACTS_HEAD_ITEMS_AMOUNT',
+        ];
     }
 
     protected function _getListQuery()
@@ -177,6 +189,47 @@ class ContractsModelItems extends ListModel
         return $result;
     }
 
+    public function export()
+    {
+        $items = $this->getItems();
+        JLoader::discover('PHPExcel', JPATH_LIBRARIES);
+        JLoader::register('PHPExcel', JPATH_LIBRARIES . '/PHPExcel.php');
+
+        $xls = new PHPExcel();
+        $xls->setActiveSheetIndex(0);
+        $sheet = $xls->getActiveSheet();
+
+        //Ширина столбцов
+        $width = ["A" => 84, "B" => 26, "C" => 120, "D" => 11, "E" => 9, "F" => 9, "G" => 9, "H" => 9, "I" => 9, "J" => 19];
+        foreach ($width as $col => $value) $sheet->getColumnDimension($col)->setWidth($value);
+
+        //Заголовки
+        $j = 0;
+        foreach ($this->heads as $item => $head) $sheet->setCellValueByColumnAndRow($j++, 1, JText::sprintf($head));
+
+        $sheet->setTitle(JText::sprintf('COM_CONTRACTS_MENU_ITEMS'));
+
+        //Данные
+        $row = 2; //Строка, с которой начнаются данные
+        $col = 0;
+        foreach ($items['items'] as $i => $item) {
+            foreach ($this->heads as $elem => $head) {
+                $sheet->setCellValueByColumnAndRow($col++, $row, $item[$elem]);
+            }
+            $col = 0;
+            $row++;
+        }
+        header("Expires: Mon, 1 Apr 1974 05:00:00 GMT");
+        header("Last-Modified: " . gmdate("D,d M YH:i:s") . " GMT");
+        header("Cache-Control: no-cache, must-revalidate");
+        header("Pragma: public");
+        header("Content-type: application/vnd.ms-excel");
+        header("Content-Disposition: attachment; filename=Sales.xls");
+        $objWriter = PHPExcel_IOFactory::createWriter($xls, 'Excel5');
+        $objWriter->save('php://output');
+        jexit();
+    }
+
     public function getContractID(): int
     {
         return $this->contractID;
@@ -202,5 +255,5 @@ class ContractsModelItems extends ListModel
         return parent::getStoreId($id);
     }
 
-    private $export, $contractID;
+    private $export, $contractID, $heads;
 }
