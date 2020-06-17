@@ -84,8 +84,12 @@ class ContractsModelContracts extends ListModel
                         $query->where("c.id = {$this->_db->q($id)}");
                     }
                 } else {
-                    if (stripos($search, 'num:') !== false) { //Поиск по номеру договора
-                        $num = explode(':', $search);
+                    if (stripos($search, 'num:') !== false || stripos($search, '#') !== false || stripos($search, '№') !== false) { //Поиск по номеру договора
+                        $delimiter = ":";
+                        if (stripos($search, 'num:') !== false) $delimiter = ":";
+                        if (stripos($search, '#') !== false) $delimiter = "#";
+                        if (stripos($search, '№') !== false) $delimiter = "№";
+                        $num = explode($delimiter, $search);
                         $num = $num[1];
                         if (is_numeric($num)) {
                             $query->where("c.number = {$this->_db->q($num)}");
