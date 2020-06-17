@@ -18,6 +18,19 @@ class ContractsHelper
         PrjHelper::addActiveProjectFilter();
     }
 
+    public static function setZeroAmount(int $contractID): void
+    {
+        $db = JFactory::getDbo();
+        $db->setQuery("set @is_zero := 1")->execute();
+        $query = $db->getQuery(true);
+        $query
+            ->update("#__mkv_contract_items")
+            ->set("amount = 0")
+            ->where("contractID = {$db->q($contractID)}");
+        $db->setQuery($query)->execute();
+        $db->setQuery("set @is_zero := 0")->execute();
+    }
+
     public static function getProjectAmount(int $projectID = 0): array
     {
         $result = ['rub' => 0, 'usd' => 0, 'eur' => 0];

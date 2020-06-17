@@ -71,6 +71,8 @@ class ContractsModelContract extends AdminModel {
             //Переносим задачи
             $item = parent::getItem();
             if ($item->managerID != $data['managerID']) SchedulerHelper::updateTaskManager($data['id'], $data['managerID']);
+            //Обнуляем сумму заказанных услуг, если сделка переходит в отказ
+            if ($data['status'] == '0') ContractsHelper::setZeroAmount($data['id']);
         }
         return parent::save($data);
     }

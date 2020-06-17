@@ -11,5 +11,5 @@ if ($this->contractID > 0): ?>
     </tr>
 <?php endif;?>
 <tr>
-    <td colspan="<?php echo $colspan;?>" class="center"><?php echo $this->pagination->getListFooter(); ?></td>
+    <td colspan="<?php echo $colspan;?>" class="pagination-centered"><?php echo $this->pagination->getListFooter(); ?></td>
 </tr>

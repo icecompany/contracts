@@ -19,8 +19,6 @@ class TableContractsContracts extends Table
     var $debt = null;
     var $tasks_count = null;
     var $tasks_date = null;
-    var $checked_out = null;
-    var $checked_out_time = null;
 
 	public function __construct(JDatabaseDriver $db)
 	{
