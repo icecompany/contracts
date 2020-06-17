@@ -17,6 +17,9 @@ foreach ($this->items['items'] as $i => $item) :
             </td>
         <?php endif; ?>
         <td>
+            <?php echo $item['manager']; ?>
+        </td>
+        <td>
             <?php echo $item['edit_link']; ?>
         </td>
         <td>

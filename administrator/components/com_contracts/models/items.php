@@ -20,6 +20,7 @@ class ContractsModelItems extends ListModel
                 'pi.title',
                 'e.title',
                 'currency',
+                'manager',
                 'search',
             );
         }
@@ -50,11 +51,13 @@ class ContractsModelItems extends ListModel
             ->select("c.currency")
             ->select("s.id as standID, s.number as stand")
             ->select("contractStandID")
+            ->select("u.name as manager")
             ->from("#__mkv_contract_items i")
             ->leftJoin("#__mkv_contracts c on c.id = i.contractID")
             ->leftJoin("#__mkv_companies e on e.id = c.companyID")
             ->leftJoin("#__mkv_price_items pi on pi.id = i.itemID")
             ->leftJoin("#__mkv_contract_stands cs on cs.id = i.contractStandID")
+            ->leftJoin("#__users u on u.id = c.managerID")
             ->leftJoin("#__mkv_stands s on s.id = cs.standID");
         if ($this->contractID > 0) {
             $query->where("i.contractID = {$this->_db->q($this->contractID)}");
@@ -138,6 +141,7 @@ class ContractsModelItems extends ListModel
             $cost = number_format((float) $item->cost, 2, '.', ' ');
             $arr['cost'] = JText::sprintf("COM_CONTRACTS_CURRENCY_{$currency}_AMOUNT_SHORT", $cost);
             $arr['value'] = $item->value;
+            $arr['manager'] = MkvHelper::getLastAndFirstNames($item->manager);
             $arr['value2'] = $item->value2;
             $arr['amount_clean'] = $item->amount;
             $amount = number_format((float) $item->amount, 2, '.', ' ');

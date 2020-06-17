@@ -1,7 +1,7 @@
 <?php
 defined('_JEXEC') or die;
-$listOrder    = $this->escape($this->state->get('list.ordering'));
-$listDirn    = $this->escape($this->state->get('list.direction'));
+$listOrder = $this->escape($this->state->get('list.ordering'));
+$listDirn = $this->escape($this->state->get('list.direction'));
 ?>
 <tr>
     <th style="width: 1%;">
@@ -15,6 +15,9 @@ $listDirn    = $this->escape($this->state->get('list.direction'));
             <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_ITEMS_COMPANY', 'e.title', $listDirn, $listOrder); ?>
         </th>
     <?php endif; ?>
+    <th>
+        <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_MANAGER', 'manager', $listDirn, $listOrder); ?>
+    </th>
     <th>
         <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_ITEMS_ITEM', 'pi.weight', $listDirn, $listOrder); ?>
     </th>

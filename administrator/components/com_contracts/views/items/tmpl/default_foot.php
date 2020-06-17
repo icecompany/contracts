@@ -1,9 +1,8 @@
 <?php
 // Запрет прямого доступа.
 defined('_JEXEC') or die;
-$colspan = ($this->contractID > 0) ? '11' : '12';
+$colspan = ($this->contractID > 0) ? '12' : '13';
 $currency = $this->items['currency'];
-
 if ($this->contractID > 0): ?>
     <tr>
         <td colspan="8" style="text-align: right; font-weight: bold;"><?php echo JText::sprintf('COM_CONTRACTS_HEAD_CONTRACTS_SUM_IN_CONTRACT');?></td>
@@ -12,5 +11,5 @@ if ($this->contractID > 0): ?>
     </tr>
 <?php endif;?>
 <tr>
-    <td colspan="<?php echo $colspan;?>" class="pagination-centered"><?php echo $this->pagination->getListFooter(); ?></td>
+    <td colspan="<?php echo $colspan;?>" class="center"><?php echo $this->pagination->getListFooter(); ?></td>
 </tr>
