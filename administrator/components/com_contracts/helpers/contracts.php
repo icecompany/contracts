@@ -25,7 +25,7 @@ class ContractsHelper
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
         $query
-            ->select("currency, ifnull(sum(amount), 0) as amount, ifnull(sum(payments), 0) as payments, ifnull(sum(debt), 0) as debt")
+            ->select("currency, ifnull(sum(amount), 0) as amount, ifnull(sum(payments), 0) as payments, ifnull(sum(if(debt < 0, 0, debt)), 0) as debt")
             ->from("#__mkv_contracts")
             ->where("projectID = {$db->q($projectID)}")
             ->group("currency");
