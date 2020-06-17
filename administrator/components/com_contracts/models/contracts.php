@@ -110,12 +110,12 @@ class ContractsModelContracts extends ListModel
             }
             $status = $this->getState('filter.status');
             if (is_array($status) && !empty($status)) {
+                $statuses = implode(", ", $status);
                 if (!in_array(100, $status)) {
-                    if (in_array('', $status)) {
-                        $query->where('c.status is null');
+                    if (in_array(101, $status)) {
+                        $query->where("(c.status in ({$statuses}) or c.status is null)");
                     } else {
-                        $statuses = implode(", ", $status);
-                        $query->where("c.status in ($statuses)");
+                        $query->where("c.status in ({$statuses})");
                     }
                 }
             }
@@ -176,7 +176,7 @@ class ContractsModelContracts extends ListModel
     public function getItems()
     {
         $items = parent::getItems();
-        $result = ['items' => [], 'stands' => [], 'amount' => []];
+        $result = ['items' => [], 'stands' => [], 'amount' => [], 'amount_by_status' => []];
         $ids = [];
         foreach ($items as $item) {
             $arr = [];
@@ -227,6 +227,10 @@ class ContractsModelContracts extends ListModel
         }
         $result['stands'] = $this->getStands($ids);
         $project = PrjHelper::getActiveProject();
+        $status = $this->getState('filter.status');
+        if (is_array($status) && !empty($status)) {
+            $result['amount_by_status'] = ContractsHelper::getProjectAmount((int) $project, $status);
+        }
         if (is_numeric($project) && ContractsHelper::canDo('core.project.amount')) $result['amount'] = ContractsHelper::getProjectAmount((int) $project);
         return $result;
     }

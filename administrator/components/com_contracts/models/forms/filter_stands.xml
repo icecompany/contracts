@@ -15,10 +15,10 @@
                 type="ContractStatus"
                 multiple="true"
                 onchange="this.form.submit();"
-                default="100"
+                default="[1]"
         >
-            <option value="">COM_CONTRACTS_CONTRACT_STATUS_IN_PROJECT</option>
             <option value="100">COM_CONTRACTS_CONTRACT_STATUS_ALL</option>
+            <option value="101">COM_CONTRACTS_CONTRACT_STATUS_IN_PROJECT</option>
         </field>
     </fields>
     <fields name="list">

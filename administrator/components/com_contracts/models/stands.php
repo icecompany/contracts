@@ -72,13 +72,12 @@ class ContractsModelStands extends ListModel
         }
         $status = $this->getState('filter.status');
         if (is_array($status) && !empty($status)) {
+            $statuses = implode(", ", $status);
             if (!in_array(100, $status)) {
-                if (in_array('', $status)) {
-                    $query->where('c.status is null');
-                }
-                else {
-                    $statuses = implode(", ", $status);
-                    $query->where("c.status in ($statuses)");
+                if (in_array(101, $status)) {
+                    $query->where("(c.status in ({$statuses}) or c.status is null)");
+                } else {
+                    $query->where("c.status in ({$statuses})");
                 }
             }
         }

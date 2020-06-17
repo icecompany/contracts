@@ -31,7 +31,7 @@ class ContractsHelper
         $db->setQuery("set @is_zero := 0")->execute();
     }
 
-    public static function getProjectAmount(int $projectID = 0): array
+    public static function getProjectAmount(int $projectID = 0, $status = []): array
     {
         $result = ['rub' => 0, 'usd' => 0, 'eur' => 0];
         if ($projectID === 0) return $result;
@@ -42,6 +42,16 @@ class ContractsHelper
             ->from("#__mkv_contracts")
             ->where("projectID = {$db->q($projectID)}")
             ->group("currency");
+        if (is_array($status) && !empty($status)) {
+            $statuses = implode(", ", $status);
+            if (!in_array(100, $status)) {
+                if (in_array(101, $status)) {
+                    $query->where("(status in ({$statuses}) or status is null)");
+                } else {
+                    $query->where("status in ({$statuses})");
+                }
+            }
+        }
         $items = $db->setQuery($query)->loadAssocList('currency');
         foreach ($items as $currency => $arr) {
             foreach ($arr as $type => $amount) {
