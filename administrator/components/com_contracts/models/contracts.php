@@ -115,6 +115,9 @@ class ContractsModelContracts extends ListModel
                     }
                 }
             }
+            if (empty($status)) {
+                $query->where("c.status = 1");
+            }
             $catalog_info = $this->getState('filter.catalog_info');
             if (is_numeric($catalog_info)) {
                 $query->where("i.catalog_info = {$this->_db->q($catalog_info)}");
@@ -242,7 +245,7 @@ class ContractsModelContracts extends ListModel
     {
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
-        $status = $this->getUserStateFromRequest($this->context . '.filter.status', 'filter_status',  array(100));
+        $status = $this->getUserStateFromRequest($this->context . '.filter.status', 'filter_status', [1]);
         $this->setState('filter.status', $status);
         $manager = $this->getUserStateFromRequest($this->context . '.filter.manager', 'filter_manager', JFactory::getUser()->id, 'integer');
         $this->setState('filter.manager', $manager);
