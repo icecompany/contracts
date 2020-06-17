@@ -11,6 +11,12 @@
                 class="js-stools-search-string"
         />
         <field
+                name="manager"
+                type="Manager"
+                onchange="this.form.submit();">
+            <option value="">COM_MKV_FILTER_SELECT_MANAGER</option>
+        </field>
+        <field
                 name="currency"
                 type="list"
                 onchange="this.form.submit();"
@@ -24,30 +30,8 @@
     <fields name="list">
         <field
                 name="fullordering"
-                type="list"
-                onchange="this.form.submit();"
-                default="pi.weight ASC"
-        >
-            <option value="">JGLOBAL_SORT_BY</option>
-            <option value="e.title ASC">COM_CONTRACTS_SORTING_COMPANY_ASC</option>
-            <option value="e.title DESC">COM_CONTRACTS_SORTING_COMPANY_DESC</option>
-            <option value="pi.weight ASC">COM_CONTRACTS_SORTING_PRICE_ITEM_ASC</option>
-            <option value="pi.weight DESC">COM_CONTRACTS_SORTING_PRICE_ITEM_DESC</option>
-            <option value="i.value ASC">COM_CONTRACTS_SORTING_VALUE_ASC</option>
-            <option value="i.value DESC">COM_CONTRACTS_SORTING_VALUE_DESC</option>
-            <option value="i.factor ASC">COM_CONTRACTS_SORTING_FACTOR_ASC</option>
-            <option value="i.factor DESC">COM_CONTRACTS_SORTING_FACTOR_DESC</option>
-            <option value="i.markup ASC">COM_CONTRACTS_SORTING_MARKUP_ASC</option>
-            <option value="i.markup DESC">COM_CONTRACTS_SORTING_MARKUP_DESC</option>
-            <option value="i.cost ASC">COM_CONTRACTS_SORTING_COST_ASC</option>
-            <option value="i.cost DESC">COM_CONTRACTS_SORTING_COST_DESC</option>
-            <option value="i.columnID ASC">COM_CONTRACTS_SORTING_COLUMN_ASC</option>
-            <option value="i.columnID DESC">COM_CONTRACTS_SORTING_COLUMN_DESC</option>
-            <option value="s.number ASC">COM_CONTRACTS_SORTING_STAND_ASC</option>
-            <option value="s.number DESC">COM_CONTRACTS_SORTING_STAND_DESC</option>
-            <option value="i.id ASC">COM_CONTRACTS_SORTING_ID_ASC</option>
-            <option value="i.id DESC">COM_CONTRACTS_SORTING_ID_DESC</option>
-        </field>
+                type="hidden"
+        />
         <field
                 name="limit"
                 type="limitbox"

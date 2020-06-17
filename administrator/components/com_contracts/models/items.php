@@ -97,6 +97,10 @@ class ContractsModelItems extends ListModel
             if (!empty($currency)) {
                 $query->where("c.currency like {$this->_db->q($currency)}");
             }
+            $manager = $this->getState('filter.manager');
+            if (is_numeric($manager)) {
+                $query->where("c.managerID = {$this->_db->q($manager)}");
+            }
         }
 
         $query->order($this->_db->escape($orderCol . ' ' . $orderDirn));
@@ -184,6 +188,8 @@ class ContractsModelItems extends ListModel
         $this->setState('filter.search', $search);
         $currency = $this->getUserStateFromRequest($this->context . '.filter.currency', 'filter_currency');
         $this->setState('filter.currency', $currency);
+        $manager = $this->getUserStateFromRequest($this->context . '.filter.manager', 'filter_manager');
+        $this->setState('filter.manager', $manager);
         parent::populateState($ordering, $direction);
         ContractsHelper::check_refresh();
     }
@@ -192,6 +198,7 @@ class ContractsModelItems extends ListModel
     {
         $id .= ':' . $this->getState('filter.search');
         $id .= ':' . $this->getState('filter.currency');
+        $id .= ':' . $this->getState('filter.manager');
         return parent::getStoreId($id);
     }
 

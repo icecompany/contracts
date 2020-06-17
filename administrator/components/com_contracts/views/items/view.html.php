@@ -18,6 +18,10 @@ class ContractsViewItems extends HtmlView
         $this->contractID = $this->get('contractID');
         if ($this->contractID > 0) {
             $this->filterForm->removeField('currency', 'filter');
+            $this->filterForm->removeField('manager', 'filter');
+        }
+        else {
+            $this->filterForm->addFieldPath(JPATH_ADMINISTRATOR . "/components/com_mkv/models/fields");
         }
 
         // Show the toolbar
