@@ -21,6 +21,7 @@ class ContractsModelItems extends ListModel
                 'e.title',
                 'currency',
                 'manager',
+                'status',
                 'search',
             );
         }
@@ -112,6 +113,17 @@ class ContractsModelItems extends ListModel
             $manager = $this->getState('filter.manager');
             if (is_numeric($manager)) {
                 $query->where("c.managerID = {$this->_db->q($manager)}");
+            }
+            $status = $this->getState('filter.status');
+            if (is_array($status) && !empty($status)) {
+                if (!in_array(100, $status)) {
+                    if (in_array('', $status)) {
+                        $query->where('c.status is null');
+                    } else {
+                        $statuses = implode(", ", $status);
+                        $query->where("c.status in ($statuses)");
+                    }
+                }
             }
         }
 
@@ -243,6 +255,8 @@ class ContractsModelItems extends ListModel
         $this->setState('filter.currency', $currency);
         $manager = $this->getUserStateFromRequest($this->context . '.filter.manager', 'filter_manager');
         $this->setState('filter.manager', $manager);
+        $status = $this->getUserStateFromRequest($this->context . '.filter.status', 'filter_status');
+        $this->setState('filter.status', $status);
         parent::populateState($ordering, $direction);
         ContractsHelper::check_refresh();
     }
@@ -252,6 +266,7 @@ class ContractsModelItems extends ListModel
         $id .= ':' . $this->getState('filter.search');
         $id .= ':' . $this->getState('filter.currency');
         $id .= ':' . $this->getState('filter.manager');
+        $id .= ':' . $this->getState('filter.status');
         return parent::getStoreId($id);
     }
 

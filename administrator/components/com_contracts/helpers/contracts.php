@@ -28,7 +28,7 @@ class ContractsHelper
             ->select("currency, ifnull(sum(amount), 0) as amount, ifnull(sum(payments), 0) as payments, ifnull(sum(debt), 0) as debt")
             ->from("#__mkv_contracts")
             ->where("projectID = {$db->q($projectID)}")
-            ->where("status in (1, 5, 10)")
+            ->where("status in (1, 2, 3, 4, 5, 6, 9, 10)")
             ->group("currency");
         $items = $db->setQuery($query)->loadAssocList('currency');
         foreach ($items as $currency => $arr) {
