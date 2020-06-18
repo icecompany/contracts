@@ -79,7 +79,7 @@ class ContractsModelItems extends ListModel
         else {
             $query->select("e.title as company");
 
-            $search = (!$this->export) ? $this->getState('filter.search') : JFactory::getApplication()->input->getString('search', '');
+            $search = $this->getState('filter.search');
             if (!empty($search)) {
                 if (stripos($search, 'id:') !== false) { //Поиск по ID
                     $id = explode(':', $search);
