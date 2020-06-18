@@ -2,6 +2,14 @@
 <form addrulepath="/administrator/components/com_contracts/models/rules">
     <fieldset name="general">
         <field
+                name="projectID"
+                type="Project"
+                label="COM_CONTRACTS_FORM_CONTRACT_PROJECT_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_PROJECT_DESC"
+                required="true"
+                class="span12"
+        />
+        <field
                 name="status"
                 type="ContractStatus"
                 label="COM_CONTRACTS_FORM_CONTRACT_STATUS_LABEL"
