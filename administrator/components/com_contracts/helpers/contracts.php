@@ -44,12 +44,10 @@ class ContractsHelper
             ->group("currency");
         if (is_array($status) && !empty($status)) {
             $statuses = implode(", ", $status);
-            if (!in_array(100, $status)) {
-                if (in_array(101, $status)) {
-                    $query->where("(status in ({$statuses}) or status is null)");
-                } else {
-                    $query->where("status in ({$statuses})");
-                }
+            if (in_array(101, $status)) {
+                if (!empty($statuses)) $query->where("(status in ({$statuses}) or status is null)");
+            } else {
+                if (!empty($statuses)) $query->where("status in ({$statuses})");
             }
         }
         $items = $db->setQuery($query)->loadAssocList('currency');

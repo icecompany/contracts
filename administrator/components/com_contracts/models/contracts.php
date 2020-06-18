@@ -111,16 +111,11 @@ class ContractsModelContracts extends ListModel
             $status = $this->getState('filter.status');
             if (is_array($status) && !empty($status)) {
                 $statuses = implode(", ", $status);
-                if (!in_array(100, $status)) {
-                    if (in_array(101, $status)) {
-                        $query->where("(c.status in ({$statuses}) or c.status is null)");
-                    } else {
-                        $query->where("c.status in ({$statuses})");
-                    }
+                if (in_array(101, $status)) {
+                    $query->where("(c.status in ({$statuses}) or c.status is null)");
+                } else {
+                    $query->where("c.status in ({$statuses})");
                 }
-            }
-            if (empty($status)) {
-                $query->where("c.status = 1");
             }
             $catalog_info = $this->getState('filter.catalog_info');
             if (is_numeric($catalog_info)) {
@@ -228,7 +223,7 @@ class ContractsModelContracts extends ListModel
         $result['stands'] = $this->getStands($ids);
         $project = PrjHelper::getActiveProject();
         $status = $this->getState('filter.status');
-        if (is_array($status) && !empty($status)) {
+        if (is_array($status) && !empty($status) && !$this->export) {
             $result['amount_by_status'] = ContractsHelper::getProjectAmount((int) $project, $status);
         }
         if (is_numeric($project) && ContractsHelper::canDo('core.project.amount')) $result['amount'] = ContractsHelper::getProjectAmount((int) $project);
@@ -253,7 +248,7 @@ class ContractsModelContracts extends ListModel
     {
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
-        $status = $this->getUserStateFromRequest($this->context . '.filter.status', 'filter_status', [1]);
+        $status = $this->getUserStateFromRequest($this->context . '.filter.status', 'filter_status');
         $this->setState('filter.status', $status);
         $manager = $this->getUserStateFromRequest($this->context . '.filter.manager', 'filter_manager', JFactory::getUser()->id, 'integer');
         $this->setState('filter.manager', $manager);
