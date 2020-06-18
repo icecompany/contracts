@@ -29,6 +29,7 @@ class ContractsModelItems extends ListModel
         $input = JFactory::getApplication()->input;
         $this->export = ($input->getString('format', 'html') === 'html') ? false : true;
         $this->contractID = $input->getInt('contractID', 0);
+        $this->standID = $config['standID'];
         if (!empty($config['contractID'])) {
             $this->export = true;
             $this->contractID = $config['contractID'];
@@ -72,8 +73,13 @@ class ContractsModelItems extends ListModel
             ->leftJoin("#__mkv_contract_stands cs on cs.id = i.contractStandID")
             ->leftJoin("#__users u on u.id = c.managerID")
             ->leftJoin("#__mkv_stands s on s.id = cs.standID");
-        if ($this->contractID > 0) {
-            $query->where("i.contractID = {$this->_db->q($this->contractID)}");
+        if ($this->contractID > 0 || $this->standID > 0) {
+            if ($this->contractID > 0) {
+                $query->where("i.contractID = {$this->_db->q($this->contractID)}");
+            }
+            if ($this->standID > 0) {
+                $query->where("i.contractStandID = {$this->_db->q($this->standID)}");
+            }
             $limit = 0;
         }
         else {
@@ -268,5 +274,5 @@ class ContractsModelItems extends ListModel
         return parent::getStoreId($id);
     }
 
-    private $export, $contractID, $heads;
+    private $export, $contractID, $standID, $heads;
 }

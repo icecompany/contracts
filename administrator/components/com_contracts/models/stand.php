@@ -1,6 +1,7 @@
 <?php
 defined('_JEXEC') or die;
 use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\MVC\Model\ListModel;
 
 class ContractsModelStand extends AdminModel {
 
@@ -26,6 +27,15 @@ class ContractsModelStand extends AdminModel {
     public function save($data)
     {
         return parent::save($data);
+    }
+
+    public function getStandItems()
+    {
+        $item = parent::getItem();
+        if ($item->id !== null) {
+            $model = ListModel::getInstance('Items', 'ContractsModel', ['standID' => $item->id]);
+            return $model->getItems();
+        } else return [];
     }
 
     public function getStandFromCatalog(int $standID)

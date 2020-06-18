@@ -22,7 +22,9 @@ HTMLHelper::_('script', 'com_contracts/stand.js', array('version' => 'auto', 're
                         <div><?php echo $this->loadTemplate('general'); ?></div>
                     </div>
                     <div class="span6">
-
+                        <?php if ($this->item->id !== null): ?>
+                            <div><?php echo $this->loadTemplate('items'); ?></div>
+                        <?php endif;?>
                     </div>
                 </div>
                 <?php echo JHtml::_('bootstrap.endTab'); ?>
