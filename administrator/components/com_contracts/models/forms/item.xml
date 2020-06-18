@@ -37,6 +37,17 @@
                 onchange="getCost();"
         />
         <field
+                name="value2"
+                type="text"
+                label="COM_CONTRACTS_FORM_ITEM_VALUE2_LABEL"
+                description="COM_CONTRACTS_FORM_ITEM_VALUE2_DESC"
+                hint="COM_CONTRACTS_FORM_ITEM_VALUE2_HINT"
+                autocomplete="off"
+                maxlength="18"
+                class="span12"
+                onchange="getCost();"
+        />
+        <field
                 name="factor"
                 type="integer"
                 label="COM_CONTRACTS_FORM_ITEM_FACTOR_LABEL"

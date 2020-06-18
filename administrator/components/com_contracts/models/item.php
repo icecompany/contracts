@@ -94,6 +94,7 @@ class ContractsModelItem extends AdminModel {
         $table->factor = (float) 1 - ($table->factor / 100);
         $table->cost = (float) str_replace([' ₽', ' $', ' €', ' ', ','], ['', '', '', '', '.'], $table->cost);
         $table->amount = (float) str_replace([' ₽', ' $', ' €', ' ', ','], ['', '', '', '', '.'], $table->amount);
+        if ($table->value2 <= 0 || $table->value2 == 1) $table->value2 = NULL;
 
         parent::prepareTable($table);
     }

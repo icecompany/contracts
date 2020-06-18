@@ -75,6 +75,8 @@ function getCost() {
             let price_rub = parseFloat(text.data.price_rub);
             let price_usd = parseFloat(text.data.price_usd);
             let price_eur = parseFloat(text.data.price_eur);
+            let unit_2_ID = parseFloat(text.data.unit_2_ID);
+            console.log(unit_2_ID);
             if (currency === 'rub') {
                 cost_price = price_rub;
                 jQuery(cost).val(price_rub.toLocaleString('ru-RU', {style:'currency', currency:currency})).trigger("liszt:updated");
@@ -106,6 +108,7 @@ function getCost() {
 
 function getAmount() {
     let value = document.querySelector("#jform_value");
+    let value2 = document.querySelector("#jform_value2");
     let factor_field = document.querySelector("#jform_factor");
     let markup = document.querySelector("#jform_markup");
     let contract_new_amount = document.querySelector("#jform_contract_new_amount");
@@ -115,8 +118,8 @@ function getAmount() {
     let b = parseFloat(cost_price) * parseFloat(value.value) * factor; //Цена со скидкой
     let c = a - b; //Скидка
     let d = a * parseFloat(markup.value); //Цена с наценкой
-    let amount = (d - c).toFixed(2);
-    console.log(cost_price, a, b, c, d, amount);
+    let e = parseFloat((value2.value !== '' && value2.value !== '0') ? value2.value : 1);
+    let amount = ((d - c) * e).toFixed(2);
     document.querySelector("#jform_amount").value = parseFloat(amount).toLocaleString('ru-RU', {style:'currency', currency:currency});
     contract_new_amount.value = (old_amount - old_price_value + parseFloat(amount)).toLocaleString('ru-RU', {style:'currency', currency:currency});
 }
