@@ -35,7 +35,47 @@ class ContractsModelItem extends AdminModel {
 
     public function save($data)
     {
+        $standID = 0;
+        if ($data['contractStandID'] !== null) {
+            $table = JTable::getInstance('Stands', 'TableContracts');
+            $table->load($data['contractStandID']);
+            $standID = $table->standID;
+        }
+        if ($data['id'] === null) {
+            $this->sendNotifyNewItem($data['contractID'], $data['itemID'], $data['value'], $standID);
+        }
         return parent::save($data);
+    }
+
+    private function sendNotifyNewItem(int $contractID, int $itemID, int $value, int $standID = 0): void
+    {
+        if (ContractsHelper::getConfig('notify_new_stand_item_status') != '1') return;
+        $groupID = ContractsHelper::getConfig('notify_new_stand_item_group');
+        if (empty($groupID) || $groupID === null) return;
+        $members = MkvHelper::getGroupUsers($groupID);
+        if (empty($members)) return;
+        $contract = $this->getContract($contractID);
+        $company = $contract->company;
+        $priceItem = $this->getPriceItem($itemID);
+        if ($standID > 0) {
+            $stand = $this->getStand($standID);
+            $data['text'] = JText::sprintf('COM_CONTRACTS_NOTIFY_NEW_STAND_ITEM', $priceItem->title, $value, $company);
+        }
+        else {
+            $data['text'] = JText::sprintf('COM_CONTRACTS_NOTIFY_NEW_ITEM', $priceItem->title, $value);
+        }
+        $data['contractID'] = $contractID;
+        $need_push = true;
+        foreach ($members as $member) {
+            $data['managerID'] = $member;
+            $push = [];
+            $push['id'] = ContractsHelper::getConfig('notify_new_stand_item_chanel_id');
+            $push['key'] = ContractsHelper::getConfig('notify_new_stand_item_chanel_key');
+            $push['title'] = ($standID > 0) ? JText::sprintf('COM_CONTRACTS_NOTIFY_NEW_STAND_ITEM_TITLE', $stand->number) : JText::sprintf('COM_CONTRACTS_NOTIFY_NEW_ITEM', $company);
+            $push['text'] = $data['text'];
+            SchedulerHelper::sendNotify($data, (!$need_push) ? [] : $push);
+            $need_push = false;
+        }
     }
 
     public function getPayer(int $payerID)
@@ -99,10 +139,12 @@ class ContractsModelItem extends AdminModel {
         parent::prepareTable($table);
     }
 
-    private function getContract(int $contractID)
+    private function getStand(int $standID)
     {
-        $model = AdminModel::getInstance('Contract', 'ContractsModel');
-        return $model->getItem($contractID);
+        JTable::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_stands/tables");
+        $table = JTable::getInstance('Stands', 'TableStands');
+        $table->load($standID);
+        return $table;
     }
 
     private function getPriceItem(int $itemID)
@@ -113,6 +155,11 @@ class ContractsModelItem extends AdminModel {
         return $table;
     }
 
+    private function getContract(int $contractID)
+    {
+        $model = AdminModel::getInstance('Contract', 'ContractsModel');
+        return $model->getItem($contractID);
+    }
 
     protected function canEditState($record)
     {
