@@ -13,7 +13,10 @@ class ContractsControllerStand extends FormController {
             $contractID = $referer->getVar('id');
             $this->input->set('return', base64_encode($_SERVER['HTTP_REFERER']));
         }
-        if ($contractID > 0) JFactory::getApplication()->setUserState($this->option . '.stand.contractID', $contractID);
+        if ($contractID > 0) {
+            JFactory::getApplication()->setUserState($this->option . '.stand.contractID', $contractID);
+            JFactory::getApplication()->setUserState('com_stands.stand.contractID', $contractID);
+        }
         return parent::add();
     }
 

@@ -20,7 +20,9 @@ class ContractsModelStandsLight extends ListModel
         $input = JFactory::getApplication()->input;
         $this->contractIDs = $config['contractIDs'] ?? [];
         $this->byCompanyID = $config['byCompanyID'] ?? false;
+        $this->byProjectID = $config['byProjectID'] ?? false;
         $this->byContractID = $config['byContractID'] ?? false;
+        $this->projectID = $config['projectID'] ?? 0;
         $this->export = ($input->getString('format', 'html') === 'html') ? false : true;
         $this->return = PrjHelper::getReturnUrl();
     }
@@ -34,7 +36,7 @@ class ContractsModelStandsLight extends ListModel
 
         $query
             ->select("cs.id, cs.status, cs.type, cs.freeze, cs.comment, cs.contractID")
-            ->select("s.square, s.number")
+            ->select("s.square, s.number, s.id as standID")
             ->select("e.title as company, e.id as companyID")
             ->select("c.managerID")
             ->from("#__mkv_contract_stands cs")
@@ -44,6 +46,9 @@ class ContractsModelStandsLight extends ListModel
         if (!empty($this->contractIDs)) {
             $cids = implode(', ', $this->contractIDs);
             $query->where("cs.contractID in ({$cids})");
+        }
+        if ($this->projectID > 0) {
+            $query->where("c.projectID = {$this->_db->q($this->projectID)}");
         }
 
         $this->setState('list.limit', $limit);
@@ -78,6 +83,7 @@ class ContractsModelStandsLight extends ListModel
             }
             if ($this->byCompanyID) $result[$item->companyID][] = $item->number;
             if ($this->byContractID) $result[$item->contractID][] = $arr;
+            if ($this->byProjectID) $result[$item->standID] = $arr;
         }
         return $result;
     }
@@ -98,5 +104,5 @@ class ContractsModelStandsLight extends ListModel
         return parent::getStoreId($id);
     }
 
-    private $export, $contractIDs, $byCompanyID, $byContractID, $return;
+    private $export, $contractIDs, $byCompanyID, $byContractID, $byProjectID, $projectID, $return;
 }
