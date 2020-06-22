@@ -23,6 +23,7 @@ class ContractsModelStandsLight extends ListModel
         $this->byProjectID = $config['byProjectID'] ?? false;
         $this->byContractID = $config['byContractID'] ?? false;
         $this->projectID = $config['projectID'] ?? 0;
+        $this->standID = $config['standID'] ?? 0;
         $this->export = ($input->getString('format', 'html') === 'html') ? false : true;
         $this->return = PrjHelper::getReturnUrl();
     }
@@ -49,6 +50,9 @@ class ContractsModelStandsLight extends ListModel
         }
         if ($this->projectID > 0) {
             $query->where("c.projectID = {$this->_db->q($this->projectID)}");
+        }
+        if ($this->standID > 0) {
+            $query->where("cs.standID = {$this->_db->q($this->standID)}");
         }
 
         $this->setState('list.limit', $limit);
@@ -84,6 +88,7 @@ class ContractsModelStandsLight extends ListModel
             if ($this->byCompanyID) $result[$item->companyID][] = $item->number;
             if ($this->byContractID) $result[$item->contractID][] = $arr;
             if ($this->byProjectID) $result[$item->standID] = $arr;
+            if ($this->standID > 0) $result[] = $arr;
         }
         return $result;
     }
@@ -104,5 +109,5 @@ class ContractsModelStandsLight extends ListModel
         return parent::getStoreId($id);
     }
 
-    private $export, $contractIDs, $byCompanyID, $byContractID, $byProjectID, $projectID, $return;
+    private $export, $contractIDs, $byCompanyID, $byContractID, $byProjectID, $projectID, $standID, $return;
 }
