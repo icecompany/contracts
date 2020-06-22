@@ -60,7 +60,6 @@ function getCost() {
     let val = jQuery(itemID).val();
     let value = document.querySelector("#jform_value");
     let columnID = document.querySelector("#jform_columnID");
-    console.log(columnID.value);
     if (val < 1) {
         value.value = (0).toLocaleString('ru-RU', {style:'currency', currency:currency});
         stand.setAttribute('disabled', true);

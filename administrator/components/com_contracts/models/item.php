@@ -24,6 +24,10 @@ class ContractsModelItem extends AdminModel {
         $item->contract = $this->getContract($item->contractID);
         if ($item->id === null) {
             $item->columnID = $item->contract->project_item->columnID;
+            //Разрешаем менеджерам выбирать колонку
+            if ($item->contract->status === '1' && JDate::getInstance()->format("Y-m-d") === JDate::getInstance($item->contract->dat)->format("Y-m-d")) {
+                $item->columnID = '1';
+            }
         }
         else {
             $item->contract_new_amount = $item->contract->amount;

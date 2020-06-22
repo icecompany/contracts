@@ -27,6 +27,9 @@ class ContractsViewItem extends HtmlView {
         else {
             $this->form->removeField('old_amount');
         }
+        if ($this->item->contract->status === '1' && JDate::getInstance()->format("Y-m-d") === JDate::getInstance($this->item->contract->dat)->format("Y-m-d")) {
+            $this->form->setFieldAttribute('columnID', 'readonly', false);
+        }
 
         $this->addToolbar();
         $this->setDocument();
