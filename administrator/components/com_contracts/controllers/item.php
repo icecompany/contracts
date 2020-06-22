@@ -16,6 +16,23 @@ class ContractsControllerItem extends FormController {
         return parent::add();
     }
 
+    public function edit($key = null, $urlVar = null)
+    {
+        $uri = JUri::getInstance();
+        $id = $uri->getVar('id', 0);
+        if ($id > 0) {
+            $model = $this->getModel();
+            $item = $model->getItem($id);
+            JFactory::getApplication()->setUserState($this->option . '.item.contractID', $item->contractID);
+        }
+        return parent::edit($key, $urlVar);
+    }
+
+    public function getModel($name = 'Item', $prefix = 'ContractsModel', $config = array('ignore_request' => true))
+    {
+        return parent::getModel($name, $prefix, $config);
+    }
+
     public function display($cachable = false, $urlparams = array())
     {
         return parent::display($cachable, $urlparams);
