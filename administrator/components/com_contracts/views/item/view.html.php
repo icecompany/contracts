@@ -40,6 +40,7 @@ class ContractsViewItem extends HtmlView {
     protected function addToolbar() {
 	    JToolBarHelper::apply('item.apply', 'JTOOLBAR_APPLY');
         JToolbarHelper::save('item.save', 'JTOOLBAR_SAVE');
+        JToolbarHelper::save2new('item.save2new');
         JToolbarHelper::cancel('item.cancel', 'JTOOLBAR_CLOSE');
         JFactory::getApplication()->input->set('hidemainmenu', true);
     }

@@ -20,4 +20,10 @@ class ContractsControllerItem extends FormController {
     {
         return parent::display($cachable, $urlparams);
     }
+
+    public function __construct($config = array())
+    {
+        $this->registerTask('save2new', 'save');
+        parent::__construct($config);
+    }
 }
