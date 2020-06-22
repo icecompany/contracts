@@ -39,6 +39,13 @@ class ContractsModelItem extends AdminModel {
 
     public function save($data)
     {
+        $item = $this->getPriceItem($data['itemID']);
+        if ($item->type === 'square' || $item->type === 'electric' || $item->type === 'internet' || $item->type === 'multimedia' || $item->type === 'water' || $item->type === 'cleaning') {
+            if (empty($data['contractStandID'])) {
+                JFactory::getApplication()->enqueueMessage(JText::sprintf('COM_CONTRACTS_ERROR_STAND_IS_NOT_SELECTED'), 'warning');
+                return false;
+            }
+        }
         $standID = 0;
         if ($data['contractStandID'] !== null) {
             $table = JTable::getInstance('Stands', 'TableContracts');
