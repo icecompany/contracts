@@ -59,6 +59,8 @@ function getCost() {
     let stand = document.querySelector("#jform_contractStandID");
     let val = jQuery(itemID).val();
     let value = document.querySelector("#jform_value");
+    let columnID = document.querySelector("#jform_columnID");
+    console.log(columnID.value);
     if (val < 1) {
         value.value = (0).toLocaleString('ru-RU', {style:'currency', currency:currency});
         stand.setAttribute('disabled', true);
@@ -75,8 +77,16 @@ function getCost() {
             let price_rub = parseFloat(text.data.price_rub);
             let price_usd = parseFloat(text.data.price_usd);
             let price_eur = parseFloat(text.data.price_eur);
-            let unit_2_ID = parseFloat(text.data.unit_2_ID);
-            console.log(unit_2_ID);
+            if (columnID.value === '2') {
+                price_rub *= parseFloat(text.data.column_2).toFixed(2);
+                price_usd *= parseFloat(text.data.column_2).toFixed(2);
+                price_eur *= parseFloat(text.data.column_2).toFixed(2);
+            }
+            if (columnID.value === '3') {
+                price_rub *= parseFloat(text.data.column_3).toFixed(2);
+                price_usd *= parseFloat(text.data.column_3).toFixed(2);
+                price_eur *= parseFloat(text.data.column_3).toFixed(2);
+            }
             if (currency === 'rub') {
                 cost_price = price_rub;
                 jQuery(cost).val(price_rub.toLocaleString('ru-RU', {style:'currency', currency:currency})).trigger("liszt:updated");
