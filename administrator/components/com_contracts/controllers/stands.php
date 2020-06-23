@@ -29,11 +29,9 @@ class ContractsControllerStands extends AdminController
         else
         {
             foreach ($cid as $id) {
-                $model = $this->getModel();
-                $item = $model->getItem($id);
-                $sm = ListModel::getInstance('StandsLight', 'ContractsModel', ['standID' => $item->standID]);
-                $items = $sm->getItems();
-                if (count($items) > 0) {
+                $im = ListModel::getInstance('Items', 'ContractsModel', ['standID' => $id]);
+                $items = $im->getItems();
+                if (count($items['items']) > 0) {
                     $this->setMessage(JText::sprintf('COM_CONTRACTS_ERROR_STAND_IS_ASSIGNED_TO_ITEM'), 'warning');
                     $this->setRedirect($_SERVER['HTTP_REFERER']);
                     $this->redirect();
