@@ -99,12 +99,23 @@ function getCost() {
                 jQuery(cost).val(price_eur.toLocaleString('ru-RU', {style:'currency', currency:currency})).trigger("liszt:updated");
             }
             if (text.data.type === 'square' || text.data.type === 'electric' || text.data.type === 'internet' || text.data.type === 'multimedia' || text.data.type === 'water' || text.data.type === 'cleaning') {
+                if (text.data.type === 'electric' || text.data.type === 'internet' || text.data.type === 'multimedia' || text.data.type === 'water' || text.data.type === 'cleaning') {
+                    value.value = 1;
+                }
                 stand.removeAttribute('disabled');
                 jQuery(stand).trigger("liszt:updated");
             }
             else {
                 stand.setAttribute('disabled', true);
                 jQuery(stand).trigger("liszt:updated");
+            }
+            if (text.data.type === 'fine' || text.data.type === 'transit') {
+                cost.removeAttribute('readonly');
+                value.value = 1;
+                columnID.value = 1;
+            }
+            else {
+                cost.setAttribute('readonly', true);
             }
             getAmount();
         })
