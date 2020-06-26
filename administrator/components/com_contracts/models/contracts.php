@@ -40,6 +40,34 @@ class ContractsModelContracts extends ListModel
         $this->companyID = $config['companyID'] ?? 0;
         $this->return = PrjHelper::getReturnUrl();
         if ($this->companyID > 0) $this->export = true;
+        $this->heads = [
+            'company' => 'COM_MKV_HEAD_COMPANY',
+            'status' => 'COM_MKV_HEAD_CONTRACT_STATUS',
+            'stands' => 'COM_MKV_HEAD_STANDS',
+            'number' => 'COM_MKV_HEAD_CONTRACT_NUMBER',
+            'dat' => 'COM_MKV_HEAD_DATE',
+            'currency' => 'COM_CONTRACTS_HEAD_CURRENCY',
+            'manager' => 'COM_MKV_HEAD_MANAGER',
+            'tasks_count' => 'COM_CONTRACTS_HEAD_CONTRACTS_TASKS_COUNT',
+            'doc_status' => 'COM_CONTRACTS_HEAD_CONTRACTS_ORIGINAL',
+            'amount' => 'COM_MKV_HEAD_AMOUNT',
+            'payments' => 'COM_MKV_HEAD_PAYED',
+            'debt' => 'COM_MKV_HEAD_DEBT',
+            'catalog_info' => 'COM_CONTRACTS_FORM_CONTRACT_INFO_CATALOG_LABEL',
+            'catalog_logo' => 'COM_CONTRACTS_FORM_CONTRACT_LOGO_CATALOG_LABEL',
+            'pvn_1' => 'COM_CONTRACTS_FORM_CONTRACT_PVN_1_LABEL',
+            'pvn_1a' => 'COM_CONTRACTS_FORM_CONTRACT_PVN_1A_LABEL',
+            'pvn_1b' => 'COM_CONTRACTS_FORM_CONTRACT_PVN_1B_LABEL',
+            'pvn_1v' => 'COM_CONTRACTS_FORM_CONTRACT_PVN_1V_LABEL',
+            'pvn_1g' => 'COM_CONTRACTS_FORM_CONTRACT_PVN_1G_LABEL',
+            'no_exhibit' => 'COM_CONTRACTS_FORM_CONTRACT_NO_EXHIBIT_LABEL',
+            'info_arrival' => 'COM_CONTRACTS_FORM_CONTRACT_INFO_ARRIVAL_LABEL',
+            'scheme_title' => 'COM_CONTRACTS_FORM_CONTRACT_PLAN_TITLE_RU_LABEL',
+            'scheme_title_en' => 'COM_CONTRACTS_FORM_CONTRACT_PLAN_TITLE_EN_LABEL',
+            'invite_date' => 'COM_CONTRACTS_FORM_CONTRACT_INVITE_DATE_LABEL',
+            'invite_outgoing_number' => 'COM_CONTRACTS_FORM_CONTRACT_OUTGOING_NUMBER_LABEL',
+            'invite_incoming_number' => 'COM_CONTRACTS_FORM_CONTRACT_INCOMING_NUMBER_LABEL',
+        ];
     }
 
     protected function _getListQuery()
@@ -61,13 +89,21 @@ class ContractsModelContracts extends ListModel
             ->select("p.title as project")
             ->select("e.title as company")
             ->select("u.name as manager")
-            ->select("i.doc_status, i.catalog_info, i.catalog_logo, i.pvn_1, i.pvn_1a, i.pvn_1b, i.pvn_1v, i.pvn_1g")
+            ->select("i.doc_status")
             ->from("#__mkv_contracts c")
             ->leftJoin("#__mkv_contract_statuses s on s.code = c.status")
             ->leftJoin("#__mkv_projects p on p.id = c.projectID")
             ->leftJoin("#__mkv_companies e on e.id = c.companyID")
             ->leftJoin("#__users u on u.id = c.managerID")
             ->leftJoin("#__mkv_contract_incoming_info i on i.contractID = c.id");
+
+        if ($this->export) {
+            $query
+                ->select("i.catalog_info, i.catalog_logo, i.pvn_1, i.pvn_1a, i.pvn_1b, i.pvn_1v, i.pvn_1g, i.no_exhibit, i.info_arrival, i.scheme_title_en")
+                ->select("ifnull(i.scheme_title_ru, concat_ws(', ', e.title, ifnull(e.form, ''))) as scheme_title")
+                ->select("si.invite_date, si.invite_outgoing_number, si.invite_incoming_number")
+                ->leftJoin("#__mkv_contract_sent_info si on si.contractID = c.id");
+        }
         if ($this->companyID > 0) {
             $query
                 ->where("c.companyID = {$this->_db->q($this->companyID)}");
@@ -171,7 +207,7 @@ class ContractsModelContracts extends ListModel
     public function getItems()
     {
         $items = parent::getItems();
-        $result = ['items' => [], 'stands' => [], 'amount' => [], 'amount_by_status' => []];
+        $result = ['items' => [], 'amount' => [], 'amount_by_status' => []];
         $ids = [];
         foreach ($items as $item) {
             $arr = [];
@@ -210,6 +246,22 @@ class ContractsModelContracts extends ListModel
             if (empty($item->doc_status)) $item->doc_status = 0;
             $arr['doc_status'] = JText::sprintf("COM_CONTRACTS_DOC_STATUS_{$item->doc_status}_SHORT");
             $arr['number'] = $item->number_free ?? $item->number;
+            if ($this->export) {
+                $arr['no_exhibit'] = JText::sprintf(($item->no_exhibit) != '1' ? 'JNO' : 'JYES');
+                $arr['info_arrival'] = JText::sprintf(($item->info_arrival) != '1' ? 'JNO' : 'JYES');
+                $arr['catalog_info'] = JText::sprintf(($item->catalog_info) != '1' ? 'JNO' : 'JYES');
+                $arr['catalog_logo'] = JText::sprintf(($item->catalog_logo) != '1' ? 'JNO' : 'JYES');
+                $arr['pvn_1'] = JText::sprintf(($item->pvn_1) != '1' ? 'JNO' : 'JYES');
+                $arr['pvn_1a'] = JText::sprintf(($item->pvn_1a) != '1' ? 'JNO' : 'JYES');
+                $arr['pvn_1b'] = JText::sprintf(($item->pvn_1b) != '1' ? 'JNO' : 'JYES');
+                $arr['pvn_1v'] = JText::sprintf(($item->pvn_1v) != '1' ? 'JNO' : 'JYES');
+                $arr['pvn_1g'] = JText::sprintf(($item->pvn_1g) != '1' ? 'JNO' : 'JYES');
+                $arr['scheme_title'] = $item->scheme_title;
+                $arr['scheme_title_en'] = $item->scheme_title_en;
+                $arr['invite_date'] = (!empty($item->invite_date)) ? JDate::getInstance($item->invite_date)->format("d.m.Y") : '';
+                $arr['invite_outgoing_number'] = $item->invite_outgoing_number;
+                $arr['invite_incoming_number'] = $item->invite_incoming_number;
+            }
             $url = JRoute::_("index.php?option={$this->option}&amp;task=contract.edit&amp;id={$item->id}&amp;return={$this->return}");
             $arr['edit_link'] = JHtml::link($url, JText::sprintf('COM_CONTRACTS_ACTION_OPEN'));
             $url = JRoute::_("index.php?option=com_companies&amp;task=company.edit&amp;id={$item->companyID}&amp;return={$this->return}");
@@ -218,16 +270,54 @@ class ContractsModelContracts extends ListModel
             $arr['status_link'] = JHtml::link($url, $item->status ?? JText::sprintf('COM_MKV_STATUS_IN_PROJECT'));
             $url = JRoute::_("index.php?option={$this->option}&amp;view=items&amp;contractID={$item->id}");
             $arr['items_link'] = JHtml::link($url, JText::sprintf('COM_CONTRACTS_ACTION_ITEMS'));
-            $result['items'][] = $arr;
+            $result['items'][$item->id] = $arr;
         }
-        $result['stands'] = $this->getStands($ids);
+        $stands = $this->getStands($ids);
         $project = PrjHelper::getActiveProject();
         $status = $this->getState('filter.status');
         if (is_array($status) && !empty($status) && !$this->export) {
             $result['amount_by_status'] = ContractsHelper::getProjectAmount((int) $project, $status);
         }
         if (is_numeric($project) && ContractsHelper::canDo('core.project.amount')) $result['amount'] = ContractsHelper::getProjectAmount((int) $project);
+        foreach ($result['items'] as $contractID => $item) $result['items'][$contractID]['stands'] = $stands[$contractID];
         return $result;
+    }
+
+    public function export()
+    {
+        $items = $this->getItems();
+        JLoader::discover('PHPExcel', JPATH_LIBRARIES);
+        JLoader::register('PHPExcel', JPATH_LIBRARIES . '/PHPExcel.php');
+
+        $xls = new PHPExcel();
+        $xls->setActiveSheetIndex(0);
+        $sheet = $xls->getActiveSheet();
+
+        //Заголовки
+        $j = 0;
+        foreach ($this->heads as $item => $head) $sheet->setCellValueByColumnAndRow($j++, 1, JText::sprintf($head));
+
+        $sheet->setTitle(JText::sprintf('COM_CONTRACTS_MENU_CONTRACTS'));
+
+        //Данные
+        $row = 2; //Строка, с которой начнаются данные
+        $col = 0;
+        foreach ($items['items'] as $contractID => $item) {
+            foreach ($this->heads as $elem => $head) {
+                $sheet->setCellValueExplicitByColumnAndRow($col++, $row, $item[$elem], PHPExcel_Cell_DataType::TYPE_STRING);
+            }
+            $col = 0;
+            $row++;
+        }
+        header("Expires: Mon, 1 Apr 1974 05:00:00 GMT");
+        header("Last-Modified: " . gmdate("D,d M YH:i:s") . " GMT");
+        header("Cache-Control: no-cache, must-revalidate");
+        header("Pragma: public");
+        header("Content-type: application/vnd.ms-excel");
+        header("Content-Disposition: attachment; filename=Contracts.xls");
+        $objWriter = PHPExcel_IOFactory::createWriter($xls, 'Excel5');
+        $objWriter->save('php://output');
+        jexit();
     }
 
     private function getStands(array $ids = []): array
@@ -237,10 +327,8 @@ class ContractsModelContracts extends ListModel
         $items = $model->getItems();
         $result = [];
         $tmp = [];
-        foreach ($items as $contractID => $data) {
-            foreach ($data as $item) $tmp[$contractID][] = $item['edit_link'];
-        }
-        foreach ($tmp as $contractID => $stand) $result[$contractID] = implode('<br>', $stand);
+        foreach ($items as $contractID => $data) foreach ($data as $item) $tmp[$contractID][] = $item['number'];
+        foreach ($tmp as $contractID => $stand) $result[$contractID] = implode((!$this->export) ? '<br>' : ', ', $stand);
         return $result;
     }
 
@@ -291,5 +379,5 @@ class ContractsModelContracts extends ListModel
         return parent::getStoreId($id);
     }
 
-    private $export, $return, $companyID;
+    private $export, $return, $companyID, $heads;
 }
