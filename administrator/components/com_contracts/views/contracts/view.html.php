@@ -6,7 +6,7 @@ defined('_JEXEC') or die;
 class ContractsViewContracts extends HtmlView
 {
     protected $sidebar = '';
-    public $items, $pagination, $uid, $state, $filterForm, $activeFilters, $activeProject;
+    public $items, $pagination, $uid, $state, $filterForm, $activeFilters, $activeProject, $show_by_status;
 
     public function display($tpl = null)
     {
@@ -16,6 +16,7 @@ class ContractsViewContracts extends HtmlView
         $this->filterForm = $this->get('FilterForm');
         $this->activeFilters = $this->get('ActiveFilters');
         $this->activeProject = PrjHelper::getActiveProject();
+        $this->show_by_status = (!empty($this->state->get('filter.status')));
 
         $this->filterForm->addFieldPath(JPATH_ADMINISTRATOR . "/components/com_mkv/models/fields");
         $this->filterForm->addFieldPath(JPATH_ADMINISTRATOR . "/components/com_prj/models/fields");

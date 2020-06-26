@@ -3,6 +3,7 @@
 defined('_JEXEC') or die;
 $colspan = (!is_numeric($this->activeProject)) ? 14 : 13;
 ?>
+<?php if ($this->show_by_status): ?>
 <tr>
     <td colspan="<?php echo $colspan;?>" rowspan="3" style="text-align: right;">
         <?php echo JText::sprintf('COM_CONTRACTS_HEAD_TOTAL_AMOUNT_BY_PROJECT_BY_STATUSES'); ?>
@@ -21,6 +22,7 @@ $colspan = (!is_numeric($this->activeProject)) ? 14 : 13;
     <td><?php echo $this->items['amount_by_status']['eur']['payments'];?></td>
     <td colspan="2"><?php echo $this->items['amount_by_status']['eur']['debt'];?></td>
 </tr>
+<?php endif;?>
 <tr>
     <td colspan="<?php echo $colspan;?>" rowspan="3" style="text-align: right;">
         <?php echo JText::sprintf('COM_CONTRACTS_HEAD_TOTAL_AMOUNT_BY_PROJECT'); ?>
