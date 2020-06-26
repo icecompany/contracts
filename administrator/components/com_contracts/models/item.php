@@ -60,30 +60,41 @@ class ContractsModelItem extends AdminModel {
 
     private function sendNotifyNewItem(int $contractID, int $itemID, int $value, int $standID = 0): void
     {
-        if (ContractsHelper::getConfig('notify_new_stand_item_status') != '1') return;
-        $groupID = ContractsHelper::getConfig('notify_new_stand_item_group');
-        if (empty($groupID) || $groupID === null) return;
-        $members = MkvHelper::getGroupUsers($groupID);
-        if (empty($members)) return;
         $contract = $this->getContract($contractID);
         $company = $contract->company;
         $priceItem = $this->getPriceItem($itemID);
         if ($standID > 0) {
+            //Уведомления о добавлении услуг в стенд
+            if (ContractsHelper::getConfig('notify_new_stand_item_status') != '1') return;
+            $groupID = ContractsHelper::getConfig('notify_new_stand_item_group');
+            if (empty($groupID) || $groupID === null) return;
+            $members = MkvHelper::getGroupUsers($groupID);
+            if (empty($members)) return;
             $stand = $this->getStand($standID);
             $data['text'] = JText::sprintf('COM_CONTRACTS_NOTIFY_NEW_STAND_ITEM', $priceItem->title, $value, $company);
+            $push_id = ContractsHelper::getConfig('notify_new_stand_item_chanel_id');
+            $push_key = ContractsHelper::getConfig('notify_new_stand_item_chanel_key');
         }
         else {
+            //Уведомления о конкретных пунктах прайса
+            if (ContractsHelper::getConfig('notify_new_item_status') != '1') return;
             $data['text'] = JText::sprintf('COM_CONTRACTS_NOTIFY_NEW_ITEM', $priceItem->title, $value);
+            $push_id = ContractsHelper::getConfig('notify_new_item_chanel_id');
+            $push_key = ContractsHelper::getConfig('notify_new_item_chanel_key');
+            $members = $this->getWatchers($itemID);
+            if (empty($members)) return;
+            $uids = $this->getRecipients($push_id, $push_key, $members);
         }
         $data['contractID'] = $contractID;
         $need_push = true;
         foreach ($members as $member) {
             $data['managerID'] = $member;
             $push = [];
-            $push['id'] = ContractsHelper::getConfig('notify_new_stand_item_chanel_id');
-            $push['key'] = ContractsHelper::getConfig('notify_new_stand_item_chanel_key');
-            $push['title'] = ($standID > 0) ? JText::sprintf('COM_CONTRACTS_NOTIFY_NEW_STAND_ITEM_TITLE', $stand->number) : JText::sprintf('COM_CONTRACTS_NOTIFY_NEW_ITEM', $company);
+            $push['id'] = $push_id;
+            $push['key'] = $push_key;
+            $push['title'] = ($standID > 0) ? JText::sprintf('COM_CONTRACTS_NOTIFY_NEW_STAND_ITEM_TITLE', $stand->number) : $company;
             $push['text'] = $data['text'];
+            if (isset($uids) && !empty($uids)) $push['uids'] = "[" . implode(',', $uids) . "]";
             SchedulerHelper::sendNotify($data, (!$need_push) ? [] : $push);
             $need_push = false;
         }
@@ -148,6 +159,27 @@ class ContractsModelItem extends AdminModel {
         if ($table->value2 <= 0 || $table->value2 == 1) $table->value2 = NULL;
 
         parent::prepareTable($table);
+    }
+
+    private function getRecipients(int $channelID, string $api_key, array $managerIDs = [])
+    {
+        if (empty($managerIDs)) return [];
+        $ids = implode(', ', $managerIDs);
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query
+            ->select("distinct uid")
+            ->from("#__mkv_managers_push_channels")
+            ->where("channelID = {$db->q($channelID)} and api_key = {$db->q($api_key)} and managerID in ({$ids})");
+        return $db->setQuery($query)->loadColumn() ?? [];
+    }
+
+    private function getWatchers(int $itemID)
+    {
+        JTable::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_prices/tables");
+        JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_prices/models", "PricesModel");
+        $model = JModelLegacy::getInstance('Watchers', "PricesModel", ['itemID' => $itemID]);
+        return $model->getItems();
     }
 
     private function getStand(int $standID)

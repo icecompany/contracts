@@ -85,6 +85,40 @@
 				component="com_contracts"
 				section="component"
 		/>
+		<field name="spacer_3" type="spacer" label="COM_CONTRACTS_CONFIG_NOTIFY_NEW_ITEM_ID_SPACER" />
+		<field
+				name="notify_new_item_status"
+				type="radio"
+				class="btn-group btn-group-yesno"
+				label="COM_CONTRACTS_CONFIG_NOTIFY_NEW_ITEM_STATUS_LABEL"
+				description="COM_CONTRACTS_CONFIG_NOTIFY_NEW_ITEM_STATUS_DESC"
+				filter="integer"
+				default="0"
+				required="true"
+				component="com_contracts"
+				section="component"
+		>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+				name="notify_new_item_chanel_id"
+				type="text"
+				default="0"
+				filter="integer"
+				label="COM_CONTRACTS_CONFIG_NOTIFY_NEW_ITEM_CHANEL_ID_LABEL"
+				description="COM_CONTRACTS_CONFIG_NOTIFY_NEW_ITEM_CHANEL_ID_DESC"
+				component="com_contracts"
+				section="component"
+		/>
+		<field
+				name="notify_new_item_chanel_key"
+				type="text"
+				label="COM_CONTRACTS_CONFIG_NOTIFY_NEW_ITEM_CHANEL_KEY_LABEL"
+				description="COM_CONTRACTS_CONFIG_NOTIFY_NEW_ITEM_CHANEL_KEY_DESC"
+				component="com_contracts"
+				section="component"
+		/>
 	</fieldset>
 	<fieldset name="permissions" label="JCONFIG_PERMISSIONS_LABEL" description="JCONFIG_PERMISSIONS_DESC">
 		<field name="rules"
