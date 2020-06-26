@@ -109,7 +109,7 @@ function getCost() {
                 stand.setAttribute('disabled', true);
                 jQuery(stand).trigger("liszt:updated");
             }
-            if (text.data.type === 'fine' || text.data.type === 'transit') {
+            if (text.data.type === 'fine' || text.data.type === 'transfer') {
                 cost.removeAttribute('readonly');
                 value.value = 1;
                 columnID.value = 1;
