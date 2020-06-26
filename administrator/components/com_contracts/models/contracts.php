@@ -327,7 +327,7 @@ class ContractsModelContracts extends ListModel
         $items = $model->getItems();
         $result = [];
         $tmp = [];
-        foreach ($items as $contractID => $data) foreach ($data as $item) $tmp[$contractID][] = $item['number'];
+        foreach ($items as $contractID => $data) foreach ($data as $item) $tmp[$contractID][] = (!$this->export) ? $item['edit_link'] : $item['number'];
         foreach ($tmp as $contractID => $stand) $result[$contractID] = implode((!$this->export) ? '<br>' : ', ', $stand);
         return $result;
     }
