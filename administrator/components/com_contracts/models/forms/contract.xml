@@ -39,6 +39,15 @@
             <option value="usd">COM_CONTRACTS_CURRENCY_USD</option>
             <option value="eur">COM_CONTRACTS_CURRENCY_EUR</option>
         </field>
+        <field
+                name="comment"
+                type="textarea"
+                class="span12"
+                rows="3"
+                label="COM_CONTRACTS_FORM_CONTRACT_COMMENT_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_COMMENT_DESC"
+                hint="COM_CONTRACTS_FORM_CONTRACT_COMMENT_HINT"
+        />
     </fieldset>
     <fieldset name="contract">
         <field
