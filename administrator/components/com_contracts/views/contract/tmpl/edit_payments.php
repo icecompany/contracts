@@ -25,7 +25,7 @@ $ii = 0;
                 <td><?php echo $item['score_status']; ?></td>
                 <td><?php echo $item['edit_link']; ?></td>
                 <td><?php echo $item['dat']; ?></td>
-                <td><?php echo $item['score_amount']; ?></td>
+                <td><?php echo $item['amount']; ?></td>
                 <td><?php echo (!empty($item['payer'])) ? $item['payer_link'] : $this->item->company; ?></td>
                 <td><?php echo $item['id']; ?></td>
             </tr>
