@@ -11,6 +11,7 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_contracts'))
 
 // Require the helper
 JFactory::getLanguage()->load('com_mkv', JPATH_ADMINISTRATOR . "/components/com_mkv", 'ru-RU', true);
+JFactory::getLanguage()->load('com_prj', JPATH_ADMINISTRATOR . "/components/com_prj", 'ru-RU', true);
 JFactory::getLanguage()->load('com_prices', JPATH_ADMINISTRATOR . "/components/com_prices", 'ru-RU', true);
 require_once JPATH_ADMINISTRATOR . "/components/com_mkv/helpers/mkv.php";
 require_once JPATH_ADMINISTRATOR . "/components/com_prj/helpers/prj.php";

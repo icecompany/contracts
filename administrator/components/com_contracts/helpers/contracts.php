@@ -7,6 +7,7 @@ class ContractsHelper
 {
     public function addSubmenu($vName)
     {
+        PrjHelper::addNotifies();
         HTMLHelper::_('sidebar.addEntry', JText::sprintf('COM_CONTRACTS_MENU_CONTRACTS'), 'index.php?option=com_contracts&view=contracts', $vName === 'contracts');
         HTMLHelper::_('sidebar.addEntry', JText::sprintf('COM_CONTRACTS_MENU_ITEMS'), 'index.php?option=com_contracts&view=items', $vName === 'items');
         HTMLHelper::_('sidebar.addEntry', JText::sprintf('COM_CONTRACTS_MENU_STANDS'), 'index.php?option=com_contracts&view=stands', $vName === 'stands');
