@@ -19,6 +19,7 @@ class ContractsModelItems extends ListModel
                 'pi.weight',
                 'pi.title',
                 'e.title',
+                'st.title',
                 'currency',
                 'manager',
                 'status',
@@ -36,6 +37,7 @@ class ContractsModelItems extends ListModel
         }
         $this->heads = [
             'company' => 'COM_MKV_HEAD_COMPANY',
+            'status' => 'COM_MKV_HEAD_CONTRACT_STATUS',
             'manager' => 'COM_MKV_HEAD_MANAGER',
             'item' => 'COM_CONTRACTS_HEAD_ITEMS_ITEM',
             'cost_clean' => 'COM_CONTRACTS_HEAD_ITEMS_COST',
@@ -83,7 +85,10 @@ class ContractsModelItems extends ListModel
             $limit = 0;
         }
         else {
-            $query->select("e.title as company");
+            $query
+                ->select("st.title as status")
+                ->select("e.title as company")
+                ->leftJoin("#__mkv_contract_statuses st on st.code = c.status");
 
             $search = $this->getState('filter.search');
             if (!empty($search)) {
@@ -169,6 +174,7 @@ class ContractsModelItems extends ListModel
             $arr['factor'] = (1 - $item->factor) * 100 . "%";
             $arr['markup'] = ($item->markup - 1) * 100 . "%";
             $arr['cost_clean'] = $item->cost;
+            $arr['status'] = $item->status;
             $currency = mb_strtoupper($item->currency);
             $cost = number_format((float) $item->cost, 2, '.', ' ');
             $arr['cost'] = JText::sprintf("COM_CONTRACTS_CURRENCY_{$currency}_AMOUNT_SHORT", $cost);
@@ -216,7 +222,7 @@ class ContractsModelItems extends ListModel
         $sheet = $xls->getActiveSheet();
 
         //Ширина столбцов
-        $width = ["A" => 84, "B" => 26, "C" => 120, "D" => 11, "E" => 9, "F" => 9, "G" => 9, "H" => 9, "I" => 9, "J" => 19];
+        $width = ["A" => 84, "B" => 26, "C" => 26, "D" => 120, "E" => 11, "F" => 9, "G" => 9, "H" => 9, "I" => 9, "J" => 9, "K" => 19];
         foreach ($width as $col => $value) $sheet->getColumnDimension($col)->setWidth($value);
 
         //Заголовки

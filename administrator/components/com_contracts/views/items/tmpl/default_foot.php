@@ -1,7 +1,7 @@
 <?php
 // Запрет прямого доступа.
 defined('_JEXEC') or die;
-$colspan = ($this->contractID > 0) ? '12' : '13';
+$colspan = ($this->contractID > 0) ? '12' : '14';
 $currency = $this->items['currency'];
 if ($this->contractID > 0): ?>
     <tr>

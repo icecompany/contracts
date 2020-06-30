@@ -14,6 +14,9 @@ $listDirn = $this->escape($this->state->get('list.direction'));
         <th>
             <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_COMPANY', 'e.title', $listDirn, $listOrder); ?>
         </th>
+        <th>
+            <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_CONTRACT_STATUS', 'st.title', $listDirn, $listOrder); ?>
+        </th>
     <?php endif; ?>
     <th>
         <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_MANAGER', 'manager', $listDirn, $listOrder); ?>

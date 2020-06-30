@@ -15,6 +15,9 @@ foreach ($this->items['items'] as $i => $item) :
             <td>
                 <?php echo $item['company']; ?>
             </td>
+            <td>
+                <?php echo $item['status']; ?>
+            </td>
         <?php endif; ?>
         <td>
             <?php echo $item['manager']; ?>
