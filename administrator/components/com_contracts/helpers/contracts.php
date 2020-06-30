@@ -50,6 +50,11 @@ class ContractsHelper
                 if (!empty($statuses)) $query->where("status in ({$statuses})");
             }
         }
+        if (!ContractsHelper::canDo('core.project.amount_full')) {
+            $userID = JFactory::getUser()->id;
+            $query
+                ->where("managerID = {$db->q($userID)}");
+        }
         $items = $db->setQuery($query)->loadAssocList('currency');
         foreach ($items as $currency => $arr) {
             foreach ($arr as $type => $amount) {
