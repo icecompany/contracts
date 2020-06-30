@@ -141,7 +141,7 @@ class ContractsModelContracts extends ListModel
                 $query->where("c.projectID = {$this->_db->q($project)}");
             }
             $manager = $this->getState('filter.manager');
-            if (is_numeric($manager)) {
+            if (is_numeric($manager) && !$this->export) {
                 $query->where("c.managerID = {$this->_db->q($manager)}");
             }
             $status = $this->getState('filter.status');
