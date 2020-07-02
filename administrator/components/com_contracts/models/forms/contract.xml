@@ -282,10 +282,6 @@
                 type="hidden"
         />
         <field
-                name="projectID"
-                type="hidden"
-        />
-        <field
                 name="companyID"
                 type="hidden"
         />
