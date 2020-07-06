@@ -12,7 +12,7 @@ HTMLHelper::_('script', $this->script);
 HTMLHelper::_('script', 'com_contracts/contract.js', array('version' => 'auto', 'relative' => true));
 ?>
 <form action="<?php echo ContractsHelper::getActionUrl(); ?>"
-      method="post" name="adminForm" id="adminForm" xmlns="http://www.w3.org/1999/html" class="form-validate">
+      method="post" name="adminForm" id="adminForm" xmlns="http://www.w3.org/1999/html" class="form-validate" enctype="multipart/form-data">
     <div class="row-fluid">
         <div class="span12 form-horizontal">
             <?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'general', 'useCookie' => true)); ?>
@@ -58,6 +58,18 @@ HTMLHelper::_('script', 'com_contracts/contract.js', array('version' => 'auto', 
                         </div>
                         <div class="span6">
                             <?php echo $this->loadTemplate('sent'); ?>
+                        </div>
+                    </div>
+                    <?php echo JHtml::_('bootstrap.endTab'); ?>
+                <?php endif; ?>
+                <?php if ($this->item->id !== null): ?>
+                    <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'files', JText::sprintf('COM_CONTRACTS_TITLE_TAB_FILES')); ?>
+                    <div class="row-fluid">
+                        <div class="span6">
+                            <?php echo $this->loadTemplate('upload'); ?>
+                        </div>
+                        <div class="span6">
+                            <?php echo $this->loadTemplate('files'); ?>
                         </div>
                     </div>
                     <?php echo JHtml::_('bootstrap.endTab'); ?>

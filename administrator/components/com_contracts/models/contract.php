@@ -73,6 +73,8 @@ class ContractsModelContract extends AdminModel {
             if ($item->managerID != $data['managerID']) SchedulerHelper::updateTaskManager($data['id'], $data['managerID']);
             //Обнуляем сумму заказанных услуг, если сделка переходит в отказ
             if ($data['status'] == '0') ContractsHelper::setZeroAmount($data['id']);
+            //Загрузка файла
+            $this->uploadFiles($data['id']);
         }
         return parent::save($data);
     }
@@ -129,7 +131,6 @@ class ContractsModelContract extends AdminModel {
         else return [];
     }
 
-
     public function saveParentID(int $contractID, int $companyID)
     {
         $table = JTable::getInstance('Parents', 'TableContracts');
@@ -181,6 +182,30 @@ class ContractsModelContract extends AdminModel {
             return $items['items'];
         }
         else return [];
+    }
+
+    public function getFiles(): array
+    {
+        $item = parent::getItem();
+        if ($item->id === null) return [];
+        JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_yastorage/models", 'YastorageModel');
+        $model = JModelLegacy::getInstance('Mkv', 'YastorageModel');
+        $bucket = 'mkv-contracts';
+        $prefix = "contracts/{$item->id}/";
+        $files = $model->listObjects($bucket, $prefix);
+        if (empty($files)) return [];
+        $result = [];
+        foreach ($files as $file) {
+            $arr = [];
+            $url = JRoute::_("index.php?option=com_yastorage&amp;task=mkv.download&amp;bucket={$bucket}&amp;key={$file['Key']}");
+            $arr['download_link'] = JHtml::link($url, basename($file['Key']));
+            $url = JRoute::_("index.php?option=com_yastorage&amp;task=mkv.delete&amp;bucket={$bucket}&amp;key={$file['Key']}");
+            $arr['delete_link'] = JHtml::link($url, JText::sprintf('COM_MKV_ACTION_DELETE'));
+            $arr['size'] = JText::sprintf('COM_YASTORAGE_HEAD_OBJECT_SIZE_TEXT_MB', round((float) $file['Size'] / 1024 / 1024, 2));
+            $arr['modified'] = JDate::getInstance($file['LastModified']->date)->format("d.m.Y");
+            $result[] = $arr;
+        }
+        return $result;
     }
 
     public function getIncomingInfo(int $contractID)
@@ -345,6 +370,21 @@ class ContractsModelContract extends AdminModel {
         parent::prepareTable($table);
     }
 
+    private function uploadFiles(int $contractID) {
+        $files = $_FILES['jform'];
+        if (!empty($files['name'])) {
+            JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_yastorage/models", 'YastorageModel');
+            $model = JModelLegacy::getInstance('Mkv', 'YastorageModel');
+            $key = "contracts/{$contractID}";
+            $paths = [];
+            foreach ($files['name'] as $file) {
+                foreach ($file as $index => $name) {
+                    $paths[] = $model->upload($bucket = 'mkv-contracts', $key, $files['tmp_name']['file'][$index], $name);
+                }
+            }
+        }
+    }
+
     private function getActivities(int $companyID)
     {
         JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_companies/models", 'CompaniesModel');
@@ -401,7 +441,6 @@ class ContractsModelContract extends AdminModel {
         $table->load(['contractID' => $contractID, 'thematicID' => $thematicID]);
         $table->delete($table->id);
     }
-
 
     protected function canEditState($record)
     {
