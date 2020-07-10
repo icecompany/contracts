@@ -9,6 +9,16 @@ use Joomla\CMS\HTML\HTMLHelper;
 HTMLHelper::_('stylesheet', 'com_contracts/style.css', array('version' => 'auto', 'relative' => true));
 HTMLHelper::_('script', 'com_contracts/contracts.js', array('version' => 'auto', 'relative' => true));
 ?>
+<script>
+    Joomla.submitbutton = function (task) {
+        let form = document.querySelector('#adminForm');
+        if (task === 'contracts.download') {
+            location.href = 'index.php?option=com_contracts&task=contracts.execute&format=xls';
+            return false;
+        }
+        else Joomla.submitform(task, form);
+    };
+</script>
 <div class="row-fluid">
     <div id="j-sidebar-container" class="span2">
         <form action="<?php echo ContractsHelper::getSidebarAction(); ?>" method="post">
