@@ -29,6 +29,7 @@ class ContractsModelContract extends AdminModel {
                 $item->info_arrival = $incoming->info_arrival;
                 $item->scheme_title_ru = $incoming->scheme_title_ru;
                 $item->scheme_title_en = $incoming->scheme_title_en;
+                $item->title_to_diploma = $incoming->title_to_diploma;
             }
             $sent = $this->getSentInfo($item->id);
             if ($sent !== null) {
@@ -240,6 +241,7 @@ class ContractsModelContract extends AdminModel {
         $arr['info_arrival'] = $data['info_arrival'];
         $arr['scheme_title_ru'] = $data['scheme_title_ru'] ?? null;
         $arr['scheme_title_en'] = $data['scheme_title_en'] ?? null;
+        $arr['title_to_diploma'] = $data['title_to_diploma'] ?? null;
         if ($table->doc_status == '0' && $data['doc_status'] != 0) {
             $this->sendNotifyNewDocStatus($contractID, $data['companyID'], $data['doc_status']);
         }

@@ -19,6 +19,7 @@ class TableContractsIncoming extends Table
     var $info_arrival = null;
     var $scheme_title_ru = null;
     var $scheme_title_en = null;
+    var $title_to_diploma = null;
 
 	public function __construct(JDatabaseDriver $db)
 	{

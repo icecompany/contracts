@@ -120,6 +120,15 @@
             <option value="0">COM_CONTRACTS_TITLE_SELECT_EXPONENTS_WITH</option>
             <option value="1">COM_CONTRACTS_TITLE_SELECT_EXPONENTS_WITHOUT</option>
         </field>
+        <field
+                name="title_to_diploma"
+                type="list"
+                onchange="this.form.submit();"
+                >
+            <option value="">COM_CONTRACTS_FILTER_SELECT_TITLE_TO_DIPLOMA</option>
+            <option value="0">COM_CONTRACTS_FILTER_SELECT_TITLE_TO_DIPLOMA_0</option>
+            <option value="1">COM_CONTRACTS_FILTER_SELECT_TITLE_TO_DIPLOMA_1</option>
+        </field>
     </fields>
     <fields name="list">
         <field

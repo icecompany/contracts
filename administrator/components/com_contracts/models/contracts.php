@@ -24,6 +24,7 @@ class ContractsModelContracts extends ListModel
                 'c.tasks_count',
                 'c.tasks_date',
                 'num',
+                'title_to_diploma',
                 'catalog_info', 'i.catalog_info',
                 'catalog_logo', 'i.catalog_logo',
                 'pvn_1', 'i.pvn_1',
@@ -67,6 +68,7 @@ class ContractsModelContracts extends ListModel
             'invite_date' => 'COM_CONTRACTS_FORM_CONTRACT_INVITE_DATE_LABEL',
             'invite_outgoing_number' => 'COM_CONTRACTS_FORM_CONTRACT_OUTGOING_NUMBER_LABEL',
             'invite_incoming_number' => 'COM_CONTRACTS_FORM_CONTRACT_INCOMING_NUMBER_LABEL',
+            'title_to_diploma' => 'COM_CONTRACTS_FORM_CONTRACT_TITLE_TO_DIPLOMA_LABEL',
         ];
     }
 
@@ -99,7 +101,7 @@ class ContractsModelContracts extends ListModel
 
         if ($this->export) {
             $query
-                ->select("i.catalog_info, i.catalog_logo, i.pvn_1, i.pvn_1a, i.pvn_1b, i.pvn_1v, i.pvn_1g, i.no_exhibit, i.info_arrival, i.scheme_title_en")
+                ->select("i.catalog_info, i.catalog_logo, i.pvn_1, i.pvn_1a, i.pvn_1b, i.pvn_1v, i.pvn_1g, i.no_exhibit, i.info_arrival, i.scheme_title_en, i.title_to_diploma")
                 ->select("ifnull(i.scheme_title_ru, concat_ws(', ', e.title, ifnull(e.form, ''))) as scheme_title")
                 ->select("si.invite_date, si.invite_outgoing_number, si.invite_incoming_number")
                 ->leftJoin("#__mkv_contract_sent_info si on si.contractID = c.id");
@@ -166,6 +168,15 @@ class ContractsModelContracts extends ListModel
             if (is_numeric($doc_status)) {
                 $query->where("i.doc_status = {$this->_db->q($doc_status)}");
             }
+
+            $title_to_diploma = $this->getState('filter.title_to_diploma');
+            if (is_numeric($title_to_diploma)) {
+                if ($title_to_diploma === '0') $query->where("i.title_to_diploma is null");
+                if ($title_to_diploma === '1') {
+                    $query->where("i.title_to_diploma is not null");
+                }
+            }
+
             $currency = $this->getState('filter.currency');
             if (!empty($currency)) {
                 $query->where("c.currency like {$this->_db->q($currency)}");
@@ -261,6 +272,7 @@ class ContractsModelContracts extends ListModel
                 $arr['invite_date'] = (!empty($item->invite_date)) ? JDate::getInstance($item->invite_date)->format("d.m.Y") : '';
                 $arr['invite_outgoing_number'] = $item->invite_outgoing_number;
                 $arr['invite_incoming_number'] = $item->invite_incoming_number;
+                $arr['title_to_diploma'] = $item->title_to_diploma;
             }
             $url = JRoute::_("index.php?option={$this->option}&amp;task=contract.edit&amp;id={$item->id}&amp;return={$this->return}");
             $arr['edit_link'] = JHtml::link($url, JText::sprintf('COM_CONTRACTS_ACTION_OPEN'));
@@ -358,6 +370,8 @@ class ContractsModelContracts extends ListModel
         $this->setState('filter.doc_status', $doc_status);
         $no_exhibits = $this->getUserStateFromRequest($this->context . '.filter.no_exhibits', 'filter_no_exhibits');
         $this->setState('filter.no_exhibits', $no_exhibits);
+        $title_to_diploma = $this->getUserStateFromRequest($this->context . '.filter.title_to_diploma', 'filter_title_to_diploma');
+        $this->setState('filter.title_to_diploma', $title_to_diploma);
         parent::populateState($ordering, $direction);
         PrjHelper::check_refresh();
     }
@@ -376,6 +390,7 @@ class ContractsModelContracts extends ListModel
         $id .= ':' . $this->getState('filter.pvn_1g');
         $id .= ':' . $this->getState('filter.doc_status');
         $id .= ':' . $this->getState('filter.no_exhibits');
+        $id .= ':' . $this->getState('filter.title_to_diploma');
         return parent::getStoreId($id);
     }
 
