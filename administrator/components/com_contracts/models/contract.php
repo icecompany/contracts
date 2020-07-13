@@ -368,6 +368,12 @@ class ContractsModelContract extends AdminModel {
                 }
             }
         }
+        //Обнуляем номер и дату договора, если не отказной статус
+        if ($table->status == '0') {
+            $table->number = NULL;
+            $table->number_free = NULL;
+            $table->dat = NULL;
+        }
 
         parent::prepareTable($table);
     }
