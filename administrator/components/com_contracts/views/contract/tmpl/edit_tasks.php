@@ -10,6 +10,7 @@ $arr = [-2, 1, 2]; ?>
             <th><?php echo JText::sprintf('COM_MKV_HEAD_OPEN'); ?></th>
             <th><?php echo JText::sprintf('COM_MKV_HEAD_DATE'); ?></th>
             <th><?php echo JText::sprintf('COM_MKV_HEAD_STATUS'); ?></th>
+            <th><?php echo JText::sprintf('COM_MKV_HEAD_MANAGER'); ?></th>
             <th><?php echo JText::sprintf('COM_MKV_HEAD_TASK'); ?></th>
             <th><?php echo JText::sprintf('COM_MKV_HEAD_RESULT'); ?></th>
             <th>ID</th>
@@ -23,6 +24,7 @@ $arr = [-2, 1, 2]; ?>
                 <td><?php echo $task['edit_link']; ?></td>
                 <td><?php echo $task['date_task']; ?></td>
                 <td><?php echo $task['status']; ?></td>
+                <td><?php echo $task['manager']; ?></td>
                 <td><?php echo $task['task']; ?></td>
                 <td><?php echo $task['result']; ?></td>
                 <td><?php echo $task['id']; ?></td>
@@ -34,6 +36,7 @@ $arr = [-2, 1, 2]; ?>
             <td><?php echo $task['edit_link']; ?></td>
             <td><?php echo $task['date_task']; ?></td>
             <td><?php echo $task['status']; ?></td>
+            <td><?php echo $task['manager']; ?></td>
             <td><?php echo $task['task']; ?></td>
             <td><?php echo $task['result']; ?></td>
             <td><?php echo $task['id']; ?></td>
