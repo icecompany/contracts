@@ -177,10 +177,10 @@ class ContractsModelContract extends AdminModel {
         $id = JFactory::getApplication()->input->getInt('id', 0);
         if ($id > 0) {
             JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_finances/models", "FinancesModel");
-            $model = JModelLegacy::getInstance('Payments', 'FinancesModel', ['contractID' => $id]);
+            $model = JModelLegacy::getInstance('Sap', 'FinancesModel', ['contractID' => $id]);
             $items = $model->getItems();
-            if (empty($items['items'])) return [];
-            return $items['items'];
+            if (empty($items)) return [];
+            return $items;
         }
         else return [];
     }
