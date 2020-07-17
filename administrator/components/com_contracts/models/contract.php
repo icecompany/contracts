@@ -70,8 +70,10 @@ class ContractsModelContract extends AdminModel {
             //Сохраняем виды деятельности
             $this->saveActivities($data['companyID'], $data['activities'] ?? []);
             //Переносим задачи
-            $item = parent::getItem();
-            if ($item->managerID != $data['managerID']) SchedulerHelper::updateTaskManager($data['id'], $data['managerID']);
+            $item = parent::getItem($data['id']);
+            if ($item->managerID != $data['managerID']) {
+                SchedulerHelper::updateTaskManager($data['id'], $data['managerID']);
+            }
             //Обнуляем сумму заказанных услуг, если сделка переходит в отказ
             if ($data['status'] == '0') ContractsHelper::setZeroAmount($data['id']);
             //Загрузка файла
