@@ -32,7 +32,7 @@ class ContractsHelper
         $db->setQuery("set @is_zero := 0")->execute();
     }
 
-    public static function getProjectAmount(int $projectID = 0, $status = []): array
+    public static function getProjectAmount(int $projectID = 0, $status = [], $managerID = 0): array
     {
         $result = ['rub' => 0, 'usd' => 0, 'eur' => 0];
         if ($projectID === 0) return $result;
@@ -50,6 +50,9 @@ class ContractsHelper
             } else {
                 if (!empty($statuses)) $query->where("status in ({$statuses})");
             }
+        }
+        if ($managerID > 0) {
+            $query->where("managerID = {$db->q($managerID)}");
         }
         if (!ContractsHelper::canDo('core.project.amount_full')) {
             $userID = JFactory::getUser()->id;
