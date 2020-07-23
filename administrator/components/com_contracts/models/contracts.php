@@ -287,11 +287,10 @@ class ContractsModelContracts extends ListModel
         $stands = $this->getStands($ids);
         $project = PrjHelper::getActiveProject();
         $status = $this->getState('filter.status');
-        $manager = $this->getState('filter.manager');
         if (is_array($status) && !empty($status) && !$this->export) {
-            $result['amount_by_status'] = ContractsHelper::getProjectAmount((int) $project, $status, $manager);
+            $result['amount_by_status'] = ContractsHelper::getProjectAmount(true);
         }
-        if (is_numeric($project) && ContractsHelper::canDo('core.project.amount')) $result['amount'] = ContractsHelper::getProjectAmount((int) $project);
+        if (is_numeric($project) && ContractsHelper::canDo('core.project.amount')) $result['amount'] = ContractsHelper::getProjectAmount();
         foreach ($result['items'] as $contractID => $item) $result['items'][$contractID]['stands'] = $stands[$contractID];
         return $result;
     }

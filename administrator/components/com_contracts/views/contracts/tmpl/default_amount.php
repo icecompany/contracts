@@ -6,7 +6,7 @@ $colspan = (!is_numeric($this->activeProject)) ? 14 : 13;
 <?php if ($this->show_by_status): ?>
 <tr>
     <td colspan="<?php echo $colspan;?>" rowspan="3" style="text-align: right;">
-        <?php echo JText::sprintf('COM_CONTRACTS_HEAD_TOTAL_AMOUNT_BY_PROJECT_BY_STATUSES'); ?>
+        <?php echo JText::sprintf('COM_CONTRACTS_HEAD_TOTAL_AMOUNT_BY_PROJECT_BY_FILTERS'); ?>
     </td>
     <td><?php echo $this->items['amount_by_status']['rub']['amount'];?></td>
     <td><?php echo $this->items['amount_by_status']['rub']['payments'];?></td>

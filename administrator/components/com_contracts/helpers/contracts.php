@@ -32,34 +32,102 @@ class ContractsHelper
         $db->setQuery("set @is_zero := 0")->execute();
     }
 
-    public static function getProjectAmount(int $projectID = 0, $status = [], $managerID = 0): array
+    /**
+     * Возвращает массив с суммами всех сделок по валютам
+     * @param bool $by_filters Если true, то значение возвращается с учётом фильтров в модели сделок
+     * @return array|int[]
+     * @throws Exception
+     * @since 2.1.16
+     */
+    public static function getProjectAmount(bool $by_filters = false): array
     {
+        $app = JFactory::getApplication();
+        $context = "com_contracts.contracts";
         $result = ['rub' => 0, 'usd' => 0, 'eur' => 0];
-        if ($projectID === 0) return $result;
+
         $db = JFactory::getDbo();
+
+        $projectID = PrjHelper::getActiveProject();
+        if ($projectID === 0) return $result;
+
         $query = $db->getQuery(true);
         $query
-            ->select("currency, ifnull(sum(amount), 0) as amount, ifnull(sum(payments), 0) as payments, ifnull(sum(if(debt < 0, 0, debt)), 0) as debt")
-            ->from("#__mkv_contracts")
-            ->where("projectID = {$db->q($projectID)}")
-            ->group("currency");
-        if (is_array($status) && !empty($status)) {
-            $statuses = implode(", ", $status);
-            if (in_array(101, $status)) {
-                if (!empty($statuses)) $query->where("(status in ({$statuses}) or status is null)");
-            } else {
-                if (!empty($statuses)) $query->where("status in ({$statuses})");
-            }
-        }
-        if ($managerID > 0) {
-            $query->where("managerID = {$db->q($managerID)}");
+            ->select("c.currency, ifnull(sum(c.amount), 0) as amount, ifnull(sum(c.payments), 0) as payments, ifnull(sum(if(c.debt < 0, 0, c.debt)), 0) as debt")
+            ->from("#__mkv_contracts c")
+            ->leftJoin("#__mkv_contract_incoming_info i on i.contractID = c.id")
+            ->where("c.projectID = {$db->q($projectID)}")
+            ->group("c.currency");
+        if (is_numeric($projectID)) {
+            $query->where("c.projectID = {$db->q($projectID)}");
         }
         if (!ContractsHelper::canDo('core.project.amount_full')) {
             $userID = JFactory::getUser()->id;
             $query
-                ->where("managerID = {$db->q($userID)}");
+                ->where("c.managerID = {$db->q($userID)}");
         }
+        //Если с учётом фильтров
+        if ($by_filters) {
+            $manager = $app->getUserState("{$context}.filter.managerID");
+            if (is_numeric($manager) && ContractsHelper::canDo('core.project.amount_full')) {
+                $query->where("c.managerID = {$db->q($manager)}");
+            }
+            
+            $status = $app->getUserState("{$context}.filter.status");
+            if (is_array($status) && !empty($status)) {
+                $statuses = implode(", ", $status);
+                if (in_array(101, $status)) {
+                    $query->where("(c.status in ({$statuses}) or c.status is null)");
+                } else {
+                    $query->where("c.status in ({$statuses})");
+                }
+            }
+            
+            $catalog_info = $app->getUserState("{$context}.filter.catalog_info");
+            if (is_numeric($catalog_info)) {
+                $query->where("i.catalog_info = {$db->q($catalog_info)}");
+            }
+            
+            $catalog_logo = $app->getUserState("{$context}.filter.catalog_logo");
+            if (is_numeric($catalog_logo)) {
+                $query->where("i.catalog_logo = {$db->q($catalog_logo)}");
+            }
+            
+            $doc_status = $app->getUserState("{$context}.filter.doc_status");
+            if (is_numeric($doc_status)) {
+                $query->where("i.doc_status = {$db->q($doc_status)}");
+            }
+            
+            $title_to_diploma = $app->getUserState("{$context}.filter.title_to_diploma");
+            if (is_numeric($title_to_diploma)) {
+                if ($title_to_diploma === '0') $query->where("i.title_to_diploma is null");
+                if ($title_to_diploma === '1') {
+                    $query->where("i.title_to_diploma is not null");
+                }
+            }
+            
+            $currency = $app->getUserState("{$context}.filter.currency");
+            if (!empty($currency)) {
+                $query->where("c.currency like {$db->q($currency)}");
+            }
+            
+            $pvn_1 = $app->getUserState("{$context}.filter.pvn_1");
+            $pvn_1a = $app->getUserState("{$context}.filter.pvn_1a");
+            $pvn_1b = $app->getUserState("{$context}.filter.pvn_1b");
+            $pvn_1v = $app->getUserState("{$context}.filter.pvn_1v");
+            $pvn_1g = $app->getUserState("{$context}.filter.pvn_1g");
+            $no_exhibit = $app->getUserState("{$context}.filter.no_exhibit");
+            if (is_numeric($pvn_1) or is_numeric($pvn_1a) or is_numeric($pvn_1b) or is_numeric($pvn_1v) or is_numeric($pvn_1g) or is_numeric($no_exhibit)) {
+                if ($pvn_1 == '0' and $pvn_1a == '0' and $pvn_1b == '0' and $pvn_1g == '0' and $no_exhibit == '0') {
+                    $query->where("(i.pvn_1 = 0 and i.pvn_1a = 0 and i.pvn_1b = 0 and i.pvn_1v = 0 and i.pvn_1g = 0 and i.no_exhibit = 0)");
+                }
+                else {
+                    $query->where("(i.pvn_1 = {$db->q($pvn_1)} or i.pvn_1a = {$db->q($pvn_1a)} or i.pvn_1b = {$db->q($pvn_1b)} or i.pvn_1v = {$db->q($pvn_1v)} or i.pvn_1g = {$db->q($pvn_1g)} or i.no_exhibit = {$db->q($no_exhibit)})");
+                }
+            }
+        }
+
         $items = $db->setQuery($query)->loadAssocList('currency');
+        if (empty($items)) return $result;
         foreach ($items as $currency => $arr) {
             foreach ($arr as $type => $amount) {
                 if ($type === 'currency') {
