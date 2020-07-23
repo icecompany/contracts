@@ -17,6 +17,7 @@ class ContractsModelParents extends ListModel
         $input = JFactory::getApplication()->input;
         $this->companyID = $config['companyID'] ?? 0;
         $this->projectID = $config['projectID'] ?? 0;
+        $this->contractIDs = $config['contractIDs'] ?? [];
         $this->export = ($input->getString('format', 'html') === 'html') ? false : true;
         $this->return = ContractsHelper::getReturnUrl();
     }
@@ -29,7 +30,7 @@ class ContractsModelParents extends ListModel
         $limit = 0;
 
         $query
-            ->select("p.id, p.contractID")
+            ->select("p.id, p.contractID, p.companyID, p.contractID, p.contractStandID")
             ->select("e.title as company")
             ->select("c.companyID")
             ->select("cs.title as status")
@@ -39,6 +40,10 @@ class ContractsModelParents extends ListModel
             ->leftJoin("#__mkv_companies e on e.id = c.companyID");
         if ($this->companyID > 0 && $this->projectID > 0) {
             $query->where("(c.projectID = {$this->_db->q($this->projectID)} and p.companyID = {$this->_db->q($this->companyID)})");
+        }
+        if (!empty($this->contractIDs)) {
+            $ids = implode(', ', $this->contractIDs);
+            $query->where("p.contractID in ({$ids})");
         }
 
         $this->setState('list.limit', $limit);
@@ -59,6 +64,9 @@ class ContractsModelParents extends ListModel
             $arr = [];
             $arr['id'] = $item->id;
             $arr['company'] = $item->company;
+            $arr['companyID'] = $item->companyID;
+            $arr['contractID'] = $item->contractID;
+            $arr['contractStandID'] = $item->contractStandID;
             $url = JRoute::_("index.php?option=com_companies&amp;task=company.edit&amp;id={$item->companyID}&amp;return={$this->return}");
             $arr['company_link'] = JHtml::link($url, $item->company);
             $url = JRoute::_("index.php?option={$this->option}&amp;task=contract.edit&amp;id={$item->contractID}&amp;return={$this->return}");
@@ -83,5 +91,5 @@ class ContractsModelParents extends ListModel
         return parent::getStoreId($id);
     }
 
-    private $export, $companyID, $projectID, $return;
+    private $export, $companyID, $projectID, $contractIDs, $return;
 }

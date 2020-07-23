@@ -40,13 +40,22 @@ class ContractsModelStandsLight extends ListModel
             ->select("s.square, s.number, s.id as standID")
             ->select("e.title as company, e.id as companyID")
             ->select("c.managerID")
+            ->select("cp.contractID as delegated_by")
             ->from("#__mkv_contract_stands cs")
             ->leftJoin("#__mkv_contracts c on c.id = cs.contractID")
             ->leftJoin("#__mkv_companies e on e.id = c.companyID")
-            ->leftJoin("#__mkv_stands s on s.id = cs.standID");
+            ->leftJoin("#__mkv_stands s on s.id = cs.standID")
+            ->leftJoin("#__mkv_contract_parents cp on cp.contractStandID = cs.id");
         if (!empty($this->contractIDs)) {
+            $delegates = $this->getDelegatedStand();
+            $csid = implode(', ', array_values($delegates));
             $cids = implode(', ', $this->contractIDs);
-            $query->where("cs.contractID in ({$cids})");
+            if (!empty($csid)) {
+                $query->where("(cs.contractID in ({$cids}) or cs.id in ({$csid}))");
+            }
+            else {
+                $query->where("cs.contractID in ({$cids})");
+            }
         }
         if ($this->projectID > 0) {
             $query->where("c.projectID = {$this->_db->q($this->projectID)}");
@@ -86,10 +95,22 @@ class ContractsModelStandsLight extends ListModel
                 $arr['delete_link'] = JHtml::link($url, JText::sprintf('COM_MKV_ACTION_DELETE'));
             }
             if ($this->byCompanyID) $result[$item->companyID][] = $item->number;
-            if ($this->byContractID) $result[$item->contractID][] = $arr;
+            if ($this->byContractID) {
+                if (!isset($result[$item->contractID][$item->id])) $result[$item->contractID][$item->id] = $arr;
+                $result[$item->delegated_by ?? $item->contractID][$item->id] = $arr;
+            }
             if ($this->byProjectID) $result[$item->standID] = $arr;
             if ($this->standID > 0) $result[] = $arr;
         }
+        return $result;
+    }
+
+    private function getDelegatedStand() {
+        $model = ListModel::getInstance('Parents', 'ContractsModel', ['contractIDs' => $this->contractIDs ?? []]);
+        $items = $model->getItems();
+        $result = [];
+        if (empty($items)) return $result;
+        foreach ($items as $item) if (!empty($item['contractStandID'])) $result[$item['contractID']] = $item['contractStandID'];
         return $result;
     }
 
