@@ -18,12 +18,13 @@ HTMLHelper::_('script', 'com_contracts/stand.js', array('version' => 'auto', 're
             <div class="tab-content">
                 <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'general', JText::sprintf('COM_CONTRACTS_TITLE_TAB_GENERAL')); ?>
                 <div class="row-fluid">
-                    <div class="span6">
+                    <div class="span4">
                         <div><?php echo $this->loadTemplate('general'); ?></div>
                     </div>
-                    <div class="span6">
+                    <div class="span8">
                         <?php if ($this->item->id !== null): ?>
                             <div><?php echo $this->loadTemplate('items'); ?></div>
+                            <div><?php echo $this->loadTemplate('children'); ?></div>
                         <?php endif;?>
                     </div>
                 </div>

@@ -17,6 +17,7 @@ class ContractsModelStand extends AdminModel {
         $item->contract = $this->getContract($item->contractID);
         if ($item->id !== null) {
             $item->title = JText::sprintf('COM_CONTRACTS_TITLE_STAND_EDIT', $stand->number ?? '', $item->contract->company, $item->contract->project);
+            $item->children = $this->getChildrenContracts($item->contract->companyID, $item->contract->projectID);
         }
         else {
             $item->title = JText::sprintf('COM_CONTRACTS_TITLE_STAND_ADD', $item->contract->company, $item->contract->project);
@@ -50,6 +51,12 @@ class ContractsModelStand extends AdminModel {
     {
         $model = AdminModel::getInstance('Contract', 'ContractsModel');
         return $model->getItem($contractID);
+    }
+
+    private function getChildrenContracts(int $parentID, int $projectID)
+    {
+        $model = AdminModel::getInstance('Parents', 'ContractsModel', ['companyID' => $parentID, 'projectID' => $projectID]);
+        return $model->getItems();
     }
 
     public function getTable($name = 'Stands', $prefix = 'TableContracts', $options = array())
