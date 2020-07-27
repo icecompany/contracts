@@ -1,6 +1,7 @@
 <?php
 defined('_JEXEC') or die;
 $ii = 0;
+var_dump($this->item->children);
 ?>
 <?php if (!empty($this->item->children)): ?>
     <div class="center"><h3><?php echo JText::sprintf('COM_CONTRACTS_TITLE_TAB_CHILDREN');?></h3></div>
@@ -21,7 +22,7 @@ $ii = 0;
             <td><?php echo $item['company_link']; ?></td>
             <td><?php echo $item['contract_link']; ?></td>
             <td style="text-align: center;">
-                <input type="checkbox" data-id="<?php echo $item['id'];?>" data-csid="<?php echo $this->item->id; ?>" <?php if (!empty($item['contractStandID'])) echo 'checked'; ?> onchange="asset(this);" />
+                <input type="checkbox" data-id="<?php echo $item['id'];?>" data-csid="<?php echo $this->item->id; ?>" <?php if (!empty($item['contractStandID']) && $item['contractStandID'] == $this->item->id) echo 'checked'; ?> onchange="asset(this);" />
             </td>
             <td><?php echo $item['id']; ?></td>
         </tr>
