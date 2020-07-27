@@ -247,7 +247,7 @@ class ContractsModelContracts extends ListModel
                 $url = JRoute::_("index.php?option=com_scheduler&amp;task=task.gotoContractActiveTask&amp;contractID={$item->id}&amp;return={$this->return}");
                 $arr['tasks_link'] = JHtml::link($url, $item->tasks_count);
             }
-            $arr['tasks_date'] = (!empty($item->tasks_date)) ? JDate::getInstance($item->tasks_date)->format("d.m.Y") : '';
+            $arr['tasks_date'] = (!empty($item->tasks_date) && $item->tasks_date != '0000-00-00') ? JDate::getInstance($item->tasks_date)->format("d.m.Y") : '';
             $arr['status'] = $item->status ?? JText::sprintf('COM_MKV_STATUS_IN_PROJECT');
             $arr['manager'] = MkvHelper::getLastAndFirstNames($item->manager);
             $currency = mb_strtoupper($item->currency);
