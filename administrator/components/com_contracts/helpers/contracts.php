@@ -124,6 +124,18 @@ class ContractsHelper
                     $query->where("(i.pvn_1 = {$db->q($pvn_1)} or i.pvn_1a = {$db->q($pvn_1a)} or i.pvn_1b = {$db->q($pvn_1b)} or i.pvn_1v = {$db->q($pvn_1v)} or i.pvn_1g = {$db->q($pvn_1g)} or i.no_exhibit = {$db->q($no_exhibit)})");
                 }
             }
+
+            $thematics = $app->getUserState("{$context}.filter.thematics");
+            if (is_numeric($thematics)) {
+                $ids = self::getThematicsContracts([$thematics]);
+                if (!empty($ids)) {
+                    $cid = implode(', ', $ids);
+                    $query->where("c.id in ({$cid})");
+                }
+                else {
+                    $query->where("c.id = -1");
+                }
+            }
         }
 
         $items = $db->setQuery($query)->loadAssocList('currency');
@@ -140,6 +152,20 @@ class ContractsHelper
         }
         return $items;
     }
+
+    private static function getThematicsContracts(array $thematicIDs = []): array
+    {
+        if (empty($thematicIDs)) return [];
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $ids = implode(', ', $thematicIDs);
+        $query
+            ->select("contractID")
+            ->from("#__mkv_contract_thematics")
+            ->where("thematicID in ({$ids})");
+        return $db->setQuery($query)->loadColumn() ?? [];
+    }
+
 
     public static function getNextContractNumber(int $projectID)
     {

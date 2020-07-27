@@ -24,6 +24,7 @@ class ContractsModelContracts extends ListModel
                 'c.tasks_count',
                 'c.tasks_date',
                 'num',
+                'thematics',
                 'title_to_diploma',
                 'catalog_info', 'i.catalog_info',
                 'catalog_logo', 'i.catalog_logo',
@@ -69,6 +70,7 @@ class ContractsModelContracts extends ListModel
             'invite_outgoing_number' => 'COM_CONTRACTS_FORM_CONTRACT_OUTGOING_NUMBER_LABEL',
             'invite_incoming_number' => 'COM_CONTRACTS_FORM_CONTRACT_INCOMING_NUMBER_LABEL',
             'title_to_diploma' => 'COM_CONTRACTS_FORM_CONTRACT_TITLE_TO_DIPLOMA_LABEL',
+            'thematics' => 'COM_CONTRACTS_HEAD_THEMATICS',
         ];
     }
 
@@ -208,6 +210,17 @@ class ContractsModelContracts extends ListModel
                 $query->where("c.dat is not null");
             }
         }
+        $thematics = $this->getState('filter.thematics');
+        if (is_numeric($thematics)) {
+            $ids = $this->getThematicsContracts([$thematics]);
+            if (!empty($ids)) {
+                $cid = implode(', ', $ids);
+                $query->where("c.id in ({$cid})");
+            }
+            else {
+                $query->where("c.id = -1");
+            }
+        }
 
         $query->order($this->_db->escape($orderCol . ' ' . $orderDirn));
         $this->setState('list.limit', $limit);
@@ -285,13 +298,17 @@ class ContractsModelContracts extends ListModel
             $result['items'][$item->id] = $arr;
         }
         $stands = $this->getStands($ids);
+        $thematics = $this->getThematics($ids);
         $project = PrjHelper::getActiveProject();
         $status = $this->getState('filter.status');
         if (is_array($status) && !empty($status) && !$this->export) {
             $result['amount_by_status'] = ContractsHelper::getProjectAmount(true);
         }
         if (is_numeric($project) && ContractsHelper::canDo('core.project.amount')) $result['amount'] = ContractsHelper::getProjectAmount();
-        foreach ($result['items'] as $contractID => $item) $result['items'][$contractID]['stands'] = $stands[$contractID];
+        foreach ($result['items'] as $contractID => $item) {
+            $result['items'][$contractID]['stands'] = $stands[$contractID];
+            $result['items'][$contractID]['thematics'] = $thematics[$contractID];
+        }
         return $result;
     }
 
@@ -344,6 +361,22 @@ class ContractsModelContracts extends ListModel
         return $result;
     }
 
+    private function getThematics(array $ids = []): array
+    {
+        if (empty($ids)) return [];
+        $model = ListModel::getInstance('Thematics', 'ContractsModel', ['contractIDs' => $ids]);
+        $items = $model->getItems();
+        foreach ($items as $contractID => $thematics) $items[$contractID] = implode(', ', $thematics);
+        return $items;
+    }
+
+    private function getThematicsContracts(array $thematicIDs = []): array
+    {
+        if (empty($thematicIDs)) return [];
+        $model = ListModel::getInstance('Thematics', 'ContractsModel', ['thematicIDs' => $thematicIDs]);
+        return $model->getItems();
+    }
+
     protected function populateState($ordering = 'c.tasks_date', $direction = 'ASC')
     {
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
@@ -372,6 +405,8 @@ class ContractsModelContracts extends ListModel
         $this->setState('filter.no_exhibits', $no_exhibits);
         $title_to_diploma = $this->getUserStateFromRequest($this->context . '.filter.title_to_diploma', 'filter_title_to_diploma');
         $this->setState('filter.title_to_diploma', $title_to_diploma);
+        $thematics = $this->getUserStateFromRequest($this->context . '.filter.thematics', 'filter_thematics');
+        $this->setState('filter.thematics', $thematics);
         parent::populateState($ordering, $direction);
         PrjHelper::check_refresh();
     }
@@ -391,6 +426,7 @@ class ContractsModelContracts extends ListModel
         $id .= ':' . $this->getState('filter.doc_status');
         $id .= ':' . $this->getState('filter.no_exhibits');
         $id .= ':' . $this->getState('filter.title_to_diploma');
+        $id .= ':' . $this->getState('filter.thematics');
         return parent::getStoreId($id);
     }
 

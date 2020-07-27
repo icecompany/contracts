@@ -17,6 +17,7 @@ class ContractsModelThematics extends ListModel
         $input = JFactory::getApplication()->input;
         $this->contractID = $config['contractID'] ?? 0;
         $this->contractIDs = $config['contractIDs'] ?? [];
+        $this->thematicIDs = $config['thematicIDs'] ?? [];
         $this->export = ($input->getString('format', 'html') === 'html') ? false : true;
         $this->return = ContractsHelper::getReturnUrl();
     }
@@ -38,6 +39,12 @@ class ContractsModelThematics extends ListModel
                 ->leftJoin("#__mkv_thematics t on t.id = ct.thematicID")
                 ->where("ct.contractID in ({$ids})");
         }
+        if (!empty($this->thematicIDs)) {
+            $tid = implode(', ', $this->thematicIDs);
+            $query
+                ->select("ct.contractID")
+                ->where("ct.thematicID in ({$tid})");
+        }
 
         $this->setState('list.limit', 0);
 
@@ -52,6 +59,9 @@ class ContractsModelThematics extends ListModel
             if ($this->contractID > 0) $result[] = $item->thematicID;
             if (!empty($this->contractIDs)) {
                 $result[$item->contractID][] = $item->title;
+            }
+            if (!empty($this->thematicIDs)) {
+                if (!array_search($item->contractID, $result)) $result[] = $item->contractID;
             }
         }
         return $result;
@@ -70,5 +80,5 @@ class ContractsModelThematics extends ListModel
         return parent::getStoreId($id);
     }
 
-    private $export, $contractID, $contractIDs, $return;
+    private $export, $contractID, $contractIDs, $thematicIDs, $return;
 }
