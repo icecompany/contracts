@@ -1,7 +1,6 @@
 <?php
 defined('_JEXEC') or die;
 $ii = 0;
-var_dump($this->item->children);
 ?>
 <?php if (!empty($this->item->children)): ?>
     <div class="center"><h3><?php echo JText::sprintf('COM_CONTRACTS_TITLE_TAB_CHILDREN');?></h3></div>
