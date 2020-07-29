@@ -34,6 +34,8 @@ HTMLHelper::_('script', $this->script);
                         <div><?php echo $this->loadTemplate('price'); ?></div>
                         <div class="center"><h3><?php echo JText::sprintf('COM_CONTRACTS_TITLE_CONTRACT_AMOUNT');?></h3></div>
                         <div><?php echo $this->loadTemplate('contract_amount'); ?></div>
+                        <div class="center"><h3><?php echo JText::sprintf('COM_CONTRACTS_TITLE_CONTRACT_DESCRIPTION');?></h3></div>
+                        <div><?php echo $this->loadTemplate('description'); ?></div>
                     </div>
                 </div>
                 <?php echo JHtml::_('bootstrap.endTab'); ?>

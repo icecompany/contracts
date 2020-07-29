@@ -60,6 +60,7 @@ function getCost() {
     let val = jQuery(itemID).val();
     let value = document.querySelector("#jform_value");
     let columnID = document.querySelector("#jform_columnID");
+    let description = document.querySelector("#jform_description");
     if (val < 1) {
         value.value = (0).toLocaleString('ru-RU', {style:'currency', currency:currency});
         stand.setAttribute('disabled', true);
@@ -106,13 +107,19 @@ function getCost() {
                 stand.setAttribute('disabled', true);
                 jQuery(stand).trigger("liszt:updated");
             }
-            if (text.data.type === 'fine' || text.data.type === 'transfer') {
+            if (text.data.type === 'fine' || text.data.type === 'transfer' || text.data.type === 'technical') {
                 cost.removeAttribute('readonly');
                 value.value = 1;
                 columnID.value = 1;
             }
             else {
                 cost.setAttribute('readonly', true);
+            }
+            if (text.data.type === 'technical') {
+                description.removeAttribute('readonly');
+            }
+            else {
+                description.setAttribute('readonly', true);
             }
             getAmount();
         })

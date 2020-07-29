@@ -109,7 +109,7 @@ class ContractsModelItems extends ListModel
                     else {
                         $text = $this->_db->q("%{$search}%");
                         $query
-                            ->where("(e.title like {$text} or pi.title like {$text})");
+                            ->where("(e.title like {$text} or pi.title like {$text} or i.description like {$text})");
                     }
                 }
             }
@@ -163,7 +163,7 @@ class ContractsModelItems extends ListModel
             $arr = [];
             $link_option = [];
             $arr['id'] = $item->id;
-            $arr['item'] = $item->item;
+            $arr['item'] = $item->description ?? $item->item;
             if ($item->payerID !== null) {
                 $payer = $im->getPayer($item->payerID);
                 $item->item .= ' ' . JText::sprintf('COM_MKV_TEXT_ADDING_PAYER', $payer->title);
@@ -187,10 +187,10 @@ class ContractsModelItems extends ListModel
             $arr['stand'] = $item->stand;
             if ($contract->managerID == JFactory::getUser()->id || ContractsHelper::canDo('core.edit.all')) {
                 $url = JRoute::_("index.php?option={$this->option}&amp;task=item.edit&amp;id={$item->id}&amp;return={$return}");
-                $arr['edit_link'] = JHtml::link($url, $item->item, $link_option);
+                $arr['edit_link'] = JHtml::link($url, $arr['item'], $link_option);
             }
             else {
-                $arr['edit_link'] = $item->item;
+                $arr['edit_link'] = $arr['item'];
             }
             if (($contract->managerID == JFactory::getUser()->id && ContractsHelper::canDo('core.delete')) || ContractsHelper::canDo('core.edit.all')) {
                 $url = JRoute::_("index.php?option={$this->option}&amp;task=items.delete&amp;cid[]={$item->id}");

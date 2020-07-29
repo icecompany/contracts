@@ -40,9 +40,10 @@ class ContractsModelItem extends AdminModel {
     public function save($data)
     {
         $item = $this->getPriceItem($data['itemID']);
+        $app = JFactory::getApplication();
         if ($item->type === 'square' || $item->type === 'electric' || $item->type === 'internet' || $item->type === 'multimedia' || $item->type === 'water' || $item->type === 'cleaning') {
             if (empty($data['contractStandID'])) {
-                JFactory::getApplication()->enqueueMessage(JText::sprintf('COM_CONTRACTS_ERROR_STAND_IS_NOT_SELECTED'), 'warning');
+                $app->enqueueMessage(JText::sprintf('COM_CONTRACTS_ERROR_STAND_IS_NOT_SELECTED'), 'warning');
                 return false;
             }
         }
@@ -54,6 +55,10 @@ class ContractsModelItem extends AdminModel {
         }
         if ($data['id'] === null) {
             $this->sendNotifyNewItem($data['contractID'], $data['itemID'], $data['value'], $standID);
+        }
+        if ($item->type === 'technical' && empty($data['description'])) {
+            $app->enqueueMessage(JText::sprintf('COM_CONTRACTS_ERROR_EMPTY_DESCRIPTION'), 'error');
+            return false;
         }
         return parent::save($data);
     }
@@ -142,7 +147,7 @@ class ContractsModelItem extends AdminModel {
     {
         $all = get_class_vars($table);
         unset($all['_errors']);
-        $nulls = ['contractStandID', 'value2', 'payerID']; //Поля, которые NULL
+        $nulls = ['contractStandID', 'value2', 'payerID', 'description']; //Поля, которые NULL
         foreach ($all as $field => $v) {
             if (empty($field)) continue;
             if (in_array($field, $nulls)) {

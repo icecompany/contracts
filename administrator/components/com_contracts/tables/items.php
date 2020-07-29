@@ -17,6 +17,7 @@ class TableContractsItems extends Table
     var $value2 = null;
     var $amount = null;
     var $payerID = null;
+    var $description = null;
 
 	public function __construct(JDatabaseDriver $db)
 	{
