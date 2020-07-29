@@ -185,7 +185,7 @@ class ContractsModelItems extends ListModel
             $amount = number_format((float) $item->amount, 2, '.', ' ');
             $arr['amount'] = JText::sprintf("COM_CONTRACTS_CURRENCY_{$currency}_AMOUNT_SHORT", $amount);
             $arr['stand'] = $item->stand;
-            if ($contract->managerID == JFactory::getUser()->id || ContractsHelper::canDo('core.edit.all')) {
+            if ($contract->managerID == JFactory::getUser()->id || ContractsHelper::canDo('core.edit.all') && empty($item->description)) {
                 $url = JRoute::_("index.php?option={$this->option}&amp;task=item.edit&amp;id={$item->id}&amp;return={$return}");
                 $arr['edit_link'] = JHtml::link($url, $arr['item'], $link_option);
             }

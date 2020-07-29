@@ -89,15 +89,18 @@ function getCost() {
             }
             if (currency === 'rub') {
                 cost_price = price_rub;
-                jQuery(cost).val(price_rub.toLocaleString('ru-RU', {style:'currency', currency:currency})).trigger("liszt:updated");
+                if (parseFloat(cost_price) === 0) cost_price = parseFloat(cost.value);
+                if (parseFloat(cost_price) > 0) jQuery(cost).val(cost_price.toLocaleString('ru-RU', {style:'currency', currency:currency})).trigger("liszt:updated");
             }
             if (currency === 'usd') {
                 cost_price = price_usd;
-                jQuery(cost).val(price_usd.toLocaleString('ru-RU', {style:'currency', currency:currency})).trigger("liszt:updated");
+                if (parseFloat(cost_price) === 0) cost_price = parseFloat(cost.value);
+                if (parseFloat(cost_price) > 0) jQuery(cost).val(cost_price.toLocaleString('ru-RU', {style:'currency', currency:currency})).trigger("liszt:updated");
             }
             if (currency === 'eur') {
                 cost_price = price_eur;
-                jQuery(cost).val(price_eur.toLocaleString('ru-RU', {style:'currency', currency:currency})).trigger("liszt:updated");
+                if (parseFloat(cost_price) === 0) cost_price = parseFloat(cost.value);
+                if (parseFloat(cost_price) > 0) jQuery(cost).val(cost_price.toLocaleString('ru-RU', {style:'currency', currency:currency})).trigger("liszt:updated");
             }
             if (text.data.type === 'square' || text.data.type === 'electric' || text.data.type === 'internet' || text.data.type === 'multimedia' || text.data.type === 'water' || text.data.type === 'cleaning') {
                 stand.removeAttribute('disabled');
@@ -107,7 +110,7 @@ function getCost() {
                 stand.setAttribute('disabled', true);
                 jQuery(stand).trigger("liszt:updated");
             }
-            if (text.data.type === 'fine' || text.data.type === 'transfer' || text.data.type === 'technical') {
+            if (text.data.type === 'fine' || text.data.type === 'transfer') {
                 cost.removeAttribute('readonly');
                 value.value = 1;
                 columnID.value = 1;
@@ -116,6 +119,7 @@ function getCost() {
                 cost.setAttribute('readonly', true);
             }
             if (text.data.type === 'technical') {
+                cost.removeAttribute('readonly');
                 description.removeAttribute('readonly');
             }
             else {
