@@ -55,6 +55,7 @@ class ContractsHelper
             ->select("c.currency, ifnull(sum(c.amount), 0) as amount, ifnull(sum(c.payments), 0) as payments, ifnull(sum(if(c.debt < 0, 0, c.debt)), 0) as debt")
             ->from("#__mkv_contracts c")
             ->leftJoin("#__mkv_contract_incoming_info i on i.contractID = c.id")
+            ->leftJoin("#__mkv_companies e on e.id = c.companyID")
             ->where("c.projectID = {$db->q($projectID)}")
             ->group("c.currency");
         if (is_numeric($projectID)) {
@@ -67,6 +68,32 @@ class ContractsHelper
         }
         //Если с учётом фильтров
         if ($by_filters) {
+            $search = $app->getUserState("{$context}.filter.search");
+            if (!empty($search)) {
+                if (stripos($search, 'id:') !== false) { //Поиск по ID
+                    $id = explode(':', $search);
+                    $id = $id[1];
+                    if (is_numeric($id)) {
+                        $query->where("c.id = {$db->q($id)}");
+                    }
+                } else {
+                    if (stripos($search, 'num:') !== false || stripos($search, '#') !== false || stripos($search, '№') !== false) { //Поиск по номеру договора
+                        $delimiter = ":";
+                        if (stripos($search, 'num:') !== false) $delimiter = ":";
+                        if (stripos($search, '#') !== false) $delimiter = "#";
+                        if (stripos($search, '№') !== false) $delimiter = "№";
+                        $num = explode($delimiter, $search);
+                        $num = $num[1];
+                        if (is_numeric($num)) {
+                            $query->where("c.number = {$db->q($num)}");
+                        }
+                    } else {
+                        $text = $db->q("%{$search}%");
+                        $query->where("(e.title like {$text} or e.title_full like {$text} or e.title_en like {$text})");
+                    }
+                }
+            }
+
             $manager = $app->getUserState("{$context}.filter.managerID");
             if (is_numeric($manager) && ContractsHelper::canDo('core.project.amount_full')) {
                 $query->where("c.managerID = {$db->q($manager)}");
