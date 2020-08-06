@@ -163,6 +163,11 @@ class ContractsHelper
                     $query->where("c.id = -1");
                 }
             }
+
+            $arrival = $app->getUserState("{$context}.filter.arrival");
+            if (is_numeric($arrival)) {
+                $query->where("i.info_arrival = {$db->q($arrival)}");
+            }
         }
 
         $items = $db->setQuery($query)->loadAssocList('currency');

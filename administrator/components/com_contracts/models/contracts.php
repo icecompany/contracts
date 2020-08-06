@@ -24,6 +24,7 @@ class ContractsModelContracts extends ListModel
                 'c.tasks_count',
                 'c.tasks_date',
                 'num',
+                'arrival',
                 'thematics',
                 'title_to_diploma',
                 'catalog_info', 'i.catalog_info',
@@ -222,6 +223,11 @@ class ContractsModelContracts extends ListModel
             }
         }
 
+        $arrival = $this->getState('filter.arrival');
+        if (is_numeric($arrival)) {
+            $query->where("i.info_arrival = {$this->_db->q($arrival)}");
+        }
+
         $query->order($this->_db->escape($orderCol . ' ' . $orderDirn));
         $this->setState('list.limit', $limit);
 
@@ -407,6 +413,8 @@ class ContractsModelContracts extends ListModel
         $this->setState('filter.title_to_diploma', $title_to_diploma);
         $thematics = $this->getUserStateFromRequest($this->context . '.filter.thematics', 'filter_thematics');
         $this->setState('filter.thematics', $thematics);
+        $arrival = $this->getUserStateFromRequest($this->context . '.filter.arrival', 'filter_arrival');
+        $this->setState('filter.arrival', $arrival);
         parent::populateState($ordering, $direction);
         PrjHelper::check_refresh();
     }
@@ -427,6 +435,7 @@ class ContractsModelContracts extends ListModel
         $id .= ':' . $this->getState('filter.no_exhibits');
         $id .= ':' . $this->getState('filter.title_to_diploma');
         $id .= ':' . $this->getState('filter.thematics');
+        $id .= ':' . $this->getState('filter.arrival');
         return parent::getStoreId($id);
     }
 

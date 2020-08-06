@@ -121,6 +121,15 @@
             <option value="1">COM_CONTRACTS_TITLE_SELECT_EXPONENTS_WITHOUT</option>
         </field>
         <field
+                name="arrival"
+                type="list"
+                onchange="this.form.submit();"
+                >
+            <option value="">COM_CONTRACTS_TITLE_SELECT_GRAPHIC_ARRIVAL</option>
+            <option value="0">COM_CONTRACTS_TITLE_SELECT_GRAPHIC_ARRIVAL_0</option>
+            <option value="1">COM_CONTRACTS_TITLE_SELECT_GRAPHIC_ARRIVAL_1</option>
+        </field>
+        <field
                 name="title_to_diploma"
                 type="list"
                 onchange="this.form.submit();"
