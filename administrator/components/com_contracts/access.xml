@@ -14,6 +14,5 @@
 		<action name="core.access.statuses" title="COM_CONTRACTS_ACCESS_STATUSES_LABEL" description="COM_CONTRACTS_ACCESS_STATUSES_DESC" />
 		<action name="core.project.amount" title="COM_CONTRACTS_ACCESS_PROJECT_AMOUNT_LABEL" description="COM_CONTRACTS_ACCESS_PROJECT_AMOUNT_DESC" />
 		<action name="core.project.amount_full" title="COM_CONTRACTS_ACCESS_PROJECT_AMOUNT_FULL_LABEL" description="COM_CONTRACTS_ACCESS_PROJECT_AMOUNT_FULL_DESC" />
-		<action name="core.stands.full" title="COM_CONTRACTS_ACCESS_STANDS_FULL_LABEL" description="COM_CONTRACTS_ACCESS_STANDS_FULL_DESC" />
 	</section>
 </access>

@@ -13,6 +13,7 @@ class ContractsModelStands extends ListModel
                 'cs.type',
                 's.number',
                 's.ordering',
+                'manager',
                 'status',
                 'search',
             );
@@ -79,9 +80,8 @@ class ContractsModelStands extends ListModel
                 $query->where("c.status in ({$statuses})");
             }
         }
-        $full = ContractsHelper::canDo('core.stands.full');
-        if (!$full) {
-            $managerID = JFactory::getUser()->id;
+        $managerID = $this->getState('filter.manager');
+        if (is_numeric($managerID)) {
             $query->where("c.managerID = {$this->_db->q($managerID)}");
         }
 
@@ -110,9 +110,7 @@ class ContractsModelStands extends ListModel
             $arr['company'] = $item->company;
             $arr['stand_type'] = JText::sprintf("COM_CONTRACTS_STAND_TYPE_{$item->stand_type}");
             $arr['project'] = $item->project;
-            $manager = $item->manager;
-            $manager = explode(' ', $manager);
-            $arr['manager'] = $manager[0];
+            $arr['manager'] = MkvHelper::getLastAndFirstNames($item->manager);
             $arr['contract_status'] = $item->contract_status ?? JText::sprintf("COM_CONTRACTS_CONTRACT_STATUS_IN_PROJECT");
             $arr['contract_number'] = $item->contract_number ?? '';
             $arr['contract_dat'] = (!empty($item->dat)) ? JDate::getInstance($item->dat)->format("d.m.Y") : '';
@@ -203,6 +201,8 @@ class ContractsModelStands extends ListModel
     {
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
+        $manager = $this->getUserStateFromRequest($this->context . '.filter.manager', 'filter_manager');
+        $this->setState('filter.manager', $manager);
         $status = $this->getUserStateFromRequest($this->context . '.filter.status', 'filter_status');
         $this->setState('filter.status', $status);
         parent::populateState($ordering, $direction);
@@ -212,6 +212,7 @@ class ContractsModelStands extends ListModel
     protected function getStoreId($id = '')
     {
         $id .= ':' . $this->getState('filter.search');
+        $id .= ':' . $this->getState('filter.manager');
         $id .= ':' . $this->getState('filter.status');
         return parent::getStoreId($id);
     }

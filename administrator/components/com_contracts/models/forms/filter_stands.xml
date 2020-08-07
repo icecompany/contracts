@@ -11,6 +11,12 @@
                 class="js-stools-search-string"
         />
         <field
+                name="manager"
+                type="Manager"
+                onchange="this.form.submit();">
+            <option value="">COM_MKV_FILTER_SELECT_MANAGER</option>
+        </field>
+        <field
                 name="status"
                 type="ContractStatus"
                 multiple="true"
