@@ -79,6 +79,11 @@ class ContractsModelStands extends ListModel
                 $query->where("c.status in ({$statuses})");
             }
         }
+        $full = ContractsHelper::canDo('core.stands.full');
+        if (!$full) {
+            $managerID = JFactory::getUser()->id;
+            $query->where("c.managerID = {$this->_db->q($managerID)}");
+        }
 
         $query->order($this->_db->escape($orderCol . ' ' . $orderDirn));
         $this->setState('list.limit', $limit);
