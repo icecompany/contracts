@@ -39,8 +39,20 @@ class ContractsModelItem extends AdminModel {
 
     public function save($data)
     {
-        $item = $this->getPriceItem($data['itemID']);
+        $item = $this->getPriceItem($data['itemID']); //Пункт прайса, который хотят заказать
         $app = JFactory::getApplication();
+        $old_value = 0; //Старое значение, для уже существующих записей
+        if ($data['id'] !== null) {
+            $already = parent::getItem($data['id']); //Текущая запись
+            $old_value = (float) $already->value; //Уже заказано в текущей записи
+        }
+        //Проверяем доступное количество
+        $balance = (float) ($item->available + $old_value - $data['value']); //Остаток, доступный в случае успешного сохранения
+        if ($item->available > 0 && $item->available !== null && $balance < 0) {
+            $app->enqueueMessage(JText::sprintf('COM_CONTRACTS_ERROR_VALUE_IS_OUT_OF_AVAILABLE_RANGE', $item->available), 'warning');
+            return false;
+        }
+        //Проверяем заполненность стенда
         if ($item->type === 'square' || $item->type === 'electric' || $item->type === 'internet' || $item->type === 'multimedia' || $item->type === 'water' || $item->type === 'cleaning') {
             if (empty($data['contractStandID'])) {
                 $app->enqueueMessage(JText::sprintf('COM_CONTRACTS_ERROR_STAND_IS_NOT_SELECTED'), 'warning');
@@ -54,13 +66,34 @@ class ContractsModelItem extends AdminModel {
             $standID = $table->standID;
         }
         if ($data['id'] === null) {
-            $this->sendNotifyNewItem($data['contractID'], $data['itemID'], $data['value'], $standID);
+            $this->sendNotifyNewItem($data['contractID'], $data['itemID'], $data['value'], $standID ?? 0);
         }
         if ($item->type === 'technical' && empty($data['description'])) {
             $app->enqueueMessage(JText::sprintf('COM_CONTRACTS_ERROR_EMPTY_DESCRIPTION'), 'error');
             return false;
         }
-        return parent::save($data);
+
+        $s = parent::save($data);
+        //Изменяем доступное кол-во остатка в пункте прайса
+        if ($s && $item->available !== null) $this->setNewBalance($data['itemID'], $balance);
+        return $s;
+    }
+
+    /**
+     * Установка нового доступного значения для прайса
+     * @param int $itemID ID пункта прайса
+     * @param float $available новое доступное значение
+     * @since 2.0.5
+     */
+    private function setNewBalance(int $itemID, float $available): void
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query
+            ->update("#__mkv_price_items")
+            ->set($db->qn("available") . " = " . $db->q($available))
+            ->where($db->qn("id") . " = " . $db->q($itemID));
+        $db->setQuery($query)->execute();
     }
 
     private function sendNotifyNewItem(int $contractID, int $itemID, int $value, int $standID = 0): void
