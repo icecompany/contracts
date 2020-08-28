@@ -199,14 +199,14 @@ class ContractsModelItem extends AdminModel {
                 }
             }
             if (!empty($field)) $table->$field = trim($table->$field);
+            if ($field === 'date_1' || $field === 'date_2') {
+                $table->$field = (!empty($table->$field) && $table->$field !== '0000-00-00 00:00:00') ? JDate::getInstance($table->$field)->format("Y-m-d") : NULL;
+            }
         }
         $table->factor = (float) 1 - ($table->factor / 100);
         $table->cost = (float) str_replace([' ₽', ' $', ' €', ' ', ','], ['', '', '', '', '.'], $table->cost);
         $table->amount = (float) str_replace([' ₽', ' $', ' €', ' ', ','], ['', '', '', '', '.'], $table->amount);
         if ($table->value2 <= 0 || $table->value2 == 1) $table->value2 = NULL;
-        if ($field === 'date_1' || $field === 'date_2') {
-            $table->$field = (!empty($table->$field) && $table->$field !== '0000-00-00 00:00:00') ? JDate::getInstance($table->$field)->toSql() : NULL;
-        }
 
         parent::prepareTable($table);
     }

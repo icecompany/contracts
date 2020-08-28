@@ -43,6 +43,9 @@ foreach ($this->items['items'] as $i => $item) :
         <td>
             <?php echo $item['value']; ?>
         </td>
+        <td style="text-align: center;">
+            <?php echo $item['period']; ?>
+        </td>
         <td>
             <?php echo $item['amount']; ?>
         </td>

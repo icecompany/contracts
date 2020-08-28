@@ -182,6 +182,9 @@ class ContractsModelItems extends ListModel
             $arr['manager'] = MkvHelper::getLastAndFirstNames($item->manager);
             $arr['value2'] = $item->value2;
             $arr['amount_clean'] = $item->amount;
+            $date_1 = (!empty($item->date_1)) ? JDate::getInstance($item->date_1)->format("d.m.Y") : '';
+            $date_2 = (!empty($item->date_2)) ? JDate::getInstance($item->date_2)->format("d.m.Y") : '';
+            $arr['period'] = (!empty($date_1) && !empty($date_2)) ? $date_1 . " - " . $date_2 : '';
             $amount = number_format((float) $item->amount, 2, '.', ' ');
             $arr['amount'] = JText::sprintf("COM_CONTRACTS_CURRENCY_{$currency}_AMOUNT_SHORT", $amount);
             $arr['stand'] = $item->stand;

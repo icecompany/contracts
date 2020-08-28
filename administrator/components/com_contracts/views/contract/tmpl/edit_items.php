@@ -15,6 +15,7 @@ $ii = 0;
                 <th style="width: 2%;"><?php echo JText::sprintf('COM_CONTRACTS_HEAD_ITEMS_MARKUP'); ?></th>
                 <th style="width: 1%;"><?php echo JText::sprintf('COM_CONTRACTS_HEAD_ITEMS_COLUMN'); ?></th>
                 <th style="width: 5%;"><?php echo JText::sprintf('COM_CONTRACTS_HEAD_ITEMS_VALUE'); ?></th>
+                <th><?php echo JText::sprintf('COM_CONTRACTS_HEAD_ITEMS_PERIOD'); ?></th>
                 <th style="width: 10%;"><?php echo JText::sprintf('COM_CONTRACTS_HEAD_ITEMS_AMOUNT'); ?></th>
                 <th><?php echo JText::sprintf('COM_MKV_ACTION_DELETE'); ?></th>
                 <th style="width: 1%;">ID</th>
@@ -31,6 +32,7 @@ $ii = 0;
                 <td><?php echo $item['markup']; ?></td>
                 <td><?php echo $item['columnID']; ?></td>
                 <td><?php echo $item['value']; ?></td>
+                <td><?php echo $item['period']; ?></td>
                 <td><?php echo $item['amount']; ?></td>
                 <td><?php echo $item['delete_link']; ?></td>
                 <td><?php echo $item['id']; ?></td>
