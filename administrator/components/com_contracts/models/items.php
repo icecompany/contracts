@@ -20,6 +20,7 @@ class ContractsModelItems extends ListModel
                 'pi.title',
                 'e.title',
                 'st.title',
+                's.number',
                 'currency',
                 'manager',
                 'status',
