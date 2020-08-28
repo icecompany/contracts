@@ -59,6 +59,15 @@ class ContractsModelItem extends AdminModel {
                 return false;
             }
         }
+        //Проверяем заполненность периода
+        //exit(var_dump($data, $item));
+        if ($item->need_period == '1') {
+            if (empty($data['date_1']) || empty($data['date_2'] || $data['date_1'] === '0000-00-00 00:00:00') || $data['date_2'] === '0000-00-00 00:00:00') {
+                $app = JFactory::getApplication();
+                $app->enqueueMessage(JText::sprintf('COM_CONTRACTS_ERROR_EMPTY_PERIOD'), 'error');
+                return false;
+            }
+        }
         $standID = 0;
         if ($data['contractStandID'] !== null) {
             $table = JTable::getInstance('Stands', 'TableContracts');
@@ -180,7 +189,7 @@ class ContractsModelItem extends AdminModel {
     {
         $all = get_class_vars($table);
         unset($all['_errors']);
-        $nulls = ['contractStandID', 'value2', 'payerID', 'description']; //Поля, которые NULL
+        $nulls = ['contractStandID', 'value2', 'date_1', 'date_2', 'payerID', 'description']; //Поля, которые NULL
         foreach ($all as $field => $v) {
             if (empty($field)) continue;
             if (in_array($field, $nulls)) {
@@ -195,6 +204,9 @@ class ContractsModelItem extends AdminModel {
         $table->cost = (float) str_replace([' ₽', ' $', ' €', ' ', ','], ['', '', '', '', '.'], $table->cost);
         $table->amount = (float) str_replace([' ₽', ' $', ' €', ' ', ','], ['', '', '', '', '.'], $table->amount);
         if ($table->value2 <= 0 || $table->value2 == 1) $table->value2 = NULL;
+        if ($field === 'date_1' || $field === 'date_2') {
+            $table->$field = (!empty($table->$field) && $table->$field !== '0000-00-00 00:00:00') ? JDate::getInstance($table->$field)->toSql() : NULL;
+        }
 
         parent::prepareTable($table);
     }

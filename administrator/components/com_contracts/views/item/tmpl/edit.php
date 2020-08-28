@@ -26,6 +26,8 @@ HTMLHelper::_('script', $this->script);
                     <div class="span6">
                         <div class="center"><h3><?php echo JText::sprintf('COM_CONTRACTS_TITLE_CONTRACT_ITEM');?></h3></div>
                         <div><?php echo $this->loadTemplate('general'); ?></div>
+                        <div class="center"><h3><?php echo JText::sprintf('COM_CONTRACTS_TITLE_CONTRACT_PERIOD');?></h3></div>
+                        <div><?php echo $this->loadTemplate('period'); ?></div>
                         <div class="center"><h3><?php echo JText::sprintf('COM_CONTRACTS_TITLE_CONTRACT_PAYER');?></h3></div>
                         <div><?php echo $this->loadTemplate('payer'); ?></div>
                     </div>

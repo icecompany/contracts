@@ -15,6 +15,8 @@ class TableContractsItems extends Table
     var $cost = null;
     var $value = null;
     var $value2 = null;
+    var $date_1 = null;
+    var $date_2 = null;
     var $amount = null;
     var $payerID = null;
     var $description = null;

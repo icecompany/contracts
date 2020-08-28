@@ -77,6 +77,26 @@
             <option value="1.20">20%</option>
         </field>
     </fieldset>
+    <fieldset name="period">
+        <field
+                name="date_1"
+                type="calendar"
+                label="COM_CONTRACTS_FORM_ITEM_DATE_1_LABEL"
+                description="COM_CONTRACTS_FORM_ITEM_DATE_1_LABEL"
+                filter="none"
+                format="%d.%m.%Y"
+                autocomplete="off"
+        />
+        <field
+                name="date_2"
+                type="calendar"
+                label="COM_CONTRACTS_FORM_ITEM_DATE_2_LABEL"
+                description="COM_CONTRACTS_FORM_ITEM_DATE_2_LABEL"
+                filter="none"
+                format="%d.%m.%Y"
+                autocomplete="off"
+        />
+ </fieldset>
     <fieldset name="payer">
         <field
                 name="payerID"
