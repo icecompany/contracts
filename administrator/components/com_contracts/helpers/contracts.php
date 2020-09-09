@@ -58,9 +58,6 @@ class ContractsHelper
             ->leftJoin("#__mkv_companies e on e.id = c.companyID")
             ->where("c.projectID = {$db->q($projectID)}")
             ->group("c.currency");
-        if (is_numeric($projectID)) {
-            $query->where("c.projectID = {$db->q($projectID)}");
-        }
         if (!ContractsHelper::canDo('core.project.amount_full')) {
             $userID = JFactory::getUser()->id;
             $query
@@ -94,7 +91,7 @@ class ContractsHelper
                 }
             }
 
-            $manager = $app->getUserState("{$context}.filter.managerID");
+            $manager = $app->getUserState("{$context}.filter.manager");
             if (is_numeric($manager) && ContractsHelper::canDo('core.project.amount_full')) {
                 $query->where("c.managerID = {$db->q($manager)}");
             }
