@@ -49,10 +49,10 @@ class ContractsModelContracts extends ListModel
             'stands' => 'COM_MKV_HEAD_STANDS',
             'number' => 'COM_MKV_HEAD_CONTRACT_NUMBER',
             'dat' => 'COM_MKV_HEAD_DATE',
-            'currency' => 'COM_CONTRACTS_HEAD_CURRENCY',
             'manager' => 'COM_MKV_HEAD_MANAGER',
             'tasks_count' => 'COM_CONTRACTS_HEAD_CONTRACTS_TASKS_COUNT',
             'doc_status' => 'COM_CONTRACTS_HEAD_CONTRACTS_ORIGINAL',
+            'currency' => 'COM_CONTRACTS_HEAD_CURRENCY',
             'amount' => 'COM_MKV_HEAD_AMOUNT',
             'payments' => 'COM_MKV_HEAD_PAYED',
             'debt' => 'COM_MKV_HEAD_DEBT',
@@ -237,7 +237,12 @@ class ContractsModelContracts extends ListModel
     public function getItems()
     {
         $items = parent::getItems();
-        $result = ['items' => [], 'amount' => [], 'amount_by_status' => []];
+        $result = ['items' => [], 'amount' => [], 'amount_by_status' => [], 'sum' => [
+            'amount' => ['rub' => 0, 'usd' => 0, 'eur' => 0],
+            'payments' => ['rub' => 0, 'usd' => 0, 'eur' => 0],
+            'debt' => ['rub' => 0, 'usd' => 0, 'eur' => 0],
+        ]
+        ];
         $ids = [];
         foreach ($items as $item) {
             $arr = [];
@@ -245,9 +250,6 @@ class ContractsModelContracts extends ListModel
             $ids[] = $item->id;
             $arr['company'] = $item->company;
             $arr['project'] = $item->project;
-            $arr['amount'] = $item->amount;
-            $arr['payments'] = $item->payments;
-            $arr['debt'] = $item->debt;
             $arr['tasks_count'] = $item->tasks_count;
             if ($item->tasks_count == '1') {
                 $url = JRoute::_("index.php?option=com_scheduler&amp;task=task.gotoContractActiveTask&amp;contractID={$item->id}&amp;return={$this->return}");
@@ -257,14 +259,17 @@ class ContractsModelContracts extends ListModel
             $arr['status'] = $item->status ?? JText::sprintf('COM_MKV_STATUS_IN_PROJECT');
             $arr['manager'] = MkvHelper::getLastAndFirstNames($item->manager);
             $currency = mb_strtoupper($item->currency);
-            $amount = number_format((float) $item->amount ?? 0, 2, '.', ' ');
-            $payments = number_format((float) $item->payments ?? 0, 2, '.', ' ');
-            $debt = number_format((float) $item->debt ?? 0, 2, '.', ' ');
+            $amount = number_format((float) $item->amount ?? 0, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, MKV_FORMAT_SEPARATOR_DEC);
+            $payments = number_format((float) $item->payments ?? 0, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, MKV_FORMAT_SEPARATOR_DEC);
+            $debt = number_format((float) $item->debt ?? 0, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, MKV_FORMAT_SEPARATOR_DEC);
             $arr['dat'] = (!empty($item->dat)) ? JDate::getInstance($item->dat)->format("d.m.Y") : '';
             $arr['currency'] = JText::sprintf("COM_CONTRACTS_CURRENCY_{$currency}_SHORT");
             $arr['amount_full'] = JText::sprintf("COM_MKV_AMOUNT_{$currency}_SHORT", $amount);
             $arr['payments_full'] = JText::sprintf("COM_MKV_AMOUNT_{$currency}_SHORT", $payments);
             $arr['debt_full'] = JText::sprintf("COM_MKV_AMOUNT_{$currency}_SHORT", $debt);
+            $arr['amount'] = $amount;
+            $arr['payments'] = $payments;
+            $arr['debt'] = $debt;
             if ($item->debt > 0 && FinancesHelper::canDo('core.create')) {
                 $url = JRoute::_("index.php?option=com_finances&amp;task=score.add&amp;contractID={$item->id}&amp;return={$this->return}");
                 $arr['debt_full'] = JHtml::link($url, $arr['debt_full']);
@@ -301,6 +306,9 @@ class ContractsModelContracts extends ListModel
             $arr['status_link'] = JHtml::link($url, $item->status ?? JText::sprintf('COM_MKV_STATUS_IN_PROJECT'));
             $url = JRoute::_("index.php?option={$this->option}&amp;view=items&amp;contractID={$item->id}");
             $arr['items_link'] = JHtml::link($url, JText::sprintf('COM_CONTRACTS_ACTION_ITEMS'));
+            $result['sum']['amount'][$item->currency] += $item->amount;
+            $result['sum']['payments'][$item->currency] += $item->payments;
+            $result['sum']['debt'][$item->currency] += $item->debt;
             $result['items'][$item->id] = $arr;
         }
         $stands = $this->getStands($ids);
@@ -337,9 +345,7 @@ class ContractsModelContracts extends ListModel
         $row = 2; //Строка, с которой начнаются данные
         $col = 0;
         foreach ($items['items'] as $contractID => $item) {
-            foreach ($this->heads as $elem => $head) {
-                $sheet->setCellValueExplicitByColumnAndRow($col++, $row, $item[$elem], PHPExcel_Cell_DataType::TYPE_STRING);
-            }
+            foreach ($this->heads as $elem => $head) $sheet->setCellValueExplicitByColumnAndRow($col++, $row, $item[$elem], PHPExcel_Cell_DataType::TYPE_STRING);
             $col = 0;
             $row++;
         }

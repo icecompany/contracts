@@ -177,7 +177,7 @@ class ContractsModelItems extends ListModel
             $arr['cost_clean'] = $item->cost;
             $arr['status'] = $item->status;
             $currency = mb_strtoupper($item->currency);
-            $cost = number_format((float) $item->cost, 2, '.', ' ');
+            $cost = number_format((float) $item->cost, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, MKV_FORMAT_SEPARATOR_DEC);
             $arr['cost'] = JText::sprintf("COM_CONTRACTS_CURRENCY_{$currency}_AMOUNT_SHORT", $cost);
             $arr['value'] = $item->value;
             $arr['manager'] = MkvHelper::getLastAndFirstNames($item->manager);
@@ -186,7 +186,7 @@ class ContractsModelItems extends ListModel
             $date_1 = (!empty($item->date_1)) ? JDate::getInstance($item->date_1)->format("d.m.Y") : '';
             $date_2 = (!empty($item->date_2)) ? JDate::getInstance($item->date_2)->format("d.m.Y") : '';
             $arr['period'] = (!empty($date_1) && !empty($date_2)) ? $date_1 . " - " . $date_2 : '';
-            $amount = number_format((float) $item->amount, 2, '.', ' ');
+            $amount = number_format((float) $item->amount, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, MKV_FORMAT_SEPARATOR_DEC);
             $arr['amount'] = JText::sprintf("COM_CONTRACTS_CURRENCY_{$currency}_AMOUNT_SHORT", $amount);
             $arr['stand'] = $item->stand;
             if ($contract->managerID == JFactory::getUser()->id || ContractsHelper::canDo('core.edit.all') && empty($item->description)) {
