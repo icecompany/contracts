@@ -146,7 +146,7 @@ class ContractsModelContracts extends ListModel
                 $query->where("c.projectID = {$this->_db->q($project)}");
             }
             $manager = $this->getState('filter.manager');
-            if (is_numeric($manager) && !$this->export) {
+            if (is_numeric($manager)) {
                 $query->where("c.managerID = {$this->_db->q($manager)}");
             }
             $status = $this->getState('filter.status');
@@ -267,9 +267,9 @@ class ContractsModelContracts extends ListModel
             $arr['amount_full'] = JText::sprintf("COM_MKV_AMOUNT_{$currency}_SHORT", $amount);
             $arr['payments_full'] = JText::sprintf("COM_MKV_AMOUNT_{$currency}_SHORT", $payments);
             $arr['debt_full'] = JText::sprintf("COM_MKV_AMOUNT_{$currency}_SHORT", $debt);
-            $arr['amount'] = $amount;
-            $arr['payments'] = $payments;
-            $arr['debt'] = $debt;
+            $arr['amount'] = number_format((float) $item->amount ?? 0, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, '');
+            $arr['payments'] = number_format((float) $item->payments ?? 0, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, '');
+            $arr['debt'] = number_format((float) $item->debt ?? 0, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, '');
             if ($item->debt > 0 && FinancesHelper::canDo('core.create')) {
                 $url = JRoute::_("index.php?option=com_finances&amp;task=score.add&amp;contractID={$item->id}&amp;return={$this->return}");
                 $arr['debt_full'] = JHtml::link($url, $arr['debt_full']);
@@ -345,7 +345,16 @@ class ContractsModelContracts extends ListModel
         $row = 2; //Строка, с которой начнаются данные
         $col = 0;
         foreach ($items['items'] as $contractID => $item) {
-            foreach ($this->heads as $elem => $head) $sheet->setCellValueExplicitByColumnAndRow($col++, $row, $item[$elem], PHPExcel_Cell_DataType::TYPE_STRING);
+            foreach ($this->heads as $elem => $head) {
+                $float = ['amount', 'payments', 'debt'];
+                if (array_search($elem, $float) === false) {
+                    $sheet->setCellValueExplicitByColumnAndRow($col++, $row, $item[$elem], PHPExcel_Cell_DataType::TYPE_STRING);
+                }
+                else {
+                    $sheet->setCellValueByColumnAndRow($col++, $row, $item[$elem]);
+                    $sheet->getStyleByColumnAndRow($col-1, $row)->getNumberFormat()->setFormatCode('0');
+                }
+            }
             $col = 0;
             $row++;
         }
