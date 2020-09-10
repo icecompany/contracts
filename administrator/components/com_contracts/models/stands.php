@@ -102,8 +102,8 @@ class ContractsModelStands extends ListModel
             $arr['id'] = $item->id;
             $ids[] = $item->id;
             $arr['number'] = $item->number;
-            $arr['square_clean'] = $item->square;
-            $arr['square'] = JText::sprintf('COM_CONTRACTS_STANDS_SQUARE', $item->square);
+            $arr['square_clean'] = number_format((float) $item->square, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, '');
+            $arr['square'] = JText::sprintf('COM_CONTRACTS_STANDS_SQUARE', number_format((float) $item->square, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, MKV_FORMAT_SEPARATOR_DEC));
             $arr['freeze'] = $item->freeze;
             $arr['status'] = JText::sprintf("COM_CONTRACTS_STAND_STATUS_{$item->status}");
             $arr['comment'] = $item->comment;
@@ -118,7 +118,7 @@ class ContractsModelStands extends ListModel
             $arr['edit_link'] = JHtml::link($url, $item->number);
             if (!isset($result['stands'][$item->id])) $result['stands'][$item->id] = $arr;
             if (!isset($result['titles'][$item->itemID]) && !empty($item->item) && !empty($item->itemID)) $result['titles'][$item->itemID] = $item->item;
-            if (!isset($result['items'][$item->id][$item->itemID])) $result['items'][$item->id][$item->itemID] = $item->value;
+            if (!isset($result['items'][$item->id][$item->itemID])) $result['items'][$item->id][$item->itemID] = number_format((float) $item->value, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, '');
         }
         asort($result['titles']);
         $delegates = $this->getDelegates($ids);

@@ -14,6 +14,7 @@ class ContractsModelItems extends ListModel
                 'i.value',
                 'i.factor',
                 'i.markup',
+                'i.amount',
                 'i.cost',
                 'i.columnID',
                 'pi.weight',
@@ -174,15 +175,15 @@ class ContractsModelItems extends ListModel
             $arr['company'] = $item->company;
             $arr['factor'] = (1 - $item->factor) * 100 . "%";
             $arr['markup'] = ($item->markup - 1) * 100 . "%";
-            $arr['cost_clean'] = $item->cost;
+            $arr['cost_clean'] = number_format((float) $item->cost, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, '');
             $arr['status'] = $item->status;
             $currency = mb_strtoupper($item->currency);
             $cost = number_format((float) $item->cost, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, MKV_FORMAT_SEPARATOR_DEC);
             $arr['cost'] = JText::sprintf("COM_CONTRACTS_CURRENCY_{$currency}_AMOUNT_SHORT", $cost);
-            $arr['value'] = $item->value;
+            $arr['value'] = number_format((float) $item->value, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, '');
             $arr['manager'] = MkvHelper::getLastAndFirstNames($item->manager);
             $arr['value2'] = $item->value2;
-            $arr['amount_clean'] = $item->amount;
+            $arr['amount_clean'] = number_format((float) $item->amount, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, '');
             $date_1 = (!empty($item->date_1)) ? JDate::getInstance($item->date_1)->format("d.m.Y") : '';
             $date_2 = (!empty($item->date_2)) ? JDate::getInstance($item->date_2)->format("d.m.Y") : '';
             $arr['period'] = (!empty($date_1) && !empty($date_2)) ? $date_1 . " - " . $date_2 : '';
@@ -240,7 +241,14 @@ class ContractsModelItems extends ListModel
         $col = 0;
         foreach ($items['items'] as $i => $item) {
             foreach ($this->heads as $elem => $head) {
-                $sheet->setCellValueByColumnAndRow($col++, $row, $item[$elem]);
+                $float = ['cost_clean', 'amount_clean', 'value'];
+                if (array_search($elem, $float) === false) {
+                    $sheet->setCellValueExplicitByColumnAndRow($col++, $row, $item[$elem], PHPExcel_Cell_DataType::TYPE_STRING);
+                }
+                else {
+                    $sheet->setCellValueByColumnAndRow($col++, $row, $item[$elem]);
+                    $sheet->getStyleByColumnAndRow($col-1, $row)->getNumberFormat()->setFormatCode('0');
+                }
             }
             $col = 0;
             $row++;

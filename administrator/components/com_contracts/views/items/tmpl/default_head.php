@@ -49,6 +49,6 @@ $listDirn = $this->escape($this->state->get('list.direction'));
         <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_ITEMS_AMOUNT', 'i.amount', $listDirn, $listOrder); ?>
     </th>
     <th style="width: 1%;">
-        <?php echo JHtml::_('searchtools.sort', 'ID', 's.id', $listDirn, $listOrder); ?>
+        <?php echo JHtml::_('searchtools.sort', 'ID', 'i.id', $listDirn, $listOrder); ?>
     </th>
 </tr>
