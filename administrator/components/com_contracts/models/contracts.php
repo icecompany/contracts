@@ -403,7 +403,7 @@ class ContractsModelContracts extends ListModel
         $this->setState('filter.search', $search);
         $status = $this->getUserStateFromRequest($this->context . '.filter.status', 'filter_status');
         $this->setState('filter.status', $status);
-        $manager = $this->getUserStateFromRequest($this->context . '.filter.manager', 'filter_manager', JFactory::getUser()->id, 'integer');
+        $manager = $this->getUserStateFromRequest($this->context . '.filter.manager', 'filter_manager', JFactory::getUser()->id, 'integer', false);
         $this->setState('filter.manager', $manager);
         $catalog_info = $this->getUserStateFromRequest($this->context . '.filter.catalog_info', 'filter_catalog_info');
         $this->setState('filter.catalog_info', $catalog_info);
