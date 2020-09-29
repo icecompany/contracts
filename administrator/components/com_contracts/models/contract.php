@@ -79,7 +79,24 @@ class ContractsModelContract extends AdminModel {
             //Загрузка файла
             $this->uploadFiles($data['id']);
         }
-        return parent::save($data);
+        $s = parent::save($data);
+        //Пишем в историю
+        if ($s) {
+            $hst = [];
+            $hst['managerID'] = JFactory::getUser()->id;
+            $hst['itemID'] = $data['id'] ?? JFactory::getDbo()->insertid();
+            $hst['action'] = ($data['id'] !== null) ? 'update' : 'add';
+            $hst['section'] = 'contract';
+            $hst['new_data'] = json_encode($data);
+            $hst['old_data'] = '';
+            if ($hst['action'] === 'update') {
+                $hst['old_data'] = json_encode($item);
+            }
+            JTable::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_mkv/tables");
+            $history = JTable::getInstance('History', 'TableMkv');
+            $history->save($hst);
+        }
+        return $s;
     }
 
     public function setContractNumber($pk = null): int
@@ -450,6 +467,29 @@ class ContractsModelContract extends AdminModel {
         $table = $this->getTable('Thematics', 'TableContracts');
         $table->load(['contractID' => $contractID, 'thematicID' => $thematicID]);
         $table->delete($table->id);
+    }
+
+    public function delete(&$pks)
+    {
+        //Пишем историю
+        JTable::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_mkv/tables");
+        foreach ($pks as $pk) {
+            $item = parent::getItem($pk);
+            $d = parent::delete($pk);
+            if ($d) {
+                $hst = [];
+                $hst['managerID'] = JFactory::getUser()->id;
+                $hst['itemID'] = $item->id;
+                $hst['section'] = 'contract';
+                $hst['action'] = 'delete';
+                $hst['old_data'] = json_encode($item);
+                $hst['new_data'] = '';
+                $history = JTable::getInstance('History', 'TableMkv');
+                $history->save($hst);
+            }
+            else return false;
+        }
+        return true;
     }
 
     protected function canEditState($record)

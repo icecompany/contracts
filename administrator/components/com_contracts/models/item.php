@@ -60,7 +60,6 @@ class ContractsModelItem extends AdminModel {
             }
         }
         //Проверяем заполненность периода
-        //exit(var_dump($data, $item));
         if ($item->need_period == '1') {
             if (empty($data['date_1']) || empty($data['date_2'] || $data['date_1'] === '0000-00-00 00:00:00') || $data['date_2'] === '0000-00-00 00:00:00') {
                 $app = JFactory::getApplication();
@@ -85,6 +84,23 @@ class ContractsModelItem extends AdminModel {
         $s = parent::save($data);
         //Изменяем доступное кол-во остатка в пункте прайса
         if ($s && $item->available !== null) $this->setNewBalance($data['itemID'], $balance);
+
+        //Пишем в историю
+        if ($s) {
+            $hst = [];
+            $hst['managerID'] = JFactory::getUser()->id;
+            $hst['itemID'] = $data['id'] ?? JFactory::getDbo()->insertid();
+            $hst['action'] = ($data['id'] !== null) ? 'update' : 'add';
+            $hst['section'] = 'cart';
+            $hst['new_data'] = json_encode($data);
+            $hst['old_data'] = '';
+            if ($hst['action'] === 'update') {
+                $hst['old_data'] = json_encode($already);
+            }
+            JTable::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_mkv/tables");
+            $history = JTable::getInstance('History', 'TableMkv');
+            $history->save($hst);
+        }
         return $s;
     }
 
@@ -252,6 +268,29 @@ class ContractsModelItem extends AdminModel {
     {
         $model = AdminModel::getInstance('Contract', 'ContractsModel');
         return $model->getItem($contractID);
+    }
+
+    public function delete(&$pks)
+    {
+        //Пишем историю
+        JTable::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_mkv/tables");
+        foreach ($pks as $pk) {
+            $item = parent::getItem($pk);
+            $d = parent::delete($pk);
+            if ($d) {
+                $hst = [];
+                $hst['managerID'] = JFactory::getUser()->id;
+                $hst['itemID'] = $item->id;
+                $hst['section'] = 'cart';
+                $hst['action'] = 'delete';
+                $hst['old_data'] = json_encode($item);
+                $hst['new_data'] = '';
+                $history = JTable::getInstance('History', 'TableMkv');
+                $history->save($hst);
+            }
+            else return false;
+        }
+        return true;
     }
 
     protected function canEditState($record)
