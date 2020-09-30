@@ -30,7 +30,7 @@ class ContractsModelStandsLight extends ListModel
 
     protected function _getListQuery()
     {
-        $query = $this->_db->getQuery(true);
+        $query = JFactory::getDbo()->getQuery(true);
 
         //Ограничение длины списка
         $limit = 0;

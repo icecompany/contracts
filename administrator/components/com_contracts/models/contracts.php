@@ -83,9 +83,6 @@ class ContractsModelContracts extends ListModel
         $orderCol = $this->state->get('list.ordering');
         $orderDirn = $this->state->get('list.direction');
 
-        //Ограничение длины списка
-        $limit = (!$this->export) ? $this->getState('list.limit') : 0;
-
         $query
             ->select("c.id, c.companyID, c.dat, c.number, c.number_free, c.currency, c.amount, c.payments, c.debt")
             ->select("c.tasks_count, c.tasks_date")
@@ -228,8 +225,9 @@ class ContractsModelContracts extends ListModel
             $query->where("i.info_arrival = {$this->_db->q($arrival)}");
         }
 
+        //Ограничение длины списка
+        $this->setState('list.limit', (!$this->export) ? $this->state->get('list.limit') : 0);
         $query->order($this->_db->escape($orderCol . ' ' . $orderDirn));
-        $this->setState('list.limit', $limit);
 
         return $query;
     }
@@ -430,7 +428,7 @@ class ContractsModelContracts extends ListModel
         $arrival = $this->getUserStateFromRequest($this->context . '.filter.arrival', 'filter_arrival');
         $this->setState('filter.arrival', $arrival);
         parent::populateState($ordering, $direction);
-        PrjHelper::check_refresh();
+        ContractsHelper::check_refresh();
     }
 
     protected function getStoreId($id = '')

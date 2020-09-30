@@ -3,5 +3,5 @@
 defined('_JEXEC') or die;
 $colspan = '16';?>
 <tr>
-    <td colspan="<?php echo $colspan;?>" class="pagination-centered"><?php echo $this->pagination->getListFooter(); ?></td>
+    <td colspan="<?php echo $colspan;?>"><?php echo $this->pagination->getListFooter(); ?></td>
 </tr>

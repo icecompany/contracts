@@ -11,11 +11,11 @@ class ContractsViewContracts extends HtmlView
     public function display($tpl = null)
     {
         $this->items = $this->get('Items');
-        $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
         $this->filterForm = $this->get('FilterForm');
         $this->activeFilters = $this->get('ActiveFilters');
         $this->activeProject = PrjHelper::getActiveProject();
+        $this->pagination = $this->get('Pagination');
         $this->show_by_status = true;
 
         $this->filterForm->addFieldPath(JPATH_ADMINISTRATOR . "/components/com_mkv/models/fields");

@@ -24,7 +24,7 @@ class ContractsModelThematics extends ListModel
 
     protected function _getListQuery()
     {
-        $query = $this->_db->getQuery(true);
+        $query = JFactory::getDbo()->getQuery(true);
 
         $query
             ->select("ct.thematicID")
