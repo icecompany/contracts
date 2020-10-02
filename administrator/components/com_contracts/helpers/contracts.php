@@ -52,7 +52,7 @@ class ContractsHelper
 
         $query = $db->getQuery(true);
         $query
-            ->select("c.currency, ifnull(sum(c.amount), 0) as amount, ifnull(sum(c.payments), 0) as payments, ifnull(sum(if(c.debt < 0, 0, c.debt)), 0) as debt")
+            ->select("c.currency, ifnull(sum(c.amount), 0) as amount, ifnull(sum(c.payments), 0) as payments, ifnull(sum(c.debt), 0) as debt")
             ->from("#__mkv_contracts c")
             ->leftJoin("#__mkv_contract_incoming_info i on i.contractID = c.id")
             ->leftJoin("#__mkv_companies e on e.id = c.companyID")
