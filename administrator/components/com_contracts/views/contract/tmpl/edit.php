@@ -10,6 +10,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 HTMLHelper::_('script', 'https://code.jquery.com/ui/1.11.4/jquery-ui.min.js', array('relative' => true));
 HTMLHelper::_('script', $this->script);
 HTMLHelper::_('script', 'com_contracts/contract.js', array('version' => 'auto', 'relative' => true));
+HTMLHelper::_('script', 'com_scheduler/script.js', array('version' => 'auto', 'relative' => true));
 ?>
 <form action="<?php echo ContractsHelper::getActionUrl(); ?>"
       method="post" name="adminForm" id="adminForm" xmlns="http://www.w3.org/1999/html" class="form-validate" enctype="multipart/form-data">
