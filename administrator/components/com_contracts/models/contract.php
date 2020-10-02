@@ -59,7 +59,31 @@ class ContractsModelContract extends AdminModel {
 
     public function save($data)
     {
+        $app = JFactory::getApplication();
         if ($data['id'] != '') {
+            $item = parent::getItem($data['id']);
+            //Проверяем возможность выставить отказ
+            if ((int) $data['status'] === 0) {
+                //Проверяем наличие оплаты по сделке
+                if ((float) $item->payments > 0) {
+                    $app->enqueueMessage(JText::sprintf('COM_CONTRACTS_ERROR_SAVE_CONTRACT_IS_PAYMENTS'), 'error');
+                    return false;
+                }
+                //Проверяем наличие стендов
+                if ($this->isStandsInContract($data['id'])) {
+                    $app->enqueueMessage(JText::sprintf('COM_CONTRACTS_ERROR_SAVE_CONTRACT_IS_STANDS'), 'error');
+                    return false;
+                }
+            }
+            //Проверяем возможность выставить Заявка на участие
+            if ((int) $data['status'] === 4) {
+                //Проверяем наличие стендов
+                if (!$this->isStandsInContract($data['id'])) {
+                    $app->enqueueMessage(JText::sprintf('COM_CONTRACTS_ERROR_SAVE_CONTRACT_NO_STANDS'), 'error');
+                    return false;
+                }
+            }
+
             //Сохраняем заполненность формы
             $this->saveIncomingInfo($data['id'], $data);
             $this->saveSentInfo($data['id'], $data);
@@ -70,7 +94,6 @@ class ContractsModelContract extends AdminModel {
             //Сохраняем виды деятельности
             $this->saveActivities($data['companyID'], $data['activities'] ?? []);
             //Переносим задачи
-            $item = parent::getItem($data['id']);
             if ($item->managerID != $data['managerID']) {
                 SchedulerHelper::updateTaskManager($data['id'], $data['managerID']);
             }
@@ -395,6 +418,18 @@ class ContractsModelContract extends AdminModel {
         }
 
         parent::prepareTable($table);
+    }
+
+    private function isStandsInContract(int $contractID): bool
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query
+            ->select("ifnull(count(id), 0)")
+            ->from("#__mkv_contract_stands")
+            ->where("contractID = {$db->q($contractID)}");
+        $result = (int) $db->setQuery($query)->loadResult();
+        return ($result > 0);
     }
 
     private function uploadFiles(int $contractID) {
