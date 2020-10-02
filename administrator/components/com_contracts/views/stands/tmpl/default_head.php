@@ -32,7 +32,7 @@ $listDirn    = $this->escape($this->state->get('list.direction'));
         <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_STANDS_CONTRACT_DATE', 'c.dat', $listDirn, $listOrder); ?>
     </th>
     <th>
-        <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_STANDS_MANAGER', 'u.name', $listDirn, $listOrder); ?>
+        <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_STANDS_MANAGER', 'manager', $listDirn, $listOrder); ?>
     </th>
     <th>
         <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_STANDS_STAND_STATUS', 'cs.status', $listDirn, $listOrder); ?>

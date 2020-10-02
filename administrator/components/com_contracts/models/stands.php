@@ -11,9 +11,15 @@ class ContractsModelStands extends ListModel
             $config['filter_fields'] = array(
                 's.id',
                 'cs.type',
+                'cs.status',
+                's.square',
                 's.number',
                 's.ordering',
                 'manager',
+                'company',
+                'contract_number',
+                'c.dat',
+                'st.title',
                 'status',
                 'search',
             );

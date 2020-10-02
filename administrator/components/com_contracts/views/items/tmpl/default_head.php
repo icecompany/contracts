@@ -22,7 +22,7 @@ $listDirn = $this->escape($this->state->get('list.direction'));
         <?php echo JHtml::_('searchtools.sort', 'COM_MKV_HEAD_MANAGER', 'manager', $listDirn, $listOrder); ?>
     </th>
     <th>
-        <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_ITEMS_ITEM', 'pi.weight', $listDirn, $listOrder); ?>
+        <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_ITEMS_ITEM', 'pi.title', $listDirn, $listOrder); ?>
     </th>
     <th style="width: 10%;">
         <?php echo JHtml::_('searchtools.sort', 'COM_CONTRACTS_HEAD_ITEMS_COST', 'i.cost', $listDirn, $listOrder); ?>
