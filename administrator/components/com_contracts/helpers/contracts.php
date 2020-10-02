@@ -176,7 +176,7 @@ class ContractsHelper
                     continue;
                 }
                 $c = mb_strtoupper($currency);
-                $items[$currency][$type] = JText::sprintf("COM_MKV_AMOUNT_{$c}_SHORT", number_format((float) $amount, 2, '.', ' '));
+                $items[$currency][$type] = JText::sprintf("COM_MKV_AMOUNT_{$c}_SHORT", number_format((float) $amount, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, MKV_FORMAT_SEPARATOR_DEC));
             }
         }
         return $items;
