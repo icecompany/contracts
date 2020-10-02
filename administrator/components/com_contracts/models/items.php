@@ -181,6 +181,10 @@ class ContractsModelItems extends ListModel
             $arr['markup'] = ($item->markup - 1) * 100 . "%";
             $arr['cost_clean'] = number_format((float) $item->cost, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, '');
             $arr['status'] = $item->status;
+            if (!$this->export) {
+                $url = JRoute::_("index.php?option={$this->option}&amp;task=contract.edit&amp;id={$item->contractID}&amp;return={$return}");
+                $arr['status'] = JHtml::link($url, $item->status);
+            }
             $currency = mb_strtoupper($item->currency);
             $cost = number_format((float) $item->cost, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, MKV_FORMAT_SEPARATOR_DEC);
             $arr['cost'] = JText::sprintf("COM_CONTRACTS_CURRENCY_{$currency}_AMOUNT_SHORT", $cost);
