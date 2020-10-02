@@ -32,6 +32,7 @@ class ContractsModelItems extends ListModel
         $input = JFactory::getApplication()->input;
         $this->export = ($input->getString('format', 'html') === 'html') ? false : true;
         $this->contractID = $input->getInt('contractID', 0);
+        $this->itemID = $input->getInt('itemID', 0);
         $this->standID = $config['standID'];
         if (!empty($config['contractID'])) {
             $this->export = true;
@@ -77,6 +78,9 @@ class ContractsModelItems extends ListModel
             ->leftJoin("#__mkv_contract_stands cs on cs.id = i.contractStandID")
             ->leftJoin("#__users u on u.id = c.managerID")
             ->leftJoin("#__mkv_stands s on s.id = cs.standID");
+        if ($this->itemID > 0) {
+            $query->where("i.itemID = {$this->_db->q($this->itemID)}");
+        }
         if ($this->contractID > 0 || $this->standID > 0) {
             if ($this->contractID > 0) {
                 $query->where("i.contractID = {$this->_db->q($this->contractID)}");
@@ -269,6 +273,19 @@ class ContractsModelItems extends ListModel
         return $this->contractID;
     }
 
+    public function getItemID(): int
+    {
+        return $this->itemID;
+    }
+
+    public function getItemTitle()
+    {
+        JTable::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_prices/tables");
+        $table = JTable::getInstance('Items', 'TablePrices');
+        $table->load($this->itemID);
+        return $table->title;
+    }
+
     protected function populateState($ordering = 'pi.weight', $direction = 'ASC')
     {
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
@@ -292,5 +309,5 @@ class ContractsModelItems extends ListModel
         return parent::getStoreId($id);
     }
 
-    private $export, $contractID, $standID, $heads;
+    private $export, $contractID, $standID, $heads, $itemID;
 }

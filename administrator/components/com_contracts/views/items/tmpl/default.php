@@ -13,7 +13,11 @@ HTMLHelper::_('script', 'com_contracts/script.js', array('version' => 'auto', 'r
     Joomla.submitbutton = function (task) {
         let form = document.querySelector('#adminForm');
         if (task === 'items.download') {
-            location.href = 'index.php?option=com_contracts&task=items.execute&format=xls';
+            let url = 'index.php?option=com_contracts&task=items.execute&format=xls';
+            <?php if ($this->itemID > 0) : ?>
+            url += `&itemID=<?php echo $this->itemID;?>`;
+            <?php endif; ?>
+            location.href = url;
             return false;
         }
         else Joomla.submitform(task, form);

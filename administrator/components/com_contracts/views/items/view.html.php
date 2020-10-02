@@ -6,7 +6,7 @@ defined('_JEXEC') or die;
 class ContractsViewItems extends HtmlView
 {
     protected $sidebar = '';
-    public $items, $pagination, $uid, $state, $filterForm, $activeFilters, $contractID;
+    public $items, $pagination, $uid, $state, $filterForm, $activeFilters, $contractID, $itemID;
 
     public function display($tpl = null)
     {
@@ -16,6 +16,7 @@ class ContractsViewItems extends HtmlView
         $this->filterForm = $this->get('FilterForm');
         $this->activeFilters = $this->get('ActiveFilters');
         $this->contractID = $this->get('contractID');
+        $this->itemID = $this->get('itemID');
         if ($this->contractID > 0) {
             $this->filterForm->removeField('currency', 'filter');
             $this->filterForm->removeField('manager', 'filter');
@@ -38,6 +39,9 @@ class ContractsViewItems extends HtmlView
     private function toolbar()
     {
         $title = (!empty($this->items['company'])) ? JText::sprintf('COM_CONTRACTS_TITLE_ITEMS_FOR_COMPANY_BY_PROJECT', $this->items['company'], $this->items['project']) : JText::sprintf('COM_CONTRACTS_MENU_ITEMS');
+
+        if ($this->itemID > 0) $title = $this->get('ItemTitle');
+
         JToolBarHelper::title($title, 'cart');
 
         if (ContractsHelper::canDo('core.create') && $this->contractID > 0)
