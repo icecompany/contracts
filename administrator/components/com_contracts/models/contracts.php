@@ -142,6 +142,11 @@ class ContractsModelContracts extends ListModel
             if (is_numeric($project)) {
                 $query->where("c.projectID = {$this->_db->q($project)}");
             }
+            else {
+                //Оставляем только проекты, в которые входит юзер
+                $userGroups = implode(', ', JFactory::getUser()->groups);
+                if (!empty($userGroups)) $query->where("p.groupID in ({$userGroups})");
+            }
             $manager = $this->getState('filter.manager');
             if (is_numeric($manager)) {
                 $query->where("c.managerID = {$this->_db->q($manager)}");
