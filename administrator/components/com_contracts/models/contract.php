@@ -296,10 +296,11 @@ class ContractsModelContract extends AdminModel {
         $item = $model->getItem(['contractID' => $contractID]);
         $arr = [];
         $arr['id'] = $item->id ?? null;
-        $arr['invite_date'] = $data['invite_date'];
+        $arr['contractID'] = $contractID;
+        $arr['invite_date'] = JDate::getInstance($data['invite_date'])->toSql();
         $arr['invite_outgoing_number'] = $data['invite_outgoing_number'];
         $arr['invite_incoming_number'] = $data['invite_incoming_number'];
-        $model->save($arr);
+        return $model->save($arr);
     }
 
     private function sendNotifyNewDocStatus(int $contractID, int $companyID, int $new_status): void
