@@ -14,6 +14,7 @@ $arr = [-2, 1, 2]; ?>
             <th><?php echo JText::sprintf('COM_MKV_HEAD_TASK'); ?></th>
             <th><?php echo JText::sprintf('COM_MKV_HEAD_RESULT'); ?></th>
             <th><?php echo JText::sprintf('COM_SCHEDULER_HEAD_TASK_DATE_CLOSE'); ?></th>
+            <th><?php echo JText::sprintf('COM_SCHEDULER_HEAD_USER_CLOSE'); ?></th>
             <th>ID</th>
         </tr>
         </thead>
@@ -29,6 +30,7 @@ $arr = [-2, 1, 2]; ?>
                 <td><?php echo $task['task']; ?></td>
                 <td><?php echo $task['result']; ?></td>
                 <td><?php echo $task['date_close']; ?></td>
+                <td><?php echo $task['user_close']; ?></td>
                 <td><?php echo $task['id']; ?></td>
                 </tr>
             <?php endforeach; ?>
@@ -42,6 +44,7 @@ $arr = [-2, 1, 2]; ?>
             <td><?php echo $task['task']; ?></td>
             <td><?php echo $task['result']; ?></td>
             <td><?php echo $task['date_close']; ?></td>
+            <td><?php echo $task['user_close']; ?></td>
             <td><?php echo $task['id']; ?></td>
             </tr>
         <?php endforeach; ?>
