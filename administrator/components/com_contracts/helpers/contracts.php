@@ -19,6 +19,24 @@ class ContractsHelper
         PrjHelper::addActiveProjectFilter();
     }
 
+    /** Список дочерних компаний Приоритета. Разовая выгрузка для Руслана Каримова
+     *
+     * @return string
+     *
+     * @since version 2.3.12
+     */
+    public static function getPriority(): string
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query
+            ->select("companyID")
+            ->from("#__mkv_companies_parents")
+            ->where("parentID = 520");
+        $result = $db->setQuery($query)->loadColumn();
+        return (!empty($result)) ? implode(', ', $result) : '';
+    }
+
     public static function setZeroAmount(int $contractID): void
     {
         $db = JFactory::getDbo();

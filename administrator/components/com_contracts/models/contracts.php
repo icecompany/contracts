@@ -27,6 +27,7 @@ class ContractsModelContracts extends ListModel
                 'arrival',
                 'thematics',
                 'title_to_diploma',
+                'priority',
                 'catalog_info', 'i.catalog_info',
                 'catalog_logo', 'i.catalog_logo',
                 'pvn_1', 'i.pvn_1',
@@ -186,6 +187,14 @@ class ContractsModelContracts extends ListModel
             if (!empty($currency)) {
                 $query->where("c.currency like {$this->_db->q($currency)}");
             }
+
+            $priority = $this->getState('filter.priority');
+            if (is_numeric($priority)) {
+                $companies = ContractsHelper::getPriority();
+                $not = ($priority == '1') ? '' : 'not';
+                $query->where("c.companyID {$not} in ({$companies})");
+            }
+
             $pvn_1 = $this->getState('filter.pvn_1');
             $pvn_1a = $this->getState('filter.pvn_1a');
             $pvn_1b = $this->getState('filter.pvn_1b');
@@ -432,6 +441,8 @@ class ContractsModelContracts extends ListModel
         $this->setState('filter.thematics', $thematics);
         $arrival = $this->getUserStateFromRequest($this->context . '.filter.arrival', 'filter_arrival');
         $this->setState('filter.arrival', $arrival);
+        $priority = $this->getUserStateFromRequest($this->context . '.filter.priority', 'filter_priority');
+        $this->setState('filter.priority', $priority);
         parent::populateState($ordering, $direction);
         ContractsHelper::check_refresh();
     }
@@ -453,6 +464,7 @@ class ContractsModelContracts extends ListModel
         $id .= ':' . $this->getState('filter.title_to_diploma');
         $id .= ':' . $this->getState('filter.thematics');
         $id .= ':' . $this->getState('filter.arrival');
+        $id .= ':' . $this->getState('filter.priority');
         return parent::getStoreId($id);
     }
 
