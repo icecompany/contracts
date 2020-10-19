@@ -32,7 +32,7 @@ class ContractsHelper
         $query
             ->select("companyID")
             ->from("#__mkv_companies_parents")
-            ->where("parentID = 1295");
+            ->where("parentID = 520");
         $result = $db->setQuery($query)->loadColumn();
         return (!empty($result)) ? implode(', ', $result) : '';
     }
