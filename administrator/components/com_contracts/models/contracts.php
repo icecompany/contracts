@@ -85,7 +85,7 @@ class ContractsModelContracts extends ListModel
         $orderDirn = $this->state->get('list.direction');
 
         $query
-            ->select("c.id, c.companyID, c.dat, c.number, c.number_free, c.currency, c.amount, c.payments, c.debt")
+            ->select("c.id, c.companyID, c.dat, c.number, c.number_free, c.currency, c.amount, c.payments, c.debt, c.status as status_code")
             ->select("c.tasks_count, c.tasks_date")
             ->select("ifnull(c.number_free, c.number) as num")
             ->select("s.title as status")
@@ -315,7 +315,11 @@ class ContractsModelContracts extends ListModel
             $url = JRoute::_("index.php?option=com_companies&amp;task=company.edit&amp;id={$item->companyID}&amp;return={$this->return}");
             $arr['company_link'] = JHtml::link($url, $item->company);
             $url = JRoute::_("index.php?option={$this->option}&amp;task=contract.edit&amp;id={$item->id}&amp;return={$this->return}");
-            $arr['status_link'] = JHtml::link($url, $item->status ?? JText::sprintf('COM_MKV_STATUS_IN_PROJECT'));
+            $contract_with_number = null;
+            if (($item->status_code == '1' || $item->status_code == '10') && !empty($arr['number'])) {
+                $contract_with_number = sprintf("%s №%s", $arr['status'], $arr['number']);
+            }
+            $arr['status_link'] = JHtml::link($url, $contract_with_number ?? $item->status ?? JText::sprintf('COM_MKV_STATUS_IN_PROJECT'));
             $url = JRoute::_("index.php?option={$this->option}&amp;view=items&amp;contractID={$item->id}");
             $arr['items_link'] = JHtml::link($url, JText::sprintf('COM_CONTRACTS_ACTION_ITEMS'));
             $result['sum']['amount'][$item->currency] += $item->amount;
