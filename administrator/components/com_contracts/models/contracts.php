@@ -14,6 +14,7 @@ class ContractsModelContracts extends ListModel
                 's.ordering', 'status',
                 'project', 'p.title',
                 'company',
+                'p.date_start',
                 'manager',
                 'number',
                 'i.doc_status',
@@ -110,7 +111,7 @@ class ContractsModelContracts extends ListModel
         if ($this->companyID > 0) {
             $query
                 ->where("c.companyID = {$this->_db->q($this->companyID)}");
-            $orderCol = 'c.id';
+            $orderCol = 'p.date_start';
             $orderDirn = 'desc';
         }
         else {
