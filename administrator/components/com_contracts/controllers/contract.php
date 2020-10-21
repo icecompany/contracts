@@ -7,7 +7,9 @@ class ContractsControllerContract extends FormController {
     {
         $uri = JUri::getInstance();
         $companyID = $uri->getVar('companyID', 0);
+        $projectID = $uri->getVar('projectID', 0);
         if ($companyID > 0) JFactory::getApplication()->setUserState($this->option . '.contract.companyID', $companyID);
+        if ($projectID > 0) JFactory::getApplication()->setUserState($this->option . '.contract.projectID', $projectID);
         return parent::add();
     }
 

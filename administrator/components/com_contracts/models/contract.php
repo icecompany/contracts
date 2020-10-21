@@ -9,9 +9,15 @@ class ContractsModelContract extends AdminModel {
     public function getItem($pk = null)
     {
         $item = parent::getItem($pk);
+        $app = JFactory::getApplication();
         if ($item->id === null) {
-            $item->companyID = JFactory::getApplication()->getUserState($this->option.'.contract.companyID');
+            $item->companyID = $app->getUserState($this->option.'.contract.companyID');
+            $projectFromRequest = $app->getUserState($this->option.'.contract.projectID');
             $item->projectID = PrjHelper::getActiveProject() ?? MkvHelper::getConfig('default_project');
+            if (is_numeric($projectFromRequest)) {
+                $item->projectID = $projectFromRequest;
+                $app->setUserState($this->option . '.contract.projectID', '');
+            }
             $item->managerID = JFactory::getUser()->id;
         }
         else {
