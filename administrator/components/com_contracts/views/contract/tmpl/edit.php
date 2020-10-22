@@ -33,6 +33,9 @@ HTMLHelper::_('script', 'com_scheduler/script.js', array('version' => 'auto', 'r
                             <div><?php echo $this->loadTemplate('parent'); ?></div>
                             <div><?php echo $this->loadTemplate('children'); ?></div>
                         <?php endif; ?>
+                        <?php if ($this->item->is_archive && ContractsHelper::canDo('core.access.archive')): ?>
+                            <div><?php echo $this->loadTemplate('archive'); ?></div>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <?php echo JHtml::_('bootstrap.endTab'); ?>

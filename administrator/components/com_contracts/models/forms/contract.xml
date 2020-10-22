@@ -286,6 +286,33 @@
                 multiple="true"
         />
     </fieldset>
+    <fieldset name="amount">
+        <field
+                name="amount"
+                type="text"
+                label="COM_CONTRACTS_FORM_CONTRACT_AMOUNT_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_AMOUNT_DESC"
+                class="span12"
+                autocomplete="off"
+        />
+        <field
+                name="payments"
+                type="text"
+                label="COM_CONTRACTS_FORM_CONTRACT_PAYMENTS_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_PAYMENTS_DESC"
+                class="span12"
+                autocomplete="off"
+        />
+        <field
+                name="debt"
+                type="text"
+                label="COM_CONTRACTS_FORM_CONTRACT_DEBT_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_DEBT_DESC"
+                class="span12"
+                default="0"
+                autocomplete="off"
+        />
+    </fieldset>
     <fieldset name="ids">
         <field
                 name="id"
