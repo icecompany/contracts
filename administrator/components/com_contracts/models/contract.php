@@ -55,6 +55,7 @@ class ContractsModelContract extends AdminModel {
         $project = $this->getProject($item->projectID);
         $item->company = $company->title;
         $item->project = $project->title;
+        $item->is_archive = $project->is_archive;
         $item->project_item = $project;
 
         $number = $item->number_free ?? $item->number;
