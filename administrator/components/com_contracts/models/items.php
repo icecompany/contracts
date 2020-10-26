@@ -66,7 +66,9 @@ class ContractsModelItems extends ListModel
 
         $query
             ->select("i.*")
-            ->select("pi.title as item")
+            ->select("pi.title as item, pi.appID")
+            ->select("u1.title as unit_1")
+            ->select("u2.title as unit_2")
             ->select("c.currency")
             ->select("s.id as standID, s.number as stand")
             ->select("contractStandID")
@@ -75,6 +77,8 @@ class ContractsModelItems extends ListModel
             ->leftJoin("#__mkv_contracts c on c.id = i.contractID")
             ->leftJoin("#__mkv_companies e on e.id = c.companyID")
             ->leftJoin("#__mkv_price_items pi on pi.id = i.itemID")
+            ->leftJoin("#__mkv_price_units u1 on u1.id = pi.unit_1_ID")
+            ->leftJoin("#__mkv_price_units u2 on u2.id = pi.unit_2_ID")
             ->leftJoin("#__mkv_contract_stands cs on cs.id = i.contractStandID")
             ->leftJoin("#__users u on u.id = c.managerID")
             ->leftJoin("#__mkv_stands s on s.id = cs.standID");
@@ -162,8 +166,12 @@ class ContractsModelItems extends ListModel
             'project' => ($this->contractID > 0) ? $contract->project : '',
             'amount' => ['rub' => 0, 'usd' => 0, 'eur' => 0],
             'values' => 0,
-            'currency' => null
+            'currency' => null,
+            'apps' => $this->getApps(),
+            'amount_by_apps' => [],
+            'count_by_apps' => [],
         ];
+        if ($this->contractID > 0) $result['currency'] = mb_strtoupper($contract->currency);
         $return = ContractsHelper::getReturnUrl();
         foreach ($items as $item) {
             $arr = [];
@@ -176,6 +184,7 @@ class ContractsModelItems extends ListModel
                 $link_option = ['style' => 'color: red'];
             }
             $arr['columnID'] = $item->columnID;
+            $arr['appID'] = $item->appID;
             $arr['company'] = $item->company;
             $arr['factor'] = (1 - $item->factor) * 100 . "%";
             $arr['markup'] = ($item->markup - 1) * 100 . "%";
@@ -189,6 +198,7 @@ class ContractsModelItems extends ListModel
             $cost = number_format((float) $item->cost, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, MKV_FORMAT_SEPARATOR_DEC);
             $arr['cost'] = JText::sprintf("COM_CONTRACTS_CURRENCY_{$currency}_AMOUNT_SHORT", $cost);
             $arr['value'] = number_format((float) $item->value, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, '');
+            $arr['value_full'] = sprintf("%s %s", number_format((float) $item->value, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, MKV_FORMAT_SEPARATOR_DEC), $item->unit_1);
             $arr['manager'] = MkvHelper::getLastAndFirstNames($item->manager);
             $arr['value2'] = $item->value2;
             $arr['amount_clean'] = number_format((float) $item->amount, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, '');
@@ -216,6 +226,10 @@ class ContractsModelItems extends ListModel
             else {
                 $arr['stand_link'] = $item->stand;
             }
+            if (!isset($result['count_by_apps'][$item->appID])) $result['count_by_apps'][$item->appID] = 0;
+            if (!isset($result['amount_by_apps'][$item->appID])) $result['amount_by_apps'][$item->appID] = 0;
+            $result['count_by_apps'][$item->appID]++;
+            $result['amount_by_apps'][$item->appID] += $item->amount;
             $result['items'][] = $arr;
             $result['amount'][$item->currency] += $item->amount;
             $result['values'] += $item->value;
@@ -270,6 +284,13 @@ class ContractsModelItems extends ListModel
         $objWriter = PHPExcel_IOFactory::createWriter($xls, 'Excel5');
         $objWriter->save('php://output');
         jexit();
+    }
+
+    private function getApps(): array
+    {
+        JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_prices/models", "PricesModel");
+        $model = JModelLegacy::getInstance('Apps', 'PricesModel');
+        return $model->getItems();
     }
 
     public function getContractID(): int
