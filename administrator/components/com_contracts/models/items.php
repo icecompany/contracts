@@ -34,6 +34,7 @@ class ContractsModelItems extends ListModel
         $this->contractID = $input->getInt('contractID', 0);
         $this->itemID = $input->getInt('itemID', 0);
         $this->standID = $config['standID'];
+        $this->standIDs = $config['standIDs'] ?? [];
         if (!empty($config['contractID'])) {
             $this->export = true;
             $this->contractID = $config['contractID'];
@@ -85,12 +86,16 @@ class ContractsModelItems extends ListModel
         if ($this->itemID > 0) {
             $query->where("i.itemID = {$this->_db->q($this->itemID)}");
         }
-        if ($this->contractID > 0 || $this->standID > 0) {
+        if ($this->contractID > 0 || $this->standID > 0 || !empty($this->standIDs)) {
             if ($this->contractID > 0) {
                 $query->where("i.contractID = {$this->_db->q($this->contractID)}");
             }
             if ($this->standID > 0) {
                 $query->where("i.contractStandID = {$this->_db->q($this->standID)}");
+            }
+            if (!empty($this->standIDs)) {
+                $standIDs = implode(', ', $this->standIDs);
+                if (!empty($standIDs)) $query->where("i.contractStandID in ({$standIDs})");
             }
             $limit = 0;
         }
@@ -334,5 +339,5 @@ class ContractsModelItems extends ListModel
         return parent::getStoreId($id);
     }
 
-    private $export, $contractID, $standID, $heads, $itemID;
+    private $export, $contractID, $standID, $standIDs, $heads, $itemID;
 }

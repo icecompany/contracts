@@ -277,6 +277,7 @@ class ContractsModelContracts extends ListModel
             $debt = number_format((float) $item->debt ?? 0, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, MKV_FORMAT_SEPARATOR_DEC);
             $arr['dat'] = (!empty($item->dat)) ? JDate::getInstance($item->dat)->format("d.m.Y") : '';
             $arr['currency'] = JText::sprintf("COM_CONTRACTS_CURRENCY_{$currency}_SHORT");
+            $arr['currency_clean'] = $item->currency;
             $arr['amount_full'] = JText::sprintf("COM_MKV_AMOUNT_{$currency}_SHORT", $amount);
             $arr['payments_full'] = JText::sprintf("COM_MKV_AMOUNT_{$currency}_SHORT", $payments);
             $arr['debt_full'] = JText::sprintf("COM_MKV_AMOUNT_{$currency}_SHORT", $debt);
@@ -329,6 +330,7 @@ class ContractsModelContracts extends ListModel
             $result['items'][$item->id] = $arr;
         }
         $stands = $this->getStands($ids);
+        if (!empty($ids)) $stands_info = ContractsHelper::getContractStandInfo($ids ?? []);
         $thematics = $this->getThematics($ids);
         $project = PrjHelper::getActiveProject();
         if (!$this->export) {
@@ -338,6 +340,7 @@ class ContractsModelContracts extends ListModel
         foreach ($result['items'] as $contractID => $item) {
             $result['items'][$contractID]['stands'] = $stands[$contractID];
             $result['items'][$contractID]['thematics'] = $thematics[$contractID];
+            if (!empty($result['items'][$contractID]['stands'])) $result['items'][$contractID]['stand_items'] = $stands_info[$contractID];
         }
         return $result;
     }

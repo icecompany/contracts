@@ -19,6 +19,43 @@ class ContractsHelper
         PrjHelper::addActiveProjectFilter();
     }
 
+    public static function getContractStandInfo(array $contractIDs = []): array
+    {
+        if (empty($contractIDs)) return [];
+        $ids = implode(', ', $contractIDs);
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query
+            ->select("ci.itemID, ci.contractID, ci.contractStandID, ci.value, ci.amount")
+            ->select("pi.title as item")
+            ->select("s.number as stand")
+            ->select("c.currency")
+            ->from("#__mkv_contract_items ci")
+            ->leftJoin("#__mkv_price_items pi on pi.id = ci.itemID")
+            ->leftJoin("#__mkv_contract_stands cs on cs.id = ci.contractStandID")
+            ->leftJoin("#__mkv_stands s on s.id = cs.standID")
+            ->leftJoin("#__mkv_contracts c on c.id = ci.contractID")
+            ->where("ci.contractID in ({$ids})")
+            ->where("pi.type = 'square'")
+            ->where("ci.contractStandID is not null");
+        $items = $db->setQuery($query)->loadObjectList();
+        if (empty($items)) return [];
+        $result = [];
+        foreach ($items as $item) {
+            $arr = [];
+            $arr['square'] = JText::sprintf('COM_CONTRACTS_STANDS_NUMBER_WITH_SQUARE', $item->stand, $item->value);
+            $arr['item'] = $item->item;
+            $currency = mb_strtoupper($item->currency);
+            $amount = number_format((float) $item->amount, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, MKV_FORMAT_SEPARATOR_DEC);
+            $arr['amount'] = JText::sprintf("COM_CONTRACTS_CURRENCY_{$currency}_AMOUNT_SHORT", $amount);
+            $arr['stand'] = $item->stand;
+            if (!isset($result[$item->contractID][$item->contractStandID])) $result[$item->contractID][$item->contractStandID] = $arr;
+            if (!isset($result[$item->contractID]['total'])) $result[$item->contractID]['total'] = 0;
+            $result[$item->contractID]['total'] += $item->amount;
+        }
+        return $result;
+    }
+
     /** Список дочерних компаний Приоритета. Разовая выгрузка для Руслана Каримова
      *
      * @return string

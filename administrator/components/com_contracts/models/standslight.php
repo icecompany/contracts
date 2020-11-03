@@ -41,14 +41,10 @@ class ContractsModelStandsLight extends ListModel
             ->select("e.title as company, e.id as companyID")
             ->select("c.managerID")
             ->select("cp.contractID as delegated_by")
-            ->select("pi.title as item")
-            ->select("ci.amount")
             ->from("#__mkv_contract_stands cs")
             ->leftJoin("#__mkv_contracts c on c.id = cs.contractID")
             ->leftJoin("#__mkv_companies e on e.id = c.companyID")
             ->leftJoin("#__mkv_stands s on s.id = cs.standID")
-            ->leftJoin("#__mkv_contract_items ci on ci.contractStandID = cs.id")
-            ->leftJoin("#__mkv_price_items pi on pi.id = ci.itemID")
             ->leftJoin("#__mkv_contract_parents cp on cp.contractStandID = cs.id");
         if (!empty($this->contractIDs)) {
             $delegates = $this->getDelegatedStand();
@@ -86,8 +82,6 @@ class ContractsModelStandsLight extends ListModel
             $arr['company'] = $item->company;
             $arr['type'] = JText::sprintf("COM_MKV_STAND_TYPE_{$item->type}");
             $arr['freeze'] = $item->freeze;
-            $arr['item'] = $item->item;
-            $arr['amount'] = $item->amount;
             $arr['comment'] = $item->comment;
             if (($item->managerID == JFactory::getUser()->id && ContractsHelper::canDo('core.edit')) || ContractsHelper::canDo('core.edit.all')) {
                 $url = JRoute::_("index.php?option={$this->option}&amp;task=stand.edit&amp;id={$item->id}&amp;return={$this->return}");
