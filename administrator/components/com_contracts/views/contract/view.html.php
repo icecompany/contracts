@@ -19,6 +19,7 @@ class ContractsViewContract extends HtmlView {
         if ($this->item->id === null) {
             $this->form->setFieldAttribute('dat', 'readonly', true);
         }
+        if ($this->item->is_archive) $this->form->setFieldAttribute('projectID', 'readonly', true);
 
         $this->addToolbar();
         $this->setDocument();
