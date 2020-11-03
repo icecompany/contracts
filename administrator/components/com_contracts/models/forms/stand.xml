@@ -67,4 +67,42 @@
                 type="hidden"
         />
     </fieldset>
+    <fieldset name="production">
+        <field
+                name="bypassing"
+                type="radio"
+                label="COM_CONTRACTS_FORM_STAND_BYPASSING_LABEL"
+                description="COM_CONTRACTS_FORM_STAND_BYPASSING_DESC"
+                class="btn-group btn-group-yesno"
+                required="true"
+                default="0"
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field
+                name="production_diversification"
+                type="text"
+                label="COM_CONTRACTS_FORM_STAND_PRODUCTION_DIVERSIFICATION_LABEL"
+                description="COM_CONTRACTS_FORM_STAND_PRODUCTION_DIVERSIFICATION_DESC"
+                hint="COM_CONTRACTS_FORM_STAND_PRODUCTION_DIVERSIFICATION_HINT"
+                class="span12"
+        />
+        <field
+                name="production_first_in_forum"
+                type="text"
+                label="COM_CONTRACTS_FORM_STAND_PRODUCTION_FIRST_IN_FORUM_LABEL"
+                description="COM_CONTRACTS_FORM_STAND_PRODUCTION_FIRST_IN_FORUM_DESC"
+                hint="COM_CONTRACTS_FORM_STAND_PRODUCTION_FIRST_IN_FORUM_HINT"
+                class="span12"
+        />
+        <field
+                name="production_first_in_world"
+                type="text"
+                label="COM_CONTRACTS_FORM_STAND_PRODUCTION_FIRST_IN_WORLD_LABEL"
+                description="COM_CONTRACTS_FORM_STAND_PRODUCTION_FIRST_IN_WORLD_DESC"
+                hint="COM_CONTRACTS_FORM_STAND_PRODUCTION_FIRST_IN_WORLD_HINT"
+                class="span12"
+        />
+    </fieldset>
 </form>

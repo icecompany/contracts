@@ -93,7 +93,7 @@ class ContractsModelStand extends AdminModel {
     {
         $all = get_class_vars($table);
         unset($all['_errors']);
-        $nulls = ['freeze', 'comment']; //Поля, которые NULL
+        $nulls = ['freeze', 'comment', 'production_diversification', 'production_first_in_forum', 'production_first_in_world']; //Поля, которые NULL
         foreach ($all as $field => $v) {
             if (empty($field)) continue;
             if (in_array($field, $nulls)) {
