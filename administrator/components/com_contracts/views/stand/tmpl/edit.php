@@ -22,8 +22,8 @@ HTMLHelper::_('script', 'com_contracts/stand.js', array('version' => 'auto', 're
                         <div><?php echo $this->loadTemplate('general'); ?></div>
                     </div>
                     <div class="span8">
+                        <div><?php echo $this->loadTemplate('production'); ?></div>
                         <?php if ($this->item->id !== null): ?>
-                            <div><?php echo $this->loadTemplate('production'); ?></div>
                             <div><?php echo $this->loadTemplate('items'); ?></div>
                             <div><?php echo $this->loadTemplate('children'); ?></div>
                         <?php endif;?>
