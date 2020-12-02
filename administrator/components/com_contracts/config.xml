@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
 	<fieldset name="notifies" label="COM_CONTRACTS_CONFIG_NOTIFIES_LABEL" description="COM_CONTRACTS_CONFIG_NOTIFIES_DESC">
+		<field name="spacer_4" type="spacer" label="COM_CONTRACTS_CONFIG_NOTIFY_GROUP_NEW_EXHIBITOR_SPACER_LABEL" />
+		<field
+				name="notify_new_exhibitor_group"
+				type="usergroup"
+				label="COM_CONTRACTS_CONFIG_NOTIFY_GROUP_NEW_EXHIBITOR_LABEL"
+				description="COM_CONTRACTS_CONFIG_NOTIFY_GROUP_NEW_EXHIBITOR_DESC"
+				component="com_contracts"
+				section="component"
+		/>
 		<field name="spacer_1" type="spacer" label="COM_CONTRACTS_CONFIG_NOTIFY_STATUS_NEW_DOC_CHANEL_ID_SPACER" />
 		<field
 				name="notify_new_doc_status_status"

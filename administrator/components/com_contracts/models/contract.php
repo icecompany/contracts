@@ -125,6 +125,24 @@ class ContractsModelContract extends AdminModel {
             JTable::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_mkv/tables");
             $history = JTable::getInstance('History', 'TableMkv');
             $history->save($hst);
+            //Увеодмляем об изменении статуса
+            $contract_statuses = [1, 5, 6, 9, 10];
+            $notify_group = ContractsHelper::getConfig('notify_new_exhibitor_group', null);
+            if ($notify_group !== null) {
+                $notify_users = MkvHelper::getGroupUsers($notify_group);
+                if ($item->id !== null && $item->status != $data['status'] && in_array($data['status'], $contract_statuses) && !empty($notify_users)) {
+                    $ntf = [];
+                    $ntf['user_create'] = 377;
+                    $ntf['contractID'] = $data['id'];
+                    $old_status = $this->getContractStatus($item->status);
+                    $new_status = $this->getContractStatus($data['status']);
+                    $ntf['text'] = JText::sprintf('COM_CONTRACTS_NOTIFY_NEW_CONTRACT_STATUS', $old_status, $new_status);
+                    foreach ($notify_users as $notify_user) {
+                        $ntf['managerID'] = $notify_user;
+                        SchedulerHelper::sendNotify($ntf);
+                    }
+                }
+            }
         }
         return $s;
     }
@@ -308,6 +326,14 @@ class ContractsModelContract extends AdminModel {
         $arr['invite_outgoing_number'] = $data['invite_outgoing_number'];
         $arr['invite_incoming_number'] = $data['invite_incoming_number'];
         return $model->save($arr);
+    }
+
+    public function getContractStatus(string $code = ''): string
+    {
+        if ($code === '') return JText::sprintf('COM_CONTRACTS_CONTRACT_STATUS_IN_PROJECT');
+        $table = JTable::getInstance('Statuses', 'TableContracts');
+        $table->load(['code' => $code]);
+        return $table->title;
     }
 
     private function sendNotifyNewDocStatus(int $contractID, int $companyID, int $new_status): void
