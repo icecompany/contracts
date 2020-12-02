@@ -304,7 +304,7 @@ class ContractsModelContract extends AdminModel {
         $arr = [];
         $arr['id'] = $item->id ?? null;
         $arr['contractID'] = $contractID;
-        $arr['invite_date'] = JDate::getInstance($data['invite_date'])->toSql();
+        $arr['invite_date'] = JDate::getInstance(($data['invite_date'] != '0000-00-00 00:00:00') ? $data['invite_date'] : '')->toSql();
         $arr['invite_outgoing_number'] = $data['invite_outgoing_number'];
         $arr['invite_incoming_number'] = $data['invite_incoming_number'];
         return $model->save($arr);
