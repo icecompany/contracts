@@ -20,6 +20,16 @@
             <option value="">COM_CONTRACTS_CONTRACT_STATUS_IN_PROJECT</option>
         </field>
         <field
+                name="invite_date"
+                type="calendar"
+                label="COM_CONTRACTS_FORM_CONTRACT_INVITE_DATE_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_INVITE_DATE_DESC"
+                class="span12"
+                format="%d.%m.%Y"
+                filter="none"
+                autocomplete="off"
+        />
+        <field
                 name="managerID"
                 type="Manager"
                 label="COM_CONTRACTS_FORM_CONTRACT_MANAGER_LABEL"
@@ -249,16 +259,6 @@
         />
     </fieldset>
     <fieldset name="sent_info">
-        <field
-                name="invite_date"
-                type="calendar"
-                label="COM_CONTRACTS_FORM_CONTRACT_INVITE_DATE_LABEL"
-                description="COM_CONTRACTS_FORM_CONTRACT_INVITE_DATE_DESC"
-                class="span12"
-                format="%d.%m.%Y"
-                filter="none"
-                autocomplete="off"
-        />
         <field
                 name="invite_outgoing_number"
                 type="text"
