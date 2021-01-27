@@ -67,6 +67,9 @@ class ContractsModelContract extends AdminModel {
     public function save($data)
     {
         $app = JFactory::getApplication();
+        //Автозаполнение менеджера
+        if (!ContractsHelper::canDo('core.show.all')) $data['managerID'] = JFactory::getUser()->id;
+
         if ($data['id'] != '') {
             $item = parent::getItem($data['id']);
             //Проверяем возможность выставить отказ
@@ -404,6 +407,12 @@ class ContractsModelContract extends AdminModel {
         $form->addFieldPath(JPATH_ADMINISTRATOR."/components/com_prj/models/fields");
         $form->addFieldPath(JPATH_ADMINISTRATOR."/components/com_companies/models/fields");
 
+        if (!ContractsHelper::canDo('core.show.all')) {
+            $form->setFieldAttribute('managerID', 'disabled', true);
+            $form->setFieldAttribute('managerID', 'required', false);
+            $form->setValue('managerID', 'general', JFactory::getUser()->id);
+        }
+
         if (empty($form))
         {
             return false;
@@ -553,6 +562,10 @@ class ContractsModelContract extends AdminModel {
             else return false;
         }
         return true;
+    }
+
+    protected function canEdit(int $managerID) {
+        if (!ContractsHelper::canDo('core.show.all') && $managerID != JFactory::getUser()->id) jexit('Access denied');
     }
 
     protected function canEditState($record)
