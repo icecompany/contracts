@@ -20,6 +20,10 @@ class ContractsViewContracts extends HtmlView
 
         $this->filterForm->addFieldPath(JPATH_ADMINISTRATOR . "/components/com_mkv/models/fields");
         $this->filterForm->addFieldPath(JPATH_ADMINISTRATOR . "/components/com_prj/models/fields");
+        if (!ContractsHelper::canDo('core.show.all')) {
+            $this->filterForm->removeField('manager', 'filter');
+            $this->filterForm->removeField('priority', 'filter');
+        }
 
         $this->filterForm->setValue('manager', 'filter', $this->state->get('filter.manager'));
 

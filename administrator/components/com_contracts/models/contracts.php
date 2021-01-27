@@ -150,7 +150,7 @@ class ContractsModelContracts extends ListModel
                 if (!empty($userGroups)) $query->where("p.groupID in ({$userGroups})");
             }
             $manager = $this->getState('filter.manager');
-            if (is_numeric($manager)) {
+            if (is_numeric($manager) && ContractsHelper::canDo('core.show.all')) {
                 $query->where("c.managerID = {$this->_db->q($manager)}");
             }
             $status = $this->getState('filter.status');
@@ -175,6 +175,9 @@ class ContractsModelContracts extends ListModel
             if (is_numeric($doc_status)) {
                 $query->where("i.doc_status = {$this->_db->q($doc_status)}");
             }
+
+            $userID = JFactory::getUser()->id;
+            if (!ContractsHelper::canDo('core.show.all')) $query->where("c.managerID = {$this->_db->q($userID)}");
 
             $title_to_diploma = $this->getState('filter.title_to_diploma');
             if (is_numeric($title_to_diploma)) {
