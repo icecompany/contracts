@@ -87,8 +87,12 @@ class ContractsModelStands extends ListModel
             }
         }
         $managerID = $this->getState('filter.manager');
-        if (is_numeric($managerID)) {
+        if (is_numeric($managerID) && ContractsHelper::canDo('core.show.all')) {
             $query->where("c.managerID = {$this->_db->q($managerID)}");
+        }
+        if (!ContractsHelper::canDo('core.show.all')) {
+            $userID = JFactory::getUser()->id;
+            $query->where("c.managerID = {$this->_db->q($userID)}");
         }
 
         $query->order($this->_db->escape($orderCol . ' ' . $orderDirn));

@@ -137,7 +137,7 @@ class ContractsModelItems extends ListModel
                 $query->where("c.currency like {$this->_db->q($currency)}");
             }
             $manager = $this->getState('filter.manager');
-            if (is_numeric($manager)) {
+            if (is_numeric($manager) && ContractsHelper::canDo('core.show.all')) {
                 $query->where("c.managerID = {$this->_db->q($manager)}");
             }
             $status = $this->getState('filter.status');
@@ -148,6 +148,10 @@ class ContractsModelItems extends ListModel
                 } else {
                     $query->where("c.status in ({$statuses})");
                 }
+            }
+            if (!ContractsHelper::canDo('core.show.all')) {
+                $userID = JFactory::getUser()->id;
+                $query->where("c.managerID = {$this->_db->q($userID)}");
             }
         }
 

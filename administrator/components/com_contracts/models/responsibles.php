@@ -62,7 +62,7 @@ class ContractsModelResponsibles extends ListModel
             $query->where("c.projectID = {$this->_db->q($project)}");
         }
         $manager = $this->getState('filter.manager');
-        if (is_numeric($manager)) {
+        if (is_numeric($manager) && ContractsHelper::canDo('core.show.all')) {
             $query->where("c.managerID = {$this->_db->q($manager)}");
         }
         $status = $this->getState('filter.status');
@@ -81,6 +81,10 @@ class ContractsModelResponsibles extends ListModel
             if ($without == '0') $query->where("(o.for_accreditation = 0 and o.for_building = 0)");
             if ($without == '1') $query->where("(o.for_accreditation > 0 and o.for_building > 0)");
             if ($without == '2') $query->where("((o.for_accreditation = 0 and o.for_building > 0) or (o.for_accreditation > 0 and o.for_building = 0))");
+        }
+        if (!ContractsHelper::canDo('core.show.all')) {
+            $userID = JFactory::getUser()->id;
+            $query->where("c.managerID = {$this->_db->q($userID)}");
         }
 
         $query->order($this->_db->escape($orderCol . ' ' . $orderDirn));
