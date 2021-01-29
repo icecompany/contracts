@@ -86,7 +86,7 @@ class ContractsModelContracts extends ListModel
         $orderDirn = $this->state->get('list.direction');
 
         $query
-            ->select("c.id, c.companyID, c.dat, c.number, c.number_free, c.currency, c.amount, c.payments, c.debt, c.status as status_code")
+            ->select("c.id, c.projectID, c.companyID, c.dat, c.number, c.number_free, c.currency, c.amount, c.payments, c.debt, c.status as status_code")
             ->select("c.tasks_count, c.tasks_date")
             ->select("ifnull(c.number_free, c.number) as num")
             ->select("s.title as status")
@@ -266,6 +266,7 @@ class ContractsModelContracts extends ListModel
             $ids[] = $item->id;
             $arr['company'] = $item->company;
             $arr['project'] = $item->project;
+            $arr['projectID'] = $item->projectID;
             $arr['tasks_count'] = $item->tasks_count;
             if ($item->tasks_count == '1') {
                 $url = JRoute::_("index.php?option=com_scheduler&amp;task=task.gotoContractActiveTask&amp;contractID={$item->id}&amp;return={$this->return}");
@@ -273,6 +274,7 @@ class ContractsModelContracts extends ListModel
             }
             $arr['tasks_date'] = (!empty($item->tasks_date) && $item->tasks_date != '0000-00-00') ? JDate::getInstance($item->tasks_date)->format("d.m.Y") : '';
             $arr['status'] = $item->status ?? JText::sprintf('COM_MKV_STATUS_IN_PROJECT');
+            $arr['status_code'] = $item->status_code;
             $arr['manager'] = MkvHelper::getLastAndFirstNames($item->manager);
             $currency = mb_strtoupper($item->currency);
             $amount = number_format((float) $item->amount ?? 0, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, MKV_FORMAT_SEPARATOR_DEC);
