@@ -238,6 +238,7 @@
                 hint="COM_CONTRACTS_FORM_CONTRACT_PLAN_TITLE_RU_HINT"
                 maxlength="255"
                 default=""
+                autocomplete="false"
                 class="span12"
         />
         <field
@@ -247,6 +248,7 @@
                 description="COM_CONTRACTS_FORM_CONTRACT_PLAN_TITLE_EN_DESC"
                 hint="COM_CONTRACTS_FORM_CONTRACT_PLAN_TITLE_EN_HINT"
                 maxlength="255"
+                autocomplete="false"
                 default=""
                 class="span12"
         />
