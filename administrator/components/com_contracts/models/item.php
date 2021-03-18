@@ -80,6 +80,8 @@ class ContractsModelItem extends AdminModel {
             $app->enqueueMessage(JText::sprintf('COM_CONTRACTS_ERROR_EMPTY_DESCRIPTION'), 'error');
             return false;
         }
+        //Заполняем стоимость единицы
+        $data['cost'] = $this->getCost($item, $data['contractID']);
 
         $s = parent::save($data);
         //Изменяем доступное кол-во остатка в пункте прайса
@@ -102,6 +104,15 @@ class ContractsModelItem extends AdminModel {
             $history->save($hst);
         }
         return $s;
+    }
+
+    private function getCost(TablePricesItems $price_item, int $contractID): float
+    {
+        $contract = $this->getContract($contractID);
+        $columnID = $contract->project_item->columnID;
+        $field_column = "column_{$columnID}";
+        $field_currency = "price_{$contract->currency}";
+        return (float) ((float) $price_item->$field_currency * (float) $price_item->$field_column);
     }
 
     /**
@@ -256,7 +267,7 @@ class ContractsModelItem extends AdminModel {
         return $table;
     }
 
-    private function getPriceItem(int $itemID)
+    private function getPriceItem(int $itemID): TablePricesItems
     {
         JTable::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_prices/tables");
         $table = JTable::getInstance('Items', 'TablePrices');
