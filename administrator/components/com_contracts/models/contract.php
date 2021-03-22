@@ -412,6 +412,9 @@ class ContractsModelContract extends AdminModel {
             $form->setFieldAttribute('managerID', 'required', false);
             $form->setValue('managerID', 'general', JFactory::getUser()->id);
         }
+        if (!ContractsHelper::canDo('core.edit.contract_number')) {
+            $form->setFieldAttribute('number', 'disabled', true);
+        }
 
         if (empty($form))
         {

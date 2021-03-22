@@ -68,7 +68,6 @@
                 description="COM_CONTRACTS_FORM_CONTRACT_NUMBER_DESC"
                 message="COM_CONTRACTS_FORM_CONTRACT_NUMBER_MESSAGE"
                 autocomplete="off"
-                readonly="true"
                 validate="contractnumber"
                 class="span12"
         />
