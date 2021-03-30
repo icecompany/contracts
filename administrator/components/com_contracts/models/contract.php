@@ -164,7 +164,7 @@ class ContractsModelContract extends AdminModel {
             $number = ContractsHelper::getNextContractNumber($item->projectID);
             $table = $this->getTable();
             $table->load($item->id);
-            $table->save(['id' => $item->id, 'number' => $number]);
+            $table->save(['id' => $item->id, 'number' => $number, 'dat' => JDate::getInstance()->toSql()]);
             return (int) $number;
         }
         else {

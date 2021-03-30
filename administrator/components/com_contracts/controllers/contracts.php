@@ -5,7 +5,7 @@ defined('_JEXEC') or die;
 
 class ContractsControllerContracts extends AdminController
 {
-    public function getModel($name = 'Contract', $prefix = 'ContractsModel', $config = array())
+    public function getModel($name = 'Contract', $prefix = 'ContractsModel', $config = array()): ContractsModelContract
     {
         return parent::getModel($name, $prefix, $config);
     }
