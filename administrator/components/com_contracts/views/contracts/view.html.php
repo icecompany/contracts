@@ -50,10 +50,6 @@ class ContractsViewContracts extends HtmlView
         {
             JToolbarHelper::deleteList('COM_CONTRACTS_CONFIRM_REMOVE_CONTRACT', 'contracts.delete');
         }
-        if (ContractsHelper::canDo('core.create'))
-        {
-            JToolbarHelper::custom('contracts.setContractNumber', 'pencil-2', 'pencil-2', JText::sprintf('COM_CONTRACTS_BUTTON_SET_CONTRACTS_NUMBERS'));
-        }
         JToolbarHelper::custom('contracts.assign_to_me', 'signup', 'signup', JText::sprintf('COM_CONTRACTS_BUTTON_ASSIGN_CONTRACTS_TO_ME'));
         JToolbarHelper::custom('contracts.download', 'download', 'download', JText::sprintf('COM_MKV_BUTTON_EXPORT_TO_EXCEL'), false);
         if (ContractsHelper::canDo('core.admin'))

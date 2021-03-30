@@ -112,6 +112,13 @@ class ContractsModelContract extends AdminModel {
             //Загрузка файла
             $this->uploadFiles($data['id']);
         }
+        //Присваиваем номер
+        if ($data['status'] == 1) {
+            if ($data['id'] == null || (isset($item) && $item->status != 1)) {
+                $data['number'] = $this->setContractNumber($data['projectID']);
+                $data['dat'] = JDate::getInstance()->toSql();
+            }
+        }
         $s = parent::save($data);
         //Пишем в историю
         if ($s) {
@@ -150,26 +157,9 @@ class ContractsModelContract extends AdminModel {
         return $s;
     }
 
-    public function setContractNumber($pk = null): int
+    public function setContractNumber(int $projectID): int
     {
-        $item = parent::getItem($pk);
-        if ($item->id !== null) {
-            if ($item->status != '1') {
-                $app = JFactory::getApplication();
-                $error = JText::sprintf('COM_CONTRACTS_ERROR_NUMBER_ONLY_FOR_CONTRACTS');
-                $app->enqueueMessage($error, 'error');
-                $app->redirect("index.php?option={$this->option}&view=contracts");
-                jexit();
-            }
-            $number = ContractsHelper::getNextContractNumber($item->projectID);
-            $table = $this->getTable();
-            $table->load($item->id);
-            $table->save(['id' => $item->id, 'number' => $number, 'dat' => JDate::getInstance()->toSql()]);
-            return (int) $number;
-        }
-        else {
-            return 0;
-        }
+        return ContractsHelper::getNextContractNumber($projectID);
     }
 
     public function getChildren()
