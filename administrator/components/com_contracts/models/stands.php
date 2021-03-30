@@ -41,12 +41,12 @@ class ContractsModelStands extends ListModel
         $limit = 0;
 
         $query
-            ->select("cs.id, cs.freeze, cs.status, cs.comment, cs.type as stand_type")
+            ->select("cs.id, cs.freeze, cs.status, cs.comment, cs.type as stand_type, cs.contractID")
+            ->select("c.companyID")
             ->select("s.square, s.number")
             ->select("i.id as itemID, i.type, i.title as item")
             ->select("e.title as company")
             ->select("p.title as project")
-            ->select("ci.value")
             ->select("ifnull(c.number_free, c.number) as contract_number, c.dat")
             ->select("st.title as contract_status")
             ->select("u.name as manager")
@@ -118,12 +118,16 @@ class ContractsModelStands extends ListModel
             $arr['status'] = JText::sprintf("COM_CONTRACTS_STAND_STATUS_{$item->status}");
             $arr['comment'] = $item->comment;
             $arr['company'] = $item->company;
+            $url = JRoute::_("index.php?option=com_companies&amp;task=company.edit&amp;id={$item->companyID}&amp;return={$return}");
+            $arr['company_link'] = JHtml::link($url, $item->company);
             $arr['stand_type'] = JText::sprintf("COM_CONTRACTS_STAND_TYPE_{$item->stand_type}");
             $arr['project'] = $item->project;
             $arr['manager'] = MkvHelper::getLastAndFirstNames($item->manager);
             $arr['contract_status'] = $item->contract_status ?? JText::sprintf("COM_CONTRACTS_CONTRACT_STATUS_IN_PROJECT");
             $arr['contract_number'] = $item->contract_number ?? '';
             $arr['contract_dat'] = (!empty($item->dat)) ? JDate::getInstance($item->dat)->format("d.m.Y") : '';
+            $url = JRoute::_("index.php?option={$this->option}&amp;task=contract.edit&amp;id={$item->contractID}&amp;return={$return}");
+            $arr['contract_link'] = JHtml::link($url, $arr['contract_status']);
             $url = JRoute::_("index.php?option={$this->option}&amp;task=stand.edit&amp;id={$item->id}&amp;return={$return}");
             $arr['edit_link'] = JHtml::link($url, $item->number);
             if (!isset($result['stands'][$item->id])) $result['stands'][$item->id] = $arr;
