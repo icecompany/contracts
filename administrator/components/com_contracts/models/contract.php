@@ -110,9 +110,6 @@ class ContractsModelContract extends AdminModel {
             //Обнуляем сумму заказанных услуг, номер и дату договора, если сделка переходит в отказ
             if ($data['status'] == '0') {
                 ContractsHelper::setZeroAmount($data['id']);
-                if ($item->number != null) $data['number'] = '';
-                if ($item->number_free != null) $data['number_free'] = '';
-                if ($item->dat != null) $data['dat'] = '';
             }
             //Загрузка файла
             $this->uploadFiles($data['id']);
