@@ -112,7 +112,7 @@ class ContractsModelContract extends AdminModel {
                 ContractsHelper::setZeroAmount($data['id']);
                 if ($item->status == 1) {
                     //Уведомляем об аннулировании договора
-
+                    $this->sendNotifyReject($data);
                 }
             }
             //Загрузка файла
@@ -355,6 +355,24 @@ class ContractsModelContract extends AdminModel {
             $push['text'] = $data['text'];
             SchedulerHelper::sendNotify($data, (!$need_push) ? [] : $push);
             $need_push = false;
+        }
+    }
+
+    private function sendNotifyReject(array $contract)
+    {
+        $groupID = ContractsHelper::getConfig('notify_contract_reject_group');
+        if (!is_numeric($groupID)) return;
+        $recipients = MkvHelper::getGroupUsers($groupID);
+        if (empty($recipients)) return;
+        $project = $this->getProject($contract['projectID']);
+        foreach ($recipients as $managerID) {
+            $data = [
+                'user_create' => $contract['managerID'],
+                'managerID' => $managerID,
+                'contractID' => $contract['id'],
+                'text' => JText::sprintf("COM_CONTRACTS_NOTIFY_CONTRACT_REJECT", $project->title),
+            ];
+            SchedulerHelper::sendNotify($data);
         }
     }
 
