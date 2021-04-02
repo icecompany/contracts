@@ -13,6 +13,7 @@
 		<action name="core.show.all" title="COM_CONTRACTS_ACCESS_ALL_CONTRACTS_LABEL" description="COM_CONTRACTS_ACCESS_ALL_CONTRACTS_DESC" />
 		<action name="core.edit.contract_number" title="COM_CONTRACTS_ACCESS_CHANGE_CONTRACT_NUMBER_LABEL" description="COM_CONTRACTS_ACCESS_CHANGE_CONTRACT_NUMBER_DESC" />
 		<action name="core.edit.all" title="COM_CONTRACTS_ACCESS_EDIT_ALL_LABEL" description="COM_CONTRACTS_ACCESS_EDIT_ALL_DESC" />
+		<action name="core.access.filter.lists" title="COM_CONTRACTS_ACCESS_FILTER_LISTS_LABEL" description="COM_CONTRACTS_ACCESS_FILTER_LISTS_DESC" />
 		<action name="core.access.archive" title="COM_CONTRACTS_ACCESS_ARCHIVE_LABEL" description="COM_CONTRACTS_ACCESS_ARCHIVE_DESC" />
 		<action name="core.access.statuses" title="COM_CONTRACTS_ACCESS_STATUSES_LABEL" description="COM_CONTRACTS_ACCESS_STATUSES_DESC" />
 		<action name="core.project.amount" title="COM_CONTRACTS_ACCESS_PROJECT_AMOUNT_LABEL" description="COM_CONTRACTS_ACCESS_PROJECT_AMOUNT_DESC" />

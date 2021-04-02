@@ -24,6 +24,9 @@ class ContractsViewContracts extends HtmlView
             $this->filterForm->removeField('manager', 'filter');
             $this->filterForm->removeField('priority', 'filter');
         }
+        if (!ContractsHelper::canDo('core.access.filter.lists')) {
+            $this->filterForm->removeField('list', 'filter');
+        }
 
         $this->filterForm->setValue('manager', 'filter', $this->state->get('filter.manager'));
 
