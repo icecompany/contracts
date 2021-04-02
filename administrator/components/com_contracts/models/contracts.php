@@ -22,6 +22,7 @@ class ContractsModelContracts extends ListModel
                 'c.payments',
                 'c.debt',
                 'search',
+                'list',
                 'c.tasks_count',
                 'c.tasks_date',
                 'num',
@@ -190,6 +191,13 @@ class ContractsModelContracts extends ListModel
             $currency = $this->getState('filter.currency');
             if (!empty($currency)) {
                 $query->where("c.currency like {$this->_db->q($currency)}");
+            }
+
+            $list = $this->getState('filter.list');
+            if (!empty($list)) {
+                $query
+                    ->leftJoin("#__mkv_contract_lists l on l.contractID = c.id")
+                    ->where("l.listID = {$this->_db->q($list)}");
             }
 
             $priority = $this->getState('filter.priority');
@@ -456,6 +464,8 @@ class ContractsModelContracts extends ListModel
         $this->setState('filter.arrival', $arrival);
         $priority = $this->getUserStateFromRequest($this->context . '.filter.priority', 'filter_priority');
         $this->setState('filter.priority', $priority);
+        $list = $this->getUserStateFromRequest($this->context . '.filter.list', 'filter_list');
+        $this->setState('filter.list', $list);
         parent::populateState($ordering, $direction);
         ContractsHelper::check_refresh();
     }
@@ -478,6 +488,7 @@ class ContractsModelContracts extends ListModel
         $id .= ':' . $this->getState('filter.thematics');
         $id .= ':' . $this->getState('filter.arrival');
         $id .= ':' . $this->getState('filter.priority');
+        $id .= ':' . $this->getState('filter.list');
         return parent::getStoreId($id);
     }
 

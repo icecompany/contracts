@@ -25,6 +25,13 @@
             <option value="101">COM_CONTRACTS_CONTRACT_STATUS_IN_PROJECT</option>
         </field>
             <field
+                    name="list"
+                    type="ContractLists"
+                    onchange="this.form.submit();"
+            >
+                <option value="">COM_CONTRACTS_FILTER_SELECT_CONTRACT_LIST</option>
+            </field>
+            <field
                     name="catalog_info"
                     type="list"
                     label="COM_CONTRACTS_FILTER_SELECT_INFO_CATALOG"
