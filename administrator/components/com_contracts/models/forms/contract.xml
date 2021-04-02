@@ -106,6 +106,14 @@
                 class="span12"
                 multiple="true"
         />
+        <field
+                name="listID"
+                type="ContractLists"
+                label="COM_CONTRACTS_FORM_CONTRACT_LIST_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_LIST_DESC"
+                class="span12"
+                multiple="true"
+        />
     </fieldset>
     <fieldset name="parent">
         <field

@@ -50,6 +50,7 @@ class ContractsModelContract extends AdminModel {
             }
             $item->activities = $this->getActivities($item->companyID);
             $item->thematics = $this->getThematics($item->id);
+            $item->listID = $this->getLists($item->id);
         }
         $company = $this->getCompany($item->companyID);
         $project = $this->getProject($item->projectID);
@@ -99,6 +100,8 @@ class ContractsModelContract extends AdminModel {
             $this->saveSentInfo($data['id'], $data);
             //Сохраняем компанию-родителя соэкспонента
             $this->saveParentID($data['id'], is_numeric($data['parentID']) ? $data['parentID'] : 0);
+            //Сохраняем списки
+            $this->saveLists($data['id'], $data['listID'] ?? []);
             //Сохраняем тематические рубрики
             $this->saveThematics($data['id'], $data['thematics'] ?? []);
             //Сохраняем виды деятельности
@@ -525,6 +528,30 @@ class ContractsModelContract extends AdminModel {
         return $model->getItems();
     }
 
+    private function getLists(int $contractID)
+    {
+        $model = ListModel::getInstance('Lists', 'ContractsModel', ['contractID' => $contractID]);
+        return $model->getItems();
+    }
+
+    private function saveLists(int $contractID, array $lists = [])
+    {
+        $current = $this->getLists($contractID);
+        if (empty($current)) {
+            if (empty($lists)) return;
+            foreach ($lists as $listID)
+                $this->addList($contractID, $listID);
+        }
+        else {
+            foreach ($lists as $item)
+                if (($key = array_search($item, $current)) === false)
+                    $this->addList($contractID, $item);
+            foreach ($current as $item)
+                if (($key = array_search($item, $lists)) === false)
+                    $this->deleteList($contractID, $item);
+        }
+    }
+
     private function saveThematics(int $contractID, array $thematics = [])
     {
         $model = ListModel::getInstance('Thematics', 'ContractsModel', ['contractID' => $contractID]);
@@ -555,6 +582,20 @@ class ContractsModelContract extends AdminModel {
     {
         $table = $this->getTable('Thematics', 'TableContracts');
         $table->load(['contractID' => $contractID, 'thematicID' => $thematicID]);
+        $table->delete($table->id);
+    }
+
+    private function addList(int $contractID, int $listID)
+    {
+        $table = $this->getTable('Lists', 'TableContracts');
+        $data = ['id' => null, 'contractID' => $contractID, 'listID' => $listID];
+        $table->save($data);
+    }
+
+    private function deleteList(int $contractID, int $listID)
+    {
+        $table = $this->getTable('Lists', 'TableContracts');
+        $table->load(['contractID' => $contractID, 'listID' => $listID]);
         $table->delete($table->id);
     }
 
