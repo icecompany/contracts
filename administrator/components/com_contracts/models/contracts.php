@@ -195,9 +195,16 @@ class ContractsModelContracts extends ListModel
 
             $list = $this->getState('filter.list');
             if (!empty($list)) {
-                $query
-                    ->leftJoin("#__mkv_contract_lists l on l.contractID = c.id")
-                    ->where("l.listID = {$this->_db->q($list)}");
+                $query->leftJoin("#__mkv_contract_lists l on l.contractID = c.id");
+                if ($list == 'all') {
+                    $query->where("l.listID is not null");
+                }
+                elseif ($list == 'empty') {
+                    $query->where("l.listID is null");
+                }
+                else {
+                    $query->where("l.listID = {$this->_db->q($list)}");
+                }
             }
 
             $priority = $this->getState('filter.priority');
@@ -400,6 +407,13 @@ class ContractsModelContracts extends ListModel
         $objWriter = PHPExcel_IOFactory::createWriter($xls, 'Excel5');
         $objWriter->save('php://output');
         jexit();
+    }
+
+    private function getLists(array $ids = []): array
+    {
+        if (empty($ids)) return [];
+        $model = ListModel::getInstance('Lists', 'ContractsModel', ['contractID' => $ids]);
+        return $model->getItems();
     }
 
     private function getStands(array $ids = []): array
