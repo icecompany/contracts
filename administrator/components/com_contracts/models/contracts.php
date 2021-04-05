@@ -268,7 +268,7 @@ class ContractsModelContracts extends ListModel
     public function getItems()
     {
         $items = parent::getItems();
-        $result = ['items' => [], 'amount' => [], 'amount_by_status' => [], 'sum' => [
+        $result = ['items' => [], 'lists' => $this->getLists(), 'amount' => [], 'amount_by_status' => [], 'sum' => [
             'amount' => ['rub' => 0, 'usd' => 0, 'eur' => 0],
             'payments' => ['rub' => 0, 'usd' => 0, 'eur' => 0],
             'debt' => ['rub' => 0, 'usd' => 0, 'eur' => 0],
@@ -350,6 +350,7 @@ class ContractsModelContracts extends ListModel
             $result['items'][$item->id] = $arr;
         }
         $stands = $this->getStands($ids);
+        $lists = $this->getContractsLists($result['lists'] ?? [], $ids);
         if (!empty($ids)) $stands_info = ContractsHelper::getContractStandInfo($ids ?? []);
         $thematics = $this->getThematics($ids);
         $project = PrjHelper::getActiveProject();
@@ -360,8 +361,12 @@ class ContractsModelContracts extends ListModel
         foreach ($result['items'] as $contractID => $item) {
             $result['items'][$contractID]['stands'] = $stands[$contractID];
             $result['items'][$contractID]['thematics'] = $thematics[$contractID];
+            foreach ($lists[$contractID] as $listID => $list_value) {
+                $result['items'][$contractID][$listID] = $list_value;
+            }
             if (!empty($result['items'][$contractID]['stands'])) $result['items'][$contractID]['stand_items'] = $stands_info[$contractID];
         }
+
         return $result;
     }
 
@@ -375,8 +380,11 @@ class ContractsModelContracts extends ListModel
         $xls->setActiveSheetIndex(0);
         $sheet = $xls->getActiveSheet();
 
+        //Добавляем списки
+
         //Заголовки
         $j = 0;
+        $this->addListsToHead($items['lists']);
         foreach ($this->heads as $item => $head) $sheet->setCellValueByColumnAndRow($j++, 1, JText::sprintf($head));
 
         $sheet->setTitle(JText::sprintf('COM_CONTRACTS_MENU_CONTRACTS'));
@@ -407,6 +415,36 @@ class ContractsModelContracts extends ListModel
         $objWriter = PHPExcel_IOFactory::createWriter($xls, 'Excel5');
         $objWriter->save('php://output');
         jexit();
+    }
+
+    private function addListsToHead(array $lists): void
+    {
+        if (!ContractsHelper::canDo('core.access.filter.lists')) return;
+        foreach ($lists as $listID => $list) {
+            $this->heads["list_{$listID}"] = sprintf("%s - %s", $list['type'], $list['title']);
+        }
+    }
+
+    private function getContractsLists(array $lists, array $contractIDs = []): array
+    {
+        if (empty($contractIDs)) return [];
+        if (empty($lists)) return [];
+        $model = ListModel::getInstance("Lists", "ContractsModel", ['contractID' => $contractIDs]);
+        $items = $model->getItems();
+        $result = [];
+        foreach ($contractIDs as $contractID) {
+            foreach ($lists as $listID => $list) {
+                $result[$contractID]["list_{$listID}"] = JText::sprintf((array_search($listID, array_values($items[$contractID])) !== false) ? 'JYES' : 'JNO');
+            }
+        }
+        return $result;
+    }
+
+    private function getLists(): array
+    {
+        JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_mkv/models", "MkvModel");
+        $model = JModelLegacy::getInstance("Lists", "MkvModel");
+        return $model->getItems();
     }
 
     private function getStands(array $ids = []): array
