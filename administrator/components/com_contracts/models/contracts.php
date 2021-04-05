@@ -409,13 +409,6 @@ class ContractsModelContracts extends ListModel
         jexit();
     }
 
-    private function getLists(array $ids = []): array
-    {
-        if (empty($ids)) return [];
-        $model = ListModel::getInstance('Lists', 'ContractsModel', ['contractID' => $ids]);
-        return $model->getItems();
-    }
-
     private function getStands(array $ids = []): array
     {
         if (empty($ids)) return [];
