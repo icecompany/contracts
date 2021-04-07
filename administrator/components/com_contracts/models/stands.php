@@ -44,7 +44,7 @@ class ContractsModelStands extends ListModel
             ->select("cs.id, cs.freeze, cs.status, cs.comment, cs.type as stand_type, cs.contractID")
             ->select("c.companyID")
             ->select("s.square, s.number")
-            ->select("i.id as itemID, i.type, i.title as item")
+            ->select("i.id as itemID, i.type, i.title as item, ci.value")
             ->select("e.title as company")
             ->select("p.title as project")
             ->select("ifnull(c.number_free, c.number) as contract_number, c.dat")
