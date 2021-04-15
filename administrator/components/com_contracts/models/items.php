@@ -25,6 +25,8 @@ class ContractsModelItems extends ListModel
                 'currency',
                 'manager',
                 'status',
+                'date_1',
+                'date_2',
                 'search',
             );
         }
@@ -137,7 +139,7 @@ class ContractsModelItems extends ListModel
                 $query->where("c.currency like {$this->_db->q($currency)}");
             }
             $manager = $this->getState('filter.manager');
-            if (is_numeric($manager)) {
+            if (is_numeric($manager) && ContractsHelper::canDo('core.show.all')) {
                 $query->where("c.managerID = {$this->_db->q($manager)}");
             }
             $status = $this->getState('filter.status');
@@ -148,6 +150,20 @@ class ContractsModelItems extends ListModel
                 } else {
                     $query->where("c.status in ({$statuses})");
                 }
+            }
+            //Фильтр по дате, на которую запланирована задача
+            $date_1 = $this->getState('filter.date_1');
+            $date_2 = $this->getState('filter.date_2');
+            if (!empty($date_1) && !empty($date_2)) {
+                $d1 = JDate::getInstance($date_1)->format("Y-m-d");
+                $d2 = JDate::getInstance($date_2)->format("Y-m-d");
+                if ($d1 != '0000-00-00' && $d2 != '0000-00-00') {
+                    $query->where("(c.dat >= {$this->_db->q($d1)} and c.dat <= {$this->_db->q($d2)})");
+                }
+            }
+            if (!ContractsHelper::canDo('core.show.all')) {
+                $userID = JFactory::getUser()->id;
+                $query->where("c.managerID = {$this->_db->q($userID)}");
             }
         }
 
@@ -326,6 +342,10 @@ class ContractsModelItems extends ListModel
         $this->setState('filter.manager', $manager);
         $status = $this->getUserStateFromRequest($this->context . '.filter.status', 'filter_status');
         $this->setState('filter.status', $status);
+        $date_1 = $this->getUserStateFromRequest($this->context . '.filter.date_1', 'filter_date_1');
+        $this->setState('filter.date_1', $date_1);
+        $date_2 = $this->getUserStateFromRequest($this->context . '.filter.date_2', 'filter_date_2');
+        $this->setState('filter.date_2', $date_2);
         parent::populateState($ordering, $direction);
         ContractsHelper::check_refresh();
     }
@@ -336,6 +356,8 @@ class ContractsModelItems extends ListModel
         $id .= ':' . $this->getState('filter.currency');
         $id .= ':' . $this->getState('filter.manager');
         $id .= ':' . $this->getState('filter.status');
+        $id .= ':' . $this->getState('filter.date_1');
+        $id .= ':' . $this->getState('filter.date_2');
         return parent::getStoreId($id);
     }
 

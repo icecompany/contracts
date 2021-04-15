@@ -89,18 +89,30 @@ function getCost() {
             }
             if (currency === 'rub') {
                 cost_price = price_rub;
-                if (parseFloat(cost_price) === 0) cost_price = parseFloat(cost.value);
-                if (parseFloat(cost_price) > 0) jQuery(cost).val(cost_price.toLocaleString('ru-RU', {style:'currency', currency:currency})).trigger("liszt:updated");
+                if (parseFloat(cost_price) === 0) {
+                    cost_price = parseFloat(cost.value);
+                }
+                else {
+                    jQuery(cost).val(cost_price.toLocaleString('ru-RU', {style:'currency', currency:currency})).trigger("liszt:updated");
+                }
             }
             if (currency === 'usd') {
                 cost_price = price_usd;
-                if (parseFloat(cost_price) === 0) cost_price = parseFloat(cost.value);
-                if (parseFloat(cost_price) > 0) jQuery(cost).val(cost_price.toLocaleString('ru-RU', {style:'currency', currency:currency})).trigger("liszt:updated");
+                if (parseFloat(cost_price) === 0) {
+                    cost_price = parseFloat(cost.value);
+                }
+                else {
+                    jQuery(cost).val(cost_price.toLocaleString('ru-RU', {style:'currency', currency:currency})).trigger("liszt:updated");
+                }
             }
             if (currency === 'eur') {
                 cost_price = price_eur;
-                if (parseFloat(cost_price) === 0) cost_price = parseFloat(cost.value);
-                if (parseFloat(cost_price) > 0) jQuery(cost).val(cost_price.toLocaleString('ru-RU', {style:'currency', currency:currency})).trigger("liszt:updated");
+                if (parseFloat(cost_price) === 0) {
+                    cost_price = parseFloat(cost.value);
+                }
+                else {
+                    jQuery(cost).val(cost_price.toLocaleString('ru-RU', {style:'currency', currency:currency})).trigger("liszt:updated");
+                }
             }
             if (text.data.type === 'square' || text.data.type === 'electric' || text.data.type === 'internet' || text.data.type === 'multimedia' || text.data.type === 'water' || text.data.type === 'cleaning') {
                 stand.removeAttribute('disabled');

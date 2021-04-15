@@ -22,10 +22,10 @@ foreach ($this->items['stands'] as $i => $item) :
             <?php echo $item['stand_type']; ?>
         </td>
         <td>
-            <?php echo $item['company']; ?>
+            <?php echo $item['company_link']; ?>
         </td>
         <td>
-            <?php echo $item['contract_status']; ?>
+            <?php echo $item['contract_link']; ?>
         </td>
         <td>
             <?php echo $item['contract_number']; ?>

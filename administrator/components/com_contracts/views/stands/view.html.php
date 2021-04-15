@@ -17,6 +17,7 @@ class ContractsViewStands extends HtmlView
         $this->activeFilters = $this->get('ActiveFilters');
 
         $this->filterForm->addFieldPath(JPATH_ADMINISTRATOR . "/components/com_mkv/models/fields");
+        if (!ContractsHelper::canDo('core.show.all')) $this->filterForm->removeField('manager', 'filter');
 
         // Show the toolbar
         $this->toolbar();

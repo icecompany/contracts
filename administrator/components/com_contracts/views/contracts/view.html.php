@@ -20,6 +20,13 @@ class ContractsViewContracts extends HtmlView
 
         $this->filterForm->addFieldPath(JPATH_ADMINISTRATOR . "/components/com_mkv/models/fields");
         $this->filterForm->addFieldPath(JPATH_ADMINISTRATOR . "/components/com_prj/models/fields");
+        if (!ContractsHelper::canDo('core.show.all')) {
+            $this->filterForm->removeField('manager', 'filter');
+            $this->filterForm->removeField('priority', 'filter');
+        }
+        if (!ContractsHelper::canDo('core.access.filter.lists')) {
+            $this->filterForm->removeField('list', 'filter');
+        }
 
         $this->filterForm->setValue('manager', 'filter', $this->state->get('filter.manager'));
 
@@ -45,10 +52,6 @@ class ContractsViewContracts extends HtmlView
         if (ContractsHelper::canDo('core.delete'))
         {
             JToolbarHelper::deleteList('COM_CONTRACTS_CONFIRM_REMOVE_CONTRACT', 'contracts.delete');
-        }
-        if (ContractsHelper::canDo('core.create'))
-        {
-            JToolbarHelper::custom('contracts.setContractNumber', 'pencil-2', 'pencil-2', JText::sprintf('COM_CONTRACTS_BUTTON_SET_CONTRACTS_NUMBERS'));
         }
         JToolbarHelper::custom('contracts.assign_to_me', 'signup', 'signup', JText::sprintf('COM_CONTRACTS_BUTTON_ASSIGN_CONTRACTS_TO_ME'));
         JToolbarHelper::custom('contracts.download', 'download', 'download', JText::sprintf('COM_MKV_BUTTON_EXPORT_TO_EXCEL'), false);

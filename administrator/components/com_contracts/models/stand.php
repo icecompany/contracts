@@ -27,7 +27,11 @@ class ContractsModelStand extends AdminModel {
 
     public function save($data)
     {
-        return parent::save($data);
+        $s = parent::save($data);
+        if ($data['id'] === null && $s) {
+            $this->addItemToContract($this->_db->insertid(), $data['standID'], $data['contractID']);
+        }
+        return $s;
     }
 
     public function getStandItems()
@@ -39,7 +43,7 @@ class ContractsModelStand extends AdminModel {
         } else return [];
     }
 
-    public function getStandFromCatalog(int $standID)
+    public function getStandFromCatalog(int $standID): TableStandsStands
     {
         JTable::addIncludePath(JPATH_ADMINISTRATOR."/components/com_stands/tables");
         $table = JTable::getInstance('Stands', 'TableStands');
@@ -51,6 +55,77 @@ class ContractsModelStand extends AdminModel {
     {
         $model = AdminModel::getInstance('Contract', 'ContractsModel');
         return $model->getItem($contractID);
+    }
+
+    private function addItemToContract(int $contractStandID, int $standID, int $contractID): bool
+    {
+        $can = $this->checkAddItemToContract($contractStandID, $standID, $contractID);
+        if (!$can['result']) {
+            $msg = sprintf("%s: %s", JText::sprintf('COM_CONTRACTS_FORM_STAND_ADD_ITEM_ERROR'), $can['messages']);
+            JFactory::getApplication()->enqueueMessage($msg, 'error');
+            return false;
+        }
+        else {
+            $model = AdminModel::getInstance('Item', 'ContractsModel');
+            $model->save($can['data']);
+            return true;
+        }
+    }
+
+    private function checkAddItemToContract(int $contractStandID, int $standID, int $contractID): array
+    {
+        $result = true;
+        $messages = [];
+        $data = [];
+        $return = ['result' => $result, 'messages' => [], 'data' => $data];
+        $stand = $this->getStandFromCatalog($standID);
+        if (!is_numeric($stand->itemID)) {
+            $result = false;
+            $messages[] = JText::sprintf('COM_CONTRACTS_FORM_STAND_ADD_ITEM_ERROR_NO_ITEM_ID');
+        }
+        if (!is_numeric($stand->open)) {
+            $result = false;
+            $messages[] = JText::sprintf('COM_CONTRACTS_FORM_STAND_ADD_ITEM_ERROR_NO_ITEM_ID');
+        }
+        if ($result) {
+            $contract = $this->getContract($contractID);
+            $arr = [];
+            $arr['id'] = null;
+            $arr['contractID'] = $contractID;
+            $arr['itemID'] = $stand->itemID;
+            $arr['columnID'] = $contract->project_item->columnID;
+            $arr['contractStandID'] = $contractStandID;
+            $arr['factor'] = ($contract->status != 9) ? 0 : 100;
+            $arr['markup'] = $this->getMarkup((int) $stand->open);
+            $arr['value'] = $stand->square;
+        }
+
+        $return['result'] = $result;
+        if (!empty($messages)) {
+            $return['messages'] = implode('; ', $messages);
+        }
+        if ($result) $return['data'] = $arr;
+        return $return;
+    }
+
+    private function getMarkup(int $open): float
+    {
+        switch ($open) {
+            case 2: {
+                $markup = 1.1;
+                break;
+            }
+            case 3: {
+                $markup = 1.15;
+                break;
+            }
+            case 4: {
+                $markup = 1.2;
+                break;
+            }
+            default: $markup = 1;
+        }
+        return $markup;
     }
 
     private function getChildrenContracts(int $parentID, int $projectID)

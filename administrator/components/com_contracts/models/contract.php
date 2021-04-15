@@ -50,6 +50,7 @@ class ContractsModelContract extends AdminModel {
             }
             $item->activities = $this->getActivities($item->companyID);
             $item->thematics = $this->getThematics($item->id);
+            $item->listID = $this->getLists($item->id);
         }
         $company = $this->getCompany($item->companyID);
         $project = $this->getProject($item->projectID);
@@ -67,6 +68,9 @@ class ContractsModelContract extends AdminModel {
     public function save($data)
     {
         $app = JFactory::getApplication();
+        //Автозаполнение менеджера
+        if (!ContractsHelper::canDo('core.show.all')) $data['managerID'] = JFactory::getUser()->id;
+
         if ($data['id'] != '') {
             $item = parent::getItem($data['id']);
             //Проверяем возможность выставить отказ
@@ -96,6 +100,8 @@ class ContractsModelContract extends AdminModel {
             $this->saveSentInfo($data['id'], $data);
             //Сохраняем компанию-родителя соэкспонента
             $this->saveParentID($data['id'], is_numeric($data['parentID']) ? $data['parentID'] : 0);
+            //Сохраняем списки
+            $this->saveLists($data['id'], $data['listID'] ?? []);
             //Сохраняем тематические рубрики
             $this->saveThematics($data['id'], $data['thematics'] ?? []);
             //Сохраняем виды деятельности
@@ -104,10 +110,23 @@ class ContractsModelContract extends AdminModel {
             if ($item->managerID != $data['managerID']) {
                 SchedulerHelper::updateTaskManager($data['id'], $data['managerID']);
             }
-            //Обнуляем сумму заказанных услуг, если сделка переходит в отказ
-            if ($data['status'] == '0') ContractsHelper::setZeroAmount($data['id']);
+            //Обнуляем сумму заказанных услуг, номер и дату договора, если сделка переходит в отказ
+            if ($data['status'] == '0') {
+                ContractsHelper::setZeroAmount($data['id']);
+                if ($item->status == 1) {
+                    //Уведомляем об аннулировании договора
+                    $this->sendNotifyReject($data);
+                }
+            }
             //Загрузка файла
             $this->uploadFiles($data['id']);
+        }
+        //Присваиваем номер
+        if ($data['status'] == 1) {
+            if ($data['id'] == null || (isset($item) && $item->status != 1)) {
+                $data['number'] = $this->setContractNumber($data['projectID']);
+                $data['dat'] = JDate::getInstance()->toSql();
+            }
         }
         $s = parent::save($data);
         //Пишем в историю
@@ -147,26 +166,9 @@ class ContractsModelContract extends AdminModel {
         return $s;
     }
 
-    public function setContractNumber($pk = null): int
+    public function setContractNumber(int $projectID): int
     {
-        $item = parent::getItem($pk);
-        if ($item->id !== null) {
-            if ($item->status != '1') {
-                $app = JFactory::getApplication();
-                $error = JText::sprintf('COM_CONTRACTS_ERROR_NUMBER_ONLY_FOR_CONTRACTS');
-                $app->enqueueMessage($error, 'error');
-                $app->redirect("index.php?option={$this->option}&view=contracts");
-                jexit();
-            }
-            $number = ContractsHelper::getNextContractNumber($item->projectID);
-            $table = $this->getTable();
-            $table->load($item->id);
-            $table->save(['id' => $item->id, 'number' => $number]);
-            return (int) $number;
-        }
-        else {
-            return 0;
-        }
+        return ContractsHelper::getNextContractNumber($projectID);
     }
 
     public function getChildren()
@@ -359,6 +361,24 @@ class ContractsModelContract extends AdminModel {
         }
     }
 
+    private function sendNotifyReject(array $contract)
+    {
+        $groupID = ContractsHelper::getConfig('notify_contract_reject_group');
+        if (!is_numeric($groupID)) return;
+        $recipients = MkvHelper::getGroupUsers($groupID);
+        if (empty($recipients)) return;
+        $project = $this->getProject($contract['projectID']);
+        foreach ($recipients as $managerID) {
+            $data = [
+                'user_create' => $contract['managerID'],
+                'managerID' => $managerID,
+                'contractID' => $contract['id'],
+                'text' => JText::sprintf("COM_CONTRACTS_NOTIFY_CONTRACT_REJECT", $project->title),
+            ];
+            SchedulerHelper::sendNotify($data);
+        }
+    }
+
     public function getContractItems(): array
     {
         $id = JFactory::getApplication()->input->getInt('id', 0);
@@ -403,6 +423,15 @@ class ContractsModelContract extends AdminModel {
         $form->addFieldPath(JPATH_ADMINISTRATOR."/components/com_prices/models/fields");
         $form->addFieldPath(JPATH_ADMINISTRATOR."/components/com_prj/models/fields");
         $form->addFieldPath(JPATH_ADMINISTRATOR."/components/com_companies/models/fields");
+
+        if (!ContractsHelper::canDo('core.show.all')) {
+            $form->setFieldAttribute('managerID', 'disabled', true);
+            $form->setFieldAttribute('managerID', 'required', false);
+            $form->setValue('managerID', 'general', JFactory::getUser()->id);
+        }
+        if (!ContractsHelper::canDo('core.edit.contract_number')) {
+            $form->setFieldAttribute('number', 'disabled', true);
+        }
 
         if (empty($form))
         {
@@ -499,6 +528,30 @@ class ContractsModelContract extends AdminModel {
         return $model->getItems();
     }
 
+    private function getLists(int $contractID)
+    {
+        $model = ListModel::getInstance('Lists', 'ContractsModel', ['contractID' => $contractID]);
+        return $model->getItems();
+    }
+
+    private function saveLists(int $contractID, array $lists = [])
+    {
+        $current = $this->getLists($contractID);
+        if (empty($current)) {
+            if (empty($lists)) return;
+            foreach ($lists as $listID)
+                $this->addList($contractID, $listID);
+        }
+        else {
+            foreach ($lists as $item)
+                if (($key = array_search($item, $current)) === false)
+                    $this->addList($contractID, $item);
+            foreach ($current as $item)
+                if (($key = array_search($item, $lists)) === false)
+                    $this->deleteList($contractID, $item);
+        }
+    }
+
     private function saveThematics(int $contractID, array $thematics = [])
     {
         $model = ListModel::getInstance('Thematics', 'ContractsModel', ['contractID' => $contractID]);
@@ -532,6 +585,20 @@ class ContractsModelContract extends AdminModel {
         $table->delete($table->id);
     }
 
+    private function addList(int $contractID, int $listID)
+    {
+        $table = $this->getTable('Lists', 'TableContracts');
+        $data = ['id' => null, 'contractID' => $contractID, 'listID' => $listID];
+        $table->save($data);
+    }
+
+    private function deleteList(int $contractID, int $listID)
+    {
+        $table = $this->getTable('Lists', 'TableContracts');
+        $table->load(['contractID' => $contractID, 'listID' => $listID]);
+        $table->delete($table->id);
+    }
+
     public function delete(&$pks)
     {
         //Пишем историю
@@ -553,6 +620,10 @@ class ContractsModelContract extends AdminModel {
             else return false;
         }
         return true;
+    }
+
+    protected function canEdit(int $managerID) {
+        if (!ContractsHelper::canDo('core.show.all') && $managerID != JFactory::getUser()->id) jexit('Access denied');
     }
 
     protected function canEditState($record)

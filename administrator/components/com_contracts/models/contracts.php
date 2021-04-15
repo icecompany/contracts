@@ -22,6 +22,7 @@ class ContractsModelContracts extends ListModel
                 'c.payments',
                 'c.debt',
                 'search',
+                'list',
                 'c.tasks_count',
                 'c.tasks_date',
                 'num',
@@ -86,7 +87,7 @@ class ContractsModelContracts extends ListModel
         $orderDirn = $this->state->get('list.direction');
 
         $query
-            ->select("c.id, c.companyID, c.dat, c.number, c.number_free, c.currency, c.amount, c.payments, c.debt, c.status as status_code")
+            ->select("c.id, c.projectID, c.companyID, c.dat, c.number, c.number_free, c.currency, c.amount, c.payments, c.debt, c.status as status_code")
             ->select("c.tasks_count, c.tasks_date")
             ->select("ifnull(c.number_free, c.number) as num")
             ->select("s.title as status")
@@ -150,7 +151,7 @@ class ContractsModelContracts extends ListModel
                 if (!empty($userGroups)) $query->where("p.groupID in ({$userGroups})");
             }
             $manager = $this->getState('filter.manager');
-            if (is_numeric($manager)) {
+            if (is_numeric($manager) && ContractsHelper::canDo('core.show.all')) {
                 $query->where("c.managerID = {$this->_db->q($manager)}");
             }
             $status = $this->getState('filter.status');
@@ -176,6 +177,9 @@ class ContractsModelContracts extends ListModel
                 $query->where("i.doc_status = {$this->_db->q($doc_status)}");
             }
 
+            $userID = JFactory::getUser()->id;
+            if (!ContractsHelper::canDo('core.show.all')) $query->where("c.managerID = {$this->_db->q($userID)}");
+
             $title_to_diploma = $this->getState('filter.title_to_diploma');
             if (is_numeric($title_to_diploma)) {
                 if ($title_to_diploma === '0') $query->where("i.title_to_diploma is null");
@@ -187,6 +191,20 @@ class ContractsModelContracts extends ListModel
             $currency = $this->getState('filter.currency');
             if (!empty($currency)) {
                 $query->where("c.currency like {$this->_db->q($currency)}");
+            }
+
+            $list = $this->getState('filter.list');
+            if (!empty($list)) {
+                $query->leftJoin("#__mkv_contract_lists l on l.contractID = c.id");
+                if ($list == 'all') {
+                    $query->where("l.listID is not null");
+                }
+                elseif ($list == 'empty') {
+                    $query->where("l.listID is null");
+                }
+                else {
+                    $query->where("l.listID = {$this->_db->q($list)}");
+                }
             }
 
             $priority = $this->getState('filter.priority');
@@ -250,7 +268,7 @@ class ContractsModelContracts extends ListModel
     public function getItems()
     {
         $items = parent::getItems();
-        $result = ['items' => [], 'amount' => [], 'amount_by_status' => [], 'sum' => [
+        $result = ['items' => [], 'lists' => $this->getLists(), 'amount' => [], 'amount_by_status' => [], 'sum' => [
             'amount' => ['rub' => 0, 'usd' => 0, 'eur' => 0],
             'payments' => ['rub' => 0, 'usd' => 0, 'eur' => 0],
             'debt' => ['rub' => 0, 'usd' => 0, 'eur' => 0],
@@ -263,6 +281,7 @@ class ContractsModelContracts extends ListModel
             $ids[] = $item->id;
             $arr['company'] = $item->company;
             $arr['project'] = $item->project;
+            $arr['projectID'] = $item->projectID;
             $arr['tasks_count'] = $item->tasks_count;
             if ($item->tasks_count == '1') {
                 $url = JRoute::_("index.php?option=com_scheduler&amp;task=task.gotoContractActiveTask&amp;contractID={$item->id}&amp;return={$this->return}");
@@ -270,6 +289,7 @@ class ContractsModelContracts extends ListModel
             }
             $arr['tasks_date'] = (!empty($item->tasks_date) && $item->tasks_date != '0000-00-00') ? JDate::getInstance($item->tasks_date)->format("d.m.Y") : '';
             $arr['status'] = $item->status ?? JText::sprintf('COM_MKV_STATUS_IN_PROJECT');
+            $arr['status_code'] = $item->status_code;
             $arr['manager'] = MkvHelper::getLastAndFirstNames($item->manager);
             $currency = mb_strtoupper($item->currency);
             $amount = number_format((float) $item->amount ?? 0, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, MKV_FORMAT_SEPARATOR_DEC);
@@ -330,6 +350,7 @@ class ContractsModelContracts extends ListModel
             $result['items'][$item->id] = $arr;
         }
         $stands = $this->getStands($ids);
+        $lists = $this->getContractsLists($result['lists'] ?? [], $ids);
         if (!empty($ids)) $stands_info = ContractsHelper::getContractStandInfo($ids ?? []);
         $thematics = $this->getThematics($ids);
         $project = PrjHelper::getActiveProject();
@@ -340,8 +361,12 @@ class ContractsModelContracts extends ListModel
         foreach ($result['items'] as $contractID => $item) {
             $result['items'][$contractID]['stands'] = $stands[$contractID];
             $result['items'][$contractID]['thematics'] = $thematics[$contractID];
+            foreach ($lists[$contractID] as $listID => $list_value) {
+                $result['items'][$contractID][$listID] = $list_value;
+            }
             if (!empty($result['items'][$contractID]['stands'])) $result['items'][$contractID]['stand_items'] = $stands_info[$contractID];
         }
+
         return $result;
     }
 
@@ -355,8 +380,11 @@ class ContractsModelContracts extends ListModel
         $xls->setActiveSheetIndex(0);
         $sheet = $xls->getActiveSheet();
 
+        //Добавляем списки
+
         //Заголовки
         $j = 0;
+        $this->addListsToHead($items['lists']);
         foreach ($this->heads as $item => $head) $sheet->setCellValueByColumnAndRow($j++, 1, JText::sprintf($head));
 
         $sheet->setTitle(JText::sprintf('COM_CONTRACTS_MENU_CONTRACTS'));
@@ -387,6 +415,36 @@ class ContractsModelContracts extends ListModel
         $objWriter = PHPExcel_IOFactory::createWriter($xls, 'Excel5');
         $objWriter->save('php://output');
         jexit();
+    }
+
+    private function addListsToHead(array $lists): void
+    {
+        if (!ContractsHelper::canDo('core.access.filter.lists')) return;
+        foreach ($lists as $listID => $list) {
+            $this->heads["list_{$listID}"] = sprintf("%s - %s", $list['type'], $list['title']);
+        }
+    }
+
+    private function getContractsLists(array $lists, array $contractIDs = []): array
+    {
+        if (empty($contractIDs)) return [];
+        if (empty($lists)) return [];
+        $model = ListModel::getInstance("Lists", "ContractsModel", ['contractID' => $contractIDs]);
+        $items = $model->getItems();
+        $result = [];
+        foreach ($contractIDs as $contractID) {
+            foreach ($lists as $listID => $list) {
+                $result[$contractID]["list_{$listID}"] = JText::sprintf((array_search($listID, array_values($items[$contractID])) !== false) ? 'JYES' : 'JNO');
+            }
+        }
+        return $result;
+    }
+
+    private function getLists(): array
+    {
+        JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_mkv/models", "MkvModel");
+        $model = JModelLegacy::getInstance("Lists", "MkvModel");
+        return $model->getItems();
     }
 
     private function getStands(array $ids = []): array
@@ -451,6 +509,8 @@ class ContractsModelContracts extends ListModel
         $this->setState('filter.arrival', $arrival);
         $priority = $this->getUserStateFromRequest($this->context . '.filter.priority', 'filter_priority');
         $this->setState('filter.priority', $priority);
+        $list = $this->getUserStateFromRequest($this->context . '.filter.list', 'filter_list');
+        $this->setState('filter.list', $list);
         parent::populateState($ordering, $direction);
         ContractsHelper::check_refresh();
     }
@@ -473,6 +533,7 @@ class ContractsModelContracts extends ListModel
         $id .= ':' . $this->getState('filter.thematics');
         $id .= ':' . $this->getState('filter.arrival');
         $id .= ':' . $this->getState('filter.priority');
+        $id .= ':' . $this->getState('filter.list');
         return parent::getStoreId($id);
     }
 

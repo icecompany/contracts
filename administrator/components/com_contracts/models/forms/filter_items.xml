@@ -34,6 +34,20 @@
             <option value="usd">COM_CONTRACTS_CURRENCY_USD_SHORT</option>
             <option value="eur">COM_CONTRACTS_CURRENCY_EUR_SHORT</option>
         </field>
+        <field
+                name="date_1"
+                type="calendar"
+                filter="none"
+                format="%d.%m.%Y"
+                hint="COM_CONTRACTS_FILTER_SELECT_CONTRACT_DATE_FROM"
+        />
+        <field
+                name="date_2"
+                type="calendar"
+                filter="none"
+                format="%d.%m.%Y"
+                hint="COM_CONTRACTS_FILTER_SELECT_CONTRACT_DATE_TO"
+        />
     </fields>
     <fields name="list">
         <field

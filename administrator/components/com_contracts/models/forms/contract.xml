@@ -50,6 +50,17 @@
             <option value="eur">COM_CONTRACTS_CURRENCY_EUR</option>
         </field>
         <field
+                name="is_sponsor"
+                type="radio"
+                label="COM_CONTRACTS_FORM_CONTRACT_IS_SPONSOR_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_THEMATICS_LABEL"
+                class="btn-group btn-group-yesno"
+                default="0"
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field
                 name="comment"
                 type="textarea"
                 class="span12"
@@ -67,7 +78,6 @@
                 description="COM_CONTRACTS_FORM_CONTRACT_NUMBER_DESC"
                 message="COM_CONTRACTS_FORM_CONTRACT_NUMBER_MESSAGE"
                 autocomplete="off"
-                readonly="true"
                 validate="contractnumber"
                 class="span12"
         />
@@ -103,6 +113,14 @@
                 type="Thematics"
                 label="COM_CONTRACTS_FORM_CONTRACT_THEMATICS_LABEL"
                 description="COM_CONTRACTS_FORM_CONTRACT_THEMATICS_DESC"
+                class="span12"
+                multiple="true"
+        />
+        <field
+                name="listID"
+                type="ContractLists"
+                label="COM_CONTRACTS_FORM_CONTRACT_LIST_LABEL"
+                description="COM_CONTRACTS_FORM_CONTRACT_LIST_DESC"
                 class="span12"
                 multiple="true"
         />
@@ -237,6 +255,7 @@
                 hint="COM_CONTRACTS_FORM_CONTRACT_PLAN_TITLE_RU_HINT"
                 maxlength="255"
                 default=""
+                autocomplete="false"
                 class="span12"
         />
         <field
@@ -246,6 +265,7 @@
                 description="COM_CONTRACTS_FORM_CONTRACT_PLAN_TITLE_EN_DESC"
                 hint="COM_CONTRACTS_FORM_CONTRACT_PLAN_TITLE_EN_HINT"
                 maxlength="255"
+                autocomplete="false"
                 default=""
                 class="span12"
         />
