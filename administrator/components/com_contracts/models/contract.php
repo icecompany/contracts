@@ -643,7 +643,8 @@ class ContractsModelContract extends AdminModel {
             case 4:
             case 5:
             case 6:
-            case 9: {
+            case 9:
+            case 10: {
                 return true;
             }
             default: return false;
