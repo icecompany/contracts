@@ -55,7 +55,7 @@ class ContractsModelStands extends ListModel
             ->leftJoin("#__mkv_companies e on e.id = c.companyID")
             ->leftJoin("#__mkv_projects p on p.id = c.projectID")
             ->leftJoin("#__mkv_stands s on s.id = cs.standID")
-            ->leftJoin("#__mkv_contract_items ci on ci.contractStandID = cs.id")
+            ->leftJoin("#__mkv_contract_items ci on ci.contractID = c.id")
             ->leftJoin("#__mkv_contract_statuses st on st.code = c.status")
             ->leftJoin("#__mkv_price_items i on i.id = ci.itemID")
             ->leftJoin("#__users u on u.id = c.managerID");
