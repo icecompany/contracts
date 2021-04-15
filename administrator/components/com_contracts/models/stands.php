@@ -115,12 +115,12 @@ class ContractsModelStands extends ListModel
             $arr['square_clean'] = number_format((float) $item->square, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, '');
             $arr['square'] = JText::sprintf('COM_CONTRACTS_STANDS_SQUARE', number_format((float) $item->square, MKV_FORMAT_DEC_COUNT, MKV_FORMAT_SEPARATOR_FRACTION, MKV_FORMAT_SEPARATOR_DEC));
             $arr['freeze'] = $item->freeze;
-            $arr['status'] = JText::sprintf("COM_CONTRACTS_STAND_STATUS_{$item->status}");
+            $arr['status'] = JText::sprintf("COM_MKV_STAND_STATUS_{$item->status}");
             $arr['comment'] = $item->comment;
             $arr['company'] = $item->company;
             $url = JRoute::_("index.php?option=com_companies&amp;task=company.edit&amp;id={$item->companyID}&amp;return={$return}");
             $arr['company_link'] = JHtml::link($url, $item->company);
-            $arr['stand_type'] = JText::sprintf("COM_CONTRACTS_STAND_TYPE_{$item->stand_type}");
+            $arr['stand_type'] = JText::sprintf("COM_MKV_STAND_TYPE_{$item->stand_type}");
             $arr['project'] = $item->project;
             $arr['manager'] = MkvHelper::getLastAndFirstNames($item->manager);
             $arr['contract_status'] = $item->contract_status ?? JText::sprintf("COM_CONTRACTS_CONTRACT_STATUS_IN_PROJECT");

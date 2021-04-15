@@ -14,15 +14,15 @@
                 type="list"
                 label="COM_CONTRACTS_FORM_STAND_TYPE_LABEL"
                 description="COM_CONTRACTS_FORM_STAND_TYPE_DESC"
-                default="0"
                 required="true"
                 class="span12"
         >
+                <option value="4">COM_CONTRACTS_STAND_TYPE_4</option>
                 <option value="0">COM_CONTRACTS_STAND_TYPE_0</option>
                 <option value="1">COM_CONTRACTS_STAND_TYPE_1</option>
                 <option value="2">COM_CONTRACTS_STAND_TYPE_2</option>
                 <option value="3">COM_CONTRACTS_STAND_TYPE_3</option>
-                <option value="4">COM_CONTRACTS_STAND_TYPE_4</option>
+                <option value="5">COM_CONTRACTS_STAND_TYPE_5</option>
         </field>
         <field
                 name="status"

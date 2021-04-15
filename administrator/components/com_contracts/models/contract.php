@@ -19,6 +19,8 @@ class ContractsModelContract extends AdminModel {
                 $app->setUserState($this->option . '.contract.projectID', '');
             }
             $item->managerID = JFactory::getUser()->id;
+            $item->canAddStand = false;
+            $item->canAddItem = false;
         }
         else {
             $incoming = $this->getIncomingInfo($item->id);
@@ -51,6 +53,8 @@ class ContractsModelContract extends AdminModel {
             $item->activities = $this->getActivities($item->companyID);
             $item->thematics = $this->getThematics($item->id);
             $item->listID = $this->getLists($item->id);
+            $item->canAddStand = $this->canAddStand($item->status);
+            $item->canAddItem = $this->canAddItem($item->status);
         }
         $company = $this->getCompany($item->companyID);
         $project = $this->getProject($item->projectID);
@@ -620,6 +624,30 @@ class ContractsModelContract extends AdminModel {
             else return false;
         }
         return true;
+    }
+
+    private function canAddItem(int $status): bool
+    {
+        switch ($status) {
+            case 0: {
+                return false;
+            }
+            default: return true;
+        }
+    }
+
+    private function canAddStand(int $status): bool
+    {
+        switch ($status) {
+            case 1:
+            case 4:
+            case 5:
+            case 6:
+            case 9: {
+                return true;
+            }
+            default: return false;
+        }
     }
 
     protected function canEdit(int $managerID) {

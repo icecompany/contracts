@@ -27,6 +27,7 @@ class ContractsModelStand extends AdminModel {
 
     public function save($data)
     {
+        if (!$this->canSave($data)) return false;
         $s = parent::save($data);
         if ($data['id'] === null && $s) {
             $this->addItemToContract($this->_db->insertid(), $data['standID'], $data['contractID']);
@@ -132,6 +133,15 @@ class ContractsModelStand extends AdminModel {
     {
         $model = AdminModel::getInstance('Parents', 'ContractsModel', ['companyID' => $parentID, 'projectID' => $projectID]);
         return $model->getItems();
+    }
+
+    private function canSave($data): bool
+    {
+        if ((int) $data['type'] === 4) {
+            JFactory::getApplication()->enqueueMessage(JText::sprintf('COM_CONTRACTS_ERROR_SAVE_STAND_BAD_TYPE'), 'error');
+            return false;
+        }
+        return true;
     }
 
     public function getTable($name = 'Stands', $prefix = 'TableContracts', $options = array())
