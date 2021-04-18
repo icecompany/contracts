@@ -91,13 +91,13 @@ class ContractsModelContract extends AdminModel {
                 }
             }
             //Проверяем возможность выставить Заявка на участие
-            if ((int) $data['status'] === 4) {
+            /*if ((int) $data['status'] === 4) {
                 //Проверяем наличие стендов
                 if (!$this->isStandsInContract($data['id'])) {
                     $app->enqueueMessage(JText::sprintf('COM_CONTRACTS_ERROR_SAVE_CONTRACT_NO_STANDS'), 'error');
                     return false;
                 }
-            }
+            }*/
 
             //Сохраняем заполненность формы
             $this->saveIncomingInfo($data['id'], $data);
