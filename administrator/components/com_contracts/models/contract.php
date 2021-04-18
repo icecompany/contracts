@@ -626,9 +626,10 @@ class ContractsModelContract extends AdminModel {
         return true;
     }
 
-    private function canAddItem(int $status): bool
+    private function canAddItem($status): bool
     {
         switch ($status) {
+            case null:
             case 0: {
                 return false;
             }
@@ -636,7 +637,7 @@ class ContractsModelContract extends AdminModel {
         }
     }
 
-    private function canAddStand(int $status): bool
+    private function canAddStand($status): bool
     {
         switch ($status) {
             case 1:
