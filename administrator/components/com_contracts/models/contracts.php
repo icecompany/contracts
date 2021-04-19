@@ -30,6 +30,7 @@ class ContractsModelContracts extends ListModel
                 'thematics',
                 'title_to_diploma',
                 'priority',
+                'pavilion',
                 'catalog_info', 'i.catalog_info',
                 'catalog_logo', 'i.catalog_logo',
                 'pvn_1', 'i.pvn_1',
@@ -205,6 +206,14 @@ class ContractsModelContracts extends ListModel
                 else {
                     $query->where("l.listID = {$this->_db->q($list)}");
                 }
+            }
+
+            $pavilion = $this->getState('filter.pavilion');
+            if (is_numeric($pavilion)) {
+                $query
+                    ->leftJoin("#__mkv_contract_stands cs on cs.contractID = c.id")
+                    ->leftJoin("#__mkv_stands stand on stand.id = cs.standID")
+                    ->where("stand.pavilionID = {$this->_db->q($pavilion)}");
             }
 
             $priority = $this->getState('filter.priority');
@@ -475,6 +484,23 @@ class ContractsModelContracts extends ListModel
         return $model->getItems();
     }
 
+    public function getFilterForm($data = array(), $loadData = true)
+    {
+        $form = parent::getFilterForm($data, $loadData);
+        $form::addFieldPath(JPATH_ADMINISTRATOR."/components/com_stands/models/fields");
+        $form::addFieldPath(JPATH_ADMINISTRATOR."/components/com_mkv/models/fields");
+        $form::addFieldPath(JPATH_ADMINISTRATOR."/components/com_prj/models/fields");
+        $form->setValue('manager', 'filter', $this->state->get('filter.manager'));
+        if (!ContractsHelper::canDo('core.show.all')) {
+            $form->removeField('manager', 'filter');
+            $form->removeField('priority', 'filter');
+        }
+        if (!ContractsHelper::canDo('core.access.filter.lists')) {
+            $form->removeField('list', 'filter');
+        }
+        return $form;
+    }
+
     protected function populateState($ordering = 'c.tasks_date', $direction = 'ASC')
     {
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
@@ -511,6 +537,8 @@ class ContractsModelContracts extends ListModel
         $this->setState('filter.priority', $priority);
         $list = $this->getUserStateFromRequest($this->context . '.filter.list', 'filter_list');
         $this->setState('filter.list', $list);
+        $pavilion = $this->getUserStateFromRequest($this->context . '.filter.pavilion', 'filter_pavilion');
+        $this->setState('filter.pavilion', $pavilion);
         parent::populateState($ordering, $direction);
         ContractsHelper::check_refresh();
     }
@@ -534,6 +562,7 @@ class ContractsModelContracts extends ListModel
         $id .= ':' . $this->getState('filter.arrival');
         $id .= ':' . $this->getState('filter.priority');
         $id .= ':' . $this->getState('filter.list');
+        $id .= ':' . $this->getState('filter.pavilion');
         return parent::getStoreId($id);
     }
 

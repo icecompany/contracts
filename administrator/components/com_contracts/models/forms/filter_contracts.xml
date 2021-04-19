@@ -14,107 +14,114 @@
                 name="manager"
                 type="Manager"
                 onchange="this.form.submit();">
-                <option value="">COM_MKV_FILTER_SELECT_MANAGER</option>
+            <option value="">COM_MKV_FILTER_SELECT_MANAGER</option>
         </field>
         <field
                 name="status"
                 type="ContractStatus"
                 multiple="true"
                 onchange="this.form.submit();"
-                >
+        >
             <option value="101">COM_CONTRACTS_CONTRACT_STATUS_IN_PROJECT</option>
         </field>
-            <field
-                    name="list"
-                    type="ContractLists"
-                    onchange="this.form.submit();"
-            >
-                <option value="">COM_CONTRACTS_FILTER_SELECT_CONTRACT_LIST</option>
-                <option value="all">COM_CONTRACTS_FILTER_SELECT_CONTRACT_LIST_ALL</option>
-                <option value="empty">COM_CONTRACTS_FILTER_SELECT_CONTRACT_LIST_EMPTY</option>
-            </field>
-            <field
-                    name="catalog_info"
-                    type="list"
-                    label="COM_CONTRACTS_FILTER_SELECT_INFO_CATALOG"
-                    description="COM_CONTRACTS_FILTER_SELECT_INFO_CATALOG"
-                    onchange="this.form.submit();"
-            >
-                <option value="">COM_CONTRACTS_FILTER_SELECT_INFO_CATALOG</option>
-                <option value="0">COM_CONTRACTS_FILTER_SELECT_INFO_CATALOG_0</option>
-                <option value="1">COM_CONTRACTS_FILTER_SELECT_INFO_CATALOG_1</option>
-            </field>
-            <field
-                    name="catalog_logo"
-                    type="list"
-                    label="COM_CONTRACTS_FILTER_SELECT_LOGO_CATALOG"
-                    description="COM_CONTRACTS_FILTER_SELECT_LOGO_CATALOG"
-                    onchange="this.form.submit();"
-            >
-                <option value="">COM_CONTRACTS_FILTER_SELECT_LOGO_CATALOG</option>
-                <option value="0">COM_CONTRACTS_FILTER_SELECT_LOGO_CATALOG_0</option>
-                <option value="1">COM_CONTRACTS_FILTER_SELECT_LOGO_CATALOG_1</option>
-            </field>
-            <field
-                    name="pvn_1"
-                    type="list"
-                    label="COM_CONTRACTS_FILTER_SELECT_PNV_1"
-                    description="COM_CONTRACTS_FILTER_SELECT_PNV_1"
-                    onchange="this.form.submit();"
-            >
-                <option value="">COM_CONTRACTS_FILTER_SELECT_PNV_1</option>
-                <option value="0">COM_CONTRACTS_FILTER_SELECT_PNV_1_0</option>
-                <option value="1">COM_CONTRACTS_FILTER_SELECT_PNV_1_1</option>
-            </field>
-            <field
-                    name="pvn_1a"
-                    type="list"
-                    label="COM_CONTRACTS_FILTER_SELECT_PNV_1A"
-                    description="COM_CONTRACTS_FILTER_SELECT_PNV_1A"
-                    onchange="this.form.submit();"
-            >
-                <option value="">COM_CONTRACTS_FILTER_SELECT_PNV_1A</option>
-                <option value="0">COM_CONTRACTS_FILTER_SELECT_PNV_1A_0</option>
-                <option value="1">COM_CONTRACTS_FILTER_SELECT_PNV_1A_1</option>
-            </field>
-            <field
-                    name="pvn_1b"
-                    type="list"
-                    label="COM_CONTRACTS_FILTER_SELECT_PNV_1B"
-                    description="COM_CONTRACTS_FILTER_SELECT_PNV_1B"
-                    onchange="this.form.submit();"
-            >
-                <option value="">COM_CONTRACTS_FILTER_SELECT_PNV_1B</option>
-                <option value="0">COM_CONTRACTS_FILTER_SELECT_PNV_1B_0</option>
-                <option value="1">COM_CONTRACTS_FILTER_SELECT_PNV_1B_1</option>
-            </field>
-            <field
-                    name="pvn_1v"
-                    type="list"
-                    label="COM_CONTRACTS_FILTER_SELECT_PNV_1V"
-                    description="COM_CONTRACTS_FILTER_SELECT_PNV_1V"
-                    onchange="this.form.submit();"
-            >
-                <option value="">COM_CONTRACTS_FILTER_SELECT_PNV_1V</option>
-                <option value="0">COM_CONTRACTS_FILTER_SELECT_PNV_1V_0</option>
-                <option value="1">COM_CONTRACTS_FILTER_SELECT_PNV_1V_1</option>
-            </field>
-            <field
-                    name="pvn_1g"
-                    type="list"
-                    label="COM_CONTRACTS_FILTER_SELECT_PNV_1G"
-                    description="COM_CONTRACTS_FILTER_SELECT_PNV_1G"
-                    onchange="this.form.submit();"
-            >
-                <option value="">COM_CONTRACTS_FILTER_SELECT_PNV_1G</option>
-                <option value="0">COM_CONTRACTS_FILTER_SELECT_PNV_1G_0</option>
-                <option value="1">COM_CONTRACTS_FILTER_SELECT_PNV_1G_1</option>
+        <field
+                name="pavilion"
+                type="Pavilion"
+                onchange="this.form.submit();"
+        >
+            <option value="">COM_MKV_FILTER_SELECT_STAND_PAVILION</option>
+        </field>
+        <field
+                name="list"
+                type="ContractLists"
+                onchange="this.form.submit();"
+        >
+            <option value="">COM_CONTRACTS_FILTER_SELECT_CONTRACT_LIST</option>
+            <option value="all">COM_CONTRACTS_FILTER_SELECT_CONTRACT_LIST_ALL</option>
+            <option value="empty">COM_CONTRACTS_FILTER_SELECT_CONTRACT_LIST_EMPTY</option>
+        </field>
+        <field
+                name="catalog_info"
+                type="list"
+                label="COM_CONTRACTS_FILTER_SELECT_INFO_CATALOG"
+                description="COM_CONTRACTS_FILTER_SELECT_INFO_CATALOG"
+                onchange="this.form.submit();"
+        >
+            <option value="">COM_CONTRACTS_FILTER_SELECT_INFO_CATALOG</option>
+            <option value="0">COM_CONTRACTS_FILTER_SELECT_INFO_CATALOG_0</option>
+            <option value="1">COM_CONTRACTS_FILTER_SELECT_INFO_CATALOG_1</option>
+        </field>
+        <field
+                name="catalog_logo"
+                type="list"
+                label="COM_CONTRACTS_FILTER_SELECT_LOGO_CATALOG"
+                description="COM_CONTRACTS_FILTER_SELECT_LOGO_CATALOG"
+                onchange="this.form.submit();"
+        >
+            <option value="">COM_CONTRACTS_FILTER_SELECT_LOGO_CATALOG</option>
+            <option value="0">COM_CONTRACTS_FILTER_SELECT_LOGO_CATALOG_0</option>
+            <option value="1">COM_CONTRACTS_FILTER_SELECT_LOGO_CATALOG_1</option>
+        </field>
+        <field
+                name="pvn_1"
+                type="list"
+                label="COM_CONTRACTS_FILTER_SELECT_PNV_1"
+                description="COM_CONTRACTS_FILTER_SELECT_PNV_1"
+                onchange="this.form.submit();"
+        >
+            <option value="">COM_CONTRACTS_FILTER_SELECT_PNV_1</option>
+            <option value="0">COM_CONTRACTS_FILTER_SELECT_PNV_1_0</option>
+            <option value="1">COM_CONTRACTS_FILTER_SELECT_PNV_1_1</option>
+        </field>
+        <field
+                name="pvn_1a"
+                type="list"
+                label="COM_CONTRACTS_FILTER_SELECT_PNV_1A"
+                description="COM_CONTRACTS_FILTER_SELECT_PNV_1A"
+                onchange="this.form.submit();"
+        >
+            <option value="">COM_CONTRACTS_FILTER_SELECT_PNV_1A</option>
+            <option value="0">COM_CONTRACTS_FILTER_SELECT_PNV_1A_0</option>
+            <option value="1">COM_CONTRACTS_FILTER_SELECT_PNV_1A_1</option>
+        </field>
+        <field
+                name="pvn_1b"
+                type="list"
+                label="COM_CONTRACTS_FILTER_SELECT_PNV_1B"
+                description="COM_CONTRACTS_FILTER_SELECT_PNV_1B"
+                onchange="this.form.submit();"
+        >
+            <option value="">COM_CONTRACTS_FILTER_SELECT_PNV_1B</option>
+            <option value="0">COM_CONTRACTS_FILTER_SELECT_PNV_1B_0</option>
+            <option value="1">COM_CONTRACTS_FILTER_SELECT_PNV_1B_1</option>
+        </field>
+        <field
+                name="pvn_1v"
+                type="list"
+                label="COM_CONTRACTS_FILTER_SELECT_PNV_1V"
+                description="COM_CONTRACTS_FILTER_SELECT_PNV_1V"
+                onchange="this.form.submit();"
+        >
+            <option value="">COM_CONTRACTS_FILTER_SELECT_PNV_1V</option>
+            <option value="0">COM_CONTRACTS_FILTER_SELECT_PNV_1V_0</option>
+            <option value="1">COM_CONTRACTS_FILTER_SELECT_PNV_1V_1</option>
+        </field>
+        <field
+                name="pvn_1g"
+                type="list"
+                label="COM_CONTRACTS_FILTER_SELECT_PNV_1G"
+                description="COM_CONTRACTS_FILTER_SELECT_PNV_1G"
+                onchange="this.form.submit();"
+        >
+            <option value="">COM_CONTRACTS_FILTER_SELECT_PNV_1G</option>
+            <option value="0">COM_CONTRACTS_FILTER_SELECT_PNV_1G_0</option>
+            <option value="1">COM_CONTRACTS_FILTER_SELECT_PNV_1G_1</option>
         </field>
         <field
                 name="currency"
                 type="list"
                 onchange="this.form.submit();"
-                >
+        >
             <option value="">COM_CONTRACTS_TITLE_SELECT_CURRENCY</option>
             <option value="rub">COM_CONTRACTS_CURRENCY_RUB_SHORT</option>
             <option value="usd">COM_CONTRACTS_CURRENCY_USD_SHORT</option>
@@ -124,7 +131,7 @@
                 name="no_exhibits"
                 type="list"
                 onchange="this.form.submit();"
-                >
+        >
             <option value="">COM_CONTRACTS_TITLE_SELECT_EXPONENTS</option>
             <option value="0">COM_CONTRACTS_TITLE_SELECT_EXPONENTS_WITH</option>
             <option value="1">COM_CONTRACTS_TITLE_SELECT_EXPONENTS_WITHOUT</option>
@@ -133,7 +140,7 @@
                 name="arrival"
                 type="list"
                 onchange="this.form.submit();"
-                >
+        >
             <option value="">COM_CONTRACTS_TITLE_SELECT_GRAPHIC_ARRIVAL</option>
             <option value="0">COM_CONTRACTS_TITLE_SELECT_GRAPHIC_ARRIVAL_0</option>
             <option value="1">COM_CONTRACTS_TITLE_SELECT_GRAPHIC_ARRIVAL_1</option>
@@ -142,7 +149,7 @@
                 name="title_to_diploma"
                 type="list"
                 onchange="this.form.submit();"
-                >
+        >
             <option value="">COM_CONTRACTS_FILTER_SELECT_TITLE_TO_DIPLOMA</option>
             <option value="0">COM_CONTRACTS_FILTER_SELECT_TITLE_TO_DIPLOMA_0</option>
             <option value="1">COM_CONTRACTS_FILTER_SELECT_TITLE_TO_DIPLOMA_1</option>
@@ -151,14 +158,14 @@
                 name="thematics"
                 type="Thematics"
                 onchange="this.form.submit();"
-                >
+        >
             <option value="">COM_CONTRACTS_TITLE_SELECT_THEMATIC</option>
         </field>
         <field
                 name="priority"
                 type="list"
                 onchange="this.form.submit();"
-                >
+        >
             <option value="">COM_CONTRACTS_TITLE_SELECT_PRIORITY</option>
             <option value="0">JNO</option>
             <option value="1">JYES</option>

@@ -22,6 +22,7 @@ class ContractsModelStands extends ListModel
                 'st.title',
                 'status',
                 'search',
+                'pavilion',
             );
         }
         parent::__construct($config);
@@ -93,6 +94,12 @@ class ContractsModelStands extends ListModel
         if (!ContractsHelper::canDo('core.show.all')) {
             $userID = JFactory::getUser()->id;
             $query->where("c.managerID = {$this->_db->q($userID)}");
+        }
+
+        $pavilion = $this->getState('filter.pavilion');
+        if (is_numeric($pavilion)) {
+            $query
+                ->where("s.pavilionID = {$this->_db->q($pavilion)}");
         }
 
         $query->order($this->_db->escape($orderCol . ' ' . $orderDirn));
@@ -202,7 +209,6 @@ class ContractsModelStands extends ListModel
         jexit();
     }
 
-
     private function getDelegates(array $ids = []): array
     {
         if (empty($ids)) return [];
@@ -210,6 +216,12 @@ class ContractsModelStands extends ListModel
         return $model->getItems();
     }
 
+    public function getFilterForm($data = array(), $loadData = true)
+    {
+        $form = parent::getFilterForm($data, $loadData);
+        $form->addFieldPath(JPATH_ADMINISTRATOR."/components/com_stands/models/fields");
+        return $form;
+    }
 
     protected function populateState($ordering = 's.number', $direction = 'ASC')
     {
@@ -219,6 +231,8 @@ class ContractsModelStands extends ListModel
         $this->setState('filter.manager', $manager);
         $status = $this->getUserStateFromRequest($this->context . '.filter.status', 'filter_status');
         $this->setState('filter.status', $status);
+        $pavilion = $this->getUserStateFromRequest($this->context . '.filter.pavilion', 'filter_pavilion');
+        $this->setState('filter.pavilion', $pavilion);
         parent::populateState($ordering, $direction);
         ContractsHelper::check_refresh();
     }
@@ -228,6 +242,7 @@ class ContractsModelStands extends ListModel
         $id .= ':' . $this->getState('filter.search');
         $id .= ':' . $this->getState('filter.manager');
         $id .= ':' . $this->getState('filter.status');
+        $id .= ':' . $this->getState('filter.pavilion');
         return parent::getStoreId($id);
     }
 

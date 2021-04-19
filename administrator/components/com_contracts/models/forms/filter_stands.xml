@@ -17,6 +17,13 @@
             <option value="">COM_MKV_FILTER_SELECT_MANAGER</option>
         </field>
         <field
+                name="pavilion"
+                type="Pavilion"
+                onchange="this.form.submit();"
+        >
+            <option value="">COM_MKV_FILTER_SELECT_STAND_PAVILION</option>
+        </field>
+        <field
                 name="status"
                 type="ContractStatus"
                 multiple="true"

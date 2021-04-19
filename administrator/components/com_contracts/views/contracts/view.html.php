@@ -18,18 +18,6 @@ class ContractsViewContracts extends HtmlView
         $this->pagination = $this->get('Pagination');
         $this->show_by_status = true;
 
-        $this->filterForm->addFieldPath(JPATH_ADMINISTRATOR . "/components/com_mkv/models/fields");
-        $this->filterForm->addFieldPath(JPATH_ADMINISTRATOR . "/components/com_prj/models/fields");
-        if (!ContractsHelper::canDo('core.show.all')) {
-            $this->filterForm->removeField('manager', 'filter');
-            $this->filterForm->removeField('priority', 'filter');
-        }
-        if (!ContractsHelper::canDo('core.access.filter.lists')) {
-            $this->filterForm->removeField('list', 'filter');
-        }
-
-        $this->filterForm->setValue('manager', 'filter', $this->state->get('filter.manager'));
-
         // Show the toolbar
         $this->toolbar();
 
