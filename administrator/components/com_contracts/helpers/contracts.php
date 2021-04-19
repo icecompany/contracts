@@ -220,6 +220,14 @@ class ContractsHelper
             if (is_numeric($arrival)) {
                 $query->where("i.info_arrival = {$db->q($arrival)}");
             }
+
+            $pavilion = $app->getUserState("{$context}.filter.pavilion");
+            if (is_numeric($pavilion)) {
+                $query
+                    ->leftJoin("#__mkv_contract_stands cs on cs.contractID = c.id")
+                    ->leftJoin("#__mkv_stands stand on stand.id = cs.standID")
+                    ->where("stand.pavilionID = {$db->q($pavilion)}");
+            }
         }
 
         $items = $db->setQuery($query)->loadAssocList('currency');
