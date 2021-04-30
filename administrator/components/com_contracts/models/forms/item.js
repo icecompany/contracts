@@ -138,6 +138,7 @@ function getCost() {
                 description.setAttribute('readonly', true);
             }
             getAmount();
+            getUnit(text.data.unit_2_ID);
         })
         .catch(function (error) {
             console.log('Request failed', error);
@@ -170,6 +171,20 @@ function setValue() {
     if (square === null) square = 0;
     document.querySelector("#jform_value").value = square;
     getCost();
+}
+
+function getUnit(id) {
+    let url = `index.php?option=com_prices&task=unit.execute&id=${id}&format=json`;
+    fetch(url)
+        .then((response) => {
+            return response.json();
+        }, (error) => {
+            console.log(`Error unit get: ${error}`);
+        })
+        .then((response) => {
+            let field = document.querySelector("#jform_value2-lbl");
+            field.innerText = response.data.title;
+        });
 }
 
 window.onload = function () {

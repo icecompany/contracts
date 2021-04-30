@@ -23,6 +23,9 @@ class ContractsViewItem extends HtmlView {
                     break;
                 }
             }
+            if (is_numeric($this->item->price_item->unit_2_ID)) {
+                $this->form->setFieldAttribute('value2', 'label', $this->item->unit_2_title);
+            }
         }
         else {
             $this->form->removeField('old_amount');

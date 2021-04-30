@@ -11,15 +11,17 @@ class ContractsModelItem extends AdminModel {
             $item->contractID = JFactory::getApplication()->getUserState($this->option.'.item.contractID');
         }
         else {
-            $item->item = $this->getPriceItem($item->itemID)->title;
-            $item->price_type = $this->getPriceItem($item->itemID)->type;
+            $price_item = $this->getPriceItem($item->itemID);
+            $item->price_item = $price_item;
+            $item->item = $price_item->title;
+            $item->price_type = $price_item->type;
             $item->factor = 100 - (100 * $item->factor);
             if ($item->payerID !== null) {
                 $payer = $this->getPayer($item->payerID);
                 $item->payer_id = $payer->id;
                 $item->payer_title = $payer->title;
             }
-
+            $item->unit_2_title = $this->getUnit2Title($price_item->unit_2_ID);
         }
         $item->contract = $this->getContract($item->contractID);
         if ($item->id === null) {
@@ -193,6 +195,7 @@ class ContractsModelItem extends AdminModel {
             $this->option.'.item', 'item', array('control' => 'jform', 'load_data' => $loadData)
         );
         $form->addFieldPath(JPATH_ADMINISTRATOR."/components/com_prices/models/fields");
+
         if (empty($form))
         {
             return false;
@@ -236,6 +239,14 @@ class ContractsModelItem extends AdminModel {
         if ($table->value2 <= 0 || $table->value2 == 1) $table->value2 = NULL;
 
         parent::prepareTable($table);
+    }
+
+    public function getUnit2Title(int $id): string
+    {
+        JTable::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_prices/tables");
+        $table = JTable::getInstance('Units', 'TablePrices');
+        $table->load($id);
+        return $table->title ?? '';
     }
 
     private function getRecipients(int $channelID, string $api_key, array $managerIDs = [])
