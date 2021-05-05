@@ -241,8 +241,9 @@ class ContractsModelItem extends AdminModel {
         parent::prepareTable($table);
     }
 
-    public function getUnit2Title(int $id): string
+    public function getUnit2Title($id): string
     {
+        if (is_null($id)) return '';
         JTable::addIncludePath(JPATH_ADMINISTRATOR . "/components/com_prices/tables");
         $table = JTable::getInstance('Units', 'TablePrices');
         $table->load($id);
