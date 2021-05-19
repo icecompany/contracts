@@ -61,7 +61,10 @@
                 class="span12"
                 default="0"
                 onchange="getCost();"
-        />
+        >
+            <option value="0.7">0.7</option>
+            <option value="19.5">19.5</option>
+        </field>
         <field
                 name="markup"
                 type="list"
