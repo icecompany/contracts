@@ -154,7 +154,7 @@ function getAmount() {
     let markup = document.querySelector("#jform_markup");
     let contract_new_amount = document.querySelector("#jform_contract_new_amount");
     if (value.value === '' || factor_field.value === '' || markup.value === '') return;
-    let factor = parseFloat((1 - (factor_field.value / 100)).toFixed(2));
+    let factor = parseFloat((1 - (factor_field.value / 100)).toFixed(3));
     let a = parseFloat(cost_price) * parseFloat(value.value); //Цена без скидок и наценок
     let b = parseFloat(cost_price) * parseFloat(value.value) * factor; //Цена со скидкой
     let c = a - b; //Скидка
