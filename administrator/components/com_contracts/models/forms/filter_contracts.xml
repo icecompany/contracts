@@ -170,6 +170,15 @@
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
+        <field
+                name="sponsor"
+                type="list"
+                onchange="this.form.submit();"
+        >
+            <option value="">COM_CONTRACTS_TITLE_SELECT_SPONSOR</option>
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
     </fields>
     <fields name="list">
         <field

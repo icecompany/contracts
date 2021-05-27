@@ -29,6 +29,7 @@ class ContractsModelContracts extends ListModel
                 'arrival',
                 'thematics',
                 'title_to_diploma',
+                'sponsor',
                 'priority',
                 'pavilion',
                 'catalog_info', 'i.catalog_info',
@@ -192,6 +193,11 @@ class ContractsModelContracts extends ListModel
             $currency = $this->getState('filter.currency');
             if (!empty($currency)) {
                 $query->where("c.currency like {$this->_db->q($currency)}");
+            }
+
+            $sponsor = $this->getState('filter.sponsor');
+            if (!empty($sponsor)) {
+                $query->where("c.is_sponsor = {$this->_db->q($sponsor)}");
             }
 
             $list = $this->getState('filter.list');
@@ -539,6 +545,8 @@ class ContractsModelContracts extends ListModel
         $this->setState('filter.list', $list);
         $pavilion = $this->getUserStateFromRequest($this->context . '.filter.pavilion', 'filter_pavilion');
         $this->setState('filter.pavilion', $pavilion);
+        $sponsor = $this->getUserStateFromRequest($this->context . '.filter.sponsor', 'filter_sponsor');
+        $this->setState('filter.sponsor', $sponsor);
         parent::populateState($ordering, $direction);
         ContractsHelper::check_refresh();
     }
@@ -563,6 +571,7 @@ class ContractsModelContracts extends ListModel
         $id .= ':' . $this->getState('filter.priority');
         $id .= ':' . $this->getState('filter.list');
         $id .= ':' . $this->getState('filter.pavilion');
+        $id .= ':' . $this->getState('filter.sponsor');
         return parent::getStoreId($id);
     }
 
