@@ -258,8 +258,17 @@ class ContractsHelper
         return $db->setQuery($query)->loadColumn() ?? [];
     }
 
-
-    public static function getNextContractNumber(int $projectID)
+    /**
+     * Возвращает следующий по порядку номер договора для конкретного проекта.
+     *
+     * Если ацкий сотона решил дать номер договору 666, не даём силам зла поработить МКВ
+     * и возвращаем номер 667
+     *
+     * @param int $projectID
+     *
+     * @return int
+     */
+    public static function getNextContractNumber(int $projectID): int
     {
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
@@ -267,7 +276,8 @@ class ContractsHelper
             ->select("ifnull(max(number), 0) + 1")
             ->from("#__mkv_contracts")
             ->where("projectID = {$db->q($projectID)}");
-        return $db->setQuery($query)->loadResult();
+        $result = (int) $db->setQuery($query)->loadResult();
+        return ($result != 666) ? $result: 667;
     }
 
     /**
