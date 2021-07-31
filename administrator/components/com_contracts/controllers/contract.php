@@ -40,8 +40,8 @@ class ContractsControllerContract extends FormController
 		$referer = JUri::getInstance($_SERVER['HTTP_REFERER']);
 		$view = $referer->getVar('view');
 		$contractID = $referer->getVar('id');
-		$model = parent::getModel('Contract', 'ContractsModel');
-		$item = $model->getItem($contractID);
+		$model = parent::getModel('Parent', 'ContractsModel');
+		$item = $model->getItem(['contractID' => $contractID]);
 		if ($view === 'contract' && $item->companyID > 0) {
 			$query = [
 				'option' => 'com_companies',
@@ -51,6 +51,7 @@ class ContractsControllerContract extends FormController
 			];
 			$this->setRedirect("index.php?" . http_build_query($query));
 			$this->redirect();
+
 			jexit();
 		}
 	}
