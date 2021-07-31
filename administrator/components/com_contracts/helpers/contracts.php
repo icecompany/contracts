@@ -276,8 +276,21 @@ class ContractsHelper
             ->select("ifnull(max(number), 0) + 1")
             ->from("#__mkv_contracts")
             ->where("projectID = {$db->q($projectID)}");
-        $result = (int) $db->setQuery($query)->loadResult();
-        return ($result != 666) ? $result: 667;
+        $number = (int) $db->setQuery($query)->loadResult();
+        return (self::isContractNumber666($number)) ? 667 : $number;
+    }
+
+	/**
+	 * Проверяет номер договора на запрещённый
+	 * Если аццкий сотона решит завладеть МКВ, ничего у него не выйдет
+	 *
+	 * @param string $number номер договора
+	 *
+	 * @return bool
+	 */
+	public static function isContractNumber666(string $number): bool
+	{
+		return $number === '666';
     }
 
     /**
