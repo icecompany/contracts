@@ -46,6 +46,9 @@ class ContractsViewContract extends HtmlView {
                 JToolbarHelper::custom('score.add', 'credit', 'credit', JText::sprintf('COM_CONTRACTS_BUTTON_ADD_SCORE'), false);
             }
             JToolbarHelper::custom('contract.go_to_company', 'vcard', 'vcard', JText::sprintf('COM_CONTRACTS_BUTTON_GO_TO_COMPANY'), false);
+            if (is_numeric($this->item->parent_id)) {
+				JToolbarHelper::custom('contract.go_to_parent_company', 'arrow-up-4', 'arrow-up-4', JText::sprintf('COM_CONTRACTS_BUTTON_GO_TO_PARENT'), false);
+			}
         }
         JToolbarHelper::cancel('contract.cancel', 'JTOOLBAR_CLOSE');
         JFactory::getApplication()->input->set('hidemainmenu', true);
